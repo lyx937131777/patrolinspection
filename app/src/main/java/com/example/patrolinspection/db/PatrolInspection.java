@@ -1,5 +1,7 @@
 package com.example.patrolinspection.db;
 
+import java.io.Serializable;
+
 public class PatrolInspection
 {
     private String name;

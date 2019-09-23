@@ -63,6 +63,7 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
                 int position = holder.getAdapterPosition();
                 PatrolInspection patrolInspection = mList.get(position);
                 Intent intent = new Intent(mContext, PatrolInspectionActivity.class);
+                intent.putExtra("line",patrolInspection.getName());
                 mContext.startActivity(intent);
             }
         });

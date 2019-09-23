@@ -10,7 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EventFoundActivity"></activity>
+        <activity android:name=".EventListActivity"></activity>
+        <activity android:name=".FaceRecognitionActivity" />
+        <activity android:name=".PatrolingActivity" />
+        <activity android:name=".EventFoundActivity" />
         <activity android:name=".SignInOutActivity" />
         <activity android:name=".InformationPointActivity" />
         <activity android:name=".SystemParameterActivity" />
@@ -29,8 +32,8 @@
         </activity>
         <activity android:name=".MainActivity" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

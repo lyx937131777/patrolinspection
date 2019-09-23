@@ -1,6 +1,7 @@
 package com.example.patrolinspection.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.patrolinspection.PatrolInspectionActivity;
+import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.db.PatrolInspection;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.util.MapUtil;
@@ -62,7 +65,13 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
             @Override
             public void onClick(View v)
             {
-
+                int position = holder.getAdapterPosition();
+                PatrolInspection patrolInspection = mList.get(position);
+                Intent intent = new Intent(mContext, SwipeCardActivity.class);
+                intent.putExtra("title","用户认证");
+                intent.putExtra("type","patrolInspection");
+                intent.putExtra("line",((PatrolInspectionActivity)mContext).getIntent().getStringExtra("line"));
+                mContext.startActivity(intent);
             }
         });
         return holder;

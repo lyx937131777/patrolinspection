@@ -15,6 +15,9 @@ public class MapUtil
         map.put("已结束",R.drawable.state_ended);
         map.put("漏检",R.drawable.state_miss);
         map.put("跳检",R.drawable.state_jump);
+        map.put("未巡检",R.drawable.state_unstart);
+        map.put("已巡检",R.drawable.state_ended);
+        map.put("巡检中",R.drawable.state_running);
     }
 
     public static int get(String s){

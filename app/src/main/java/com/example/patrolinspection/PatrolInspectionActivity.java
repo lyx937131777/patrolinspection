@@ -1,5 +1,6 @@
 package com.example.patrolinspection;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,10 @@ public class PatrolInspectionActivity extends AppCompatActivity
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("line");
+        actionBar.setTitle(title);
 
         initPI();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);

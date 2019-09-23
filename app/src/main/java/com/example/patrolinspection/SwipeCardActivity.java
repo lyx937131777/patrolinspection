@@ -39,6 +39,12 @@ public class SwipeCardActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 switch (type){
+                    case "patrolInspection":{
+                        Intent intent = new Intent(SwipeCardActivity.this, FaceRecognitionActivity.class);
+                        intent.putExtra("line",getIntent().getStringExtra("line"));
+                        startActivity(intent);
+                        break;
+                    }
                     case "signIn":
                     case "signOut":{
                         Intent intent = new Intent(SwipeCardActivity.this, SignInOutActivity.class);

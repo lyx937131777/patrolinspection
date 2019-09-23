@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PatrolInspection</string>
+    <string name="app_name">上海巡检</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
