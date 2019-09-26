@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="手机名称"
+                android:text="设备名称"
                 android:textSize="26sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center_vertical"
@@ -73,7 +73,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="手机型号"
+                android:text="设备型号"
                 android:textSize="26sp"
                 android:textColor="@color/black"
                 android:layout_gravity="center_vertical"

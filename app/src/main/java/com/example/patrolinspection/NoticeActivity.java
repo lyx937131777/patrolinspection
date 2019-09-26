@@ -2,15 +2,12 @@ package com.example.patrolinspection;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.patrolinspection.adapter.NoticeAdapter;
-import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.Notice;
-import com.example.patrolinspection.db.Type;
 
 import java.util.ArrayList;
 import java.util.List;

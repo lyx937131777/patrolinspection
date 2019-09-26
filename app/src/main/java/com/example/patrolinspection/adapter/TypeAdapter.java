@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.DataUpdatingActivity;
+import com.example.patrolinspection.NfcActivity;
 import com.example.patrolinspection.NoticeActivity;
 import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.PatrolLineActivity;
@@ -21,6 +22,7 @@ import com.example.patrolinspection.R;
 import com.example.patrolinspection.SignActivity;
 import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.SystemParameterActivity;
+import com.example.patrolinspection.TestActivity;
 import com.example.patrolinspection.db.Notice;
 import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.util.LogUtil;
@@ -108,7 +110,9 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         mContext.startActivity(intent);
                         break;
                     }
-                    case "eventList0":{
+                    case "eventList":{
+                        Intent intent = new Intent(mContext, TestActivity.class);
+                        mContext.startActivity(intent);
                         break;
                     }
                     case "dataUpdating":{
@@ -124,7 +128,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "informationPoint":{
-                        Intent intent = new Intent(mContext, SwipeCardActivity.class);
+                        Intent intent = new Intent(mContext, NfcActivity.class);
                         intent.putExtra("type",type.getTypeName());
                         intent.putExtra("title",type.getName());
                         mContext.startActivity(intent);

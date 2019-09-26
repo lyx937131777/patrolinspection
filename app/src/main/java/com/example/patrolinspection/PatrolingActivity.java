@@ -3,6 +3,7 @@ package com.example.patrolinspection;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ public class PatrolingActivity extends AppCompatActivity
 {
     private InformationPoint[] informationPoints = {new InformationPoint(1,"ABC","正门"),new InformationPoint(2,"ABC","食堂"),
             new InformationPoint(3,"ABC","图书馆"),new InformationPoint(4,"ABC","理科楼"),new InformationPoint(5,"ABC","毛像"),
-            new InformationPoint(6,"ABC","操场"),new InformationPoint(7,"AC","物理楼"),new InformationPoint(8,"ABC","后门")};
+            new InformationPoint(6,"ABC","操场操场操场操场"),new InformationPoint(7,"AC","物理楼科技楼地理楼信息楼"),new InformationPoint(8,"ABC","后门")};
     private List<InformationPoint> informationPointList = new ArrayList<>();
     private InformationPointAdapter adapter;
     @Override
@@ -65,8 +66,8 @@ public class PatrolingActivity extends AppCompatActivity
 
         initIP();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
+        recyclerView.setLayoutManager(layoutManager);
         adapter = new InformationPointAdapter(informationPointList);
         recyclerView.setAdapter(adapter);
     }

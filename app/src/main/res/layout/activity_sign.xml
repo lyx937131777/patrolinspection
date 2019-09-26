@@ -87,6 +87,15 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/sign_defend_school"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="护校签到/签退"
+            app:layout_constraintTop_toBottomOf="@id/sign_out"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="20dp"/>
 
     </android.support.constraint.ConstraintLayout>
 </android.support.design.widget.CoordinatorLayout>
