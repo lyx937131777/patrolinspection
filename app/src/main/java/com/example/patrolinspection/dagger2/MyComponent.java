@@ -1,6 +1,7 @@
 package com.example.patrolinspection.dagger2;
 
 import com.example.patrolinspection.presenter.LoginPresenter;
+import com.example.patrolinspection.presenter.NoticePresenter;
 
 import dagger.Component;
 
@@ -8,4 +9,6 @@ import dagger.Component;
 public interface MyComponent
 {
     LoginPresenter loginPresenter();
+
+    NoticePresenter noticePresenter();
 }

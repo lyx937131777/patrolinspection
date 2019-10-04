@@ -3,6 +3,7 @@ package com.example.patrolinspection.util;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.example.patrolinspection.db.Notice;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
@@ -16,6 +17,39 @@ import java.util.List;
 
 public class Utility
 {
+    //返回Json数据的companyID值
+    public static String getCompanyID(String response)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray dataArray = jsonObject.getJSONArray("datas");
+            JSONObject dataObject = dataArray.getJSONObject(0);
+            String companyID = dataObject.getString("companyId");
+            return companyID;
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return "000";
+    }
+
+    //返回Json数据的userID值
+    public static String getUserID(String response)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray dataArray = jsonObject.getJSONArray("datas");
+            JSONObject dataObject = dataArray.getJSONObject(0);
+            String userID = dataObject.getString("id");
+            return  userID;
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return "000";
+    }
 
     //返回Json数据的message值
     public static String checkMessage(String response)
@@ -60,7 +94,25 @@ public class Utility
     }
 
     //refresh more
-
+    public static List<Notice> handlNoticeList(String response)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                JSONArray jsonArray = dataObject.getJSONArray("content");
+                String noticeJson = jsonArray.toString();
+                return new Gson().fromJson(noticeJson, new TypeToken<List<Notice>>() {}.getType());
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
     /**
      * 将图片转换成Base64编码的字符串

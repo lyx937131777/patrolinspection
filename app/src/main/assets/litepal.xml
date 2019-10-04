@@ -1,12 +1,12 @@
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<litepal>-->
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
 
-<!--    <dbname value="patrol_inspection" />-->
+    <dbname value="patrol_inspection" />
 
-<!--    <version value="1" />-->
+    <version value="2" />
 
-<!--    <list>-->
-<!--        <mapping class="com.example.patrolinspection.db.Event" />-->
-<!--    </list>-->
+    <list>
+        <mapping class="com.example.patrolinspection.db.Notice" />
+    </list>
 
-<!--</litepal>-->
+</litepal>

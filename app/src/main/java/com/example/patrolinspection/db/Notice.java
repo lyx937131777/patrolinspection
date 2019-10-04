@@ -1,16 +1,38 @@
 package com.example.patrolinspection.db;
 
-public class Notice
+import com.google.gson.annotations.SerializedName;
+
+import org.litepal.crud.LitePalSupport;
+
+public class Notice extends LitePalSupport
 {
+    @SerializedName("id")
+    private String internetID;
+    @SerializedName("releaseTime")
     private String date;
     private String title;
     private String content;
 
-    public Notice(String date, String title, String content)
+    public Notice(){
+
+    }
+
+    public Notice(String internetID, String date, String title, String content)
     {
+        this.internetID = internetID;
         this.date = date;
         this.title = title;
         this.content = content;
+    }
+
+    public String getInternetID()
+    {
+        return internetID;
+    }
+
+    public void setInternetID(String internetID)
+    {
+        this.internetID = internetID;
     }
 
     public String getDate()

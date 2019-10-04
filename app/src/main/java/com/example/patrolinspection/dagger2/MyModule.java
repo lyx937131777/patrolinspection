@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.example.patrolinspection.presenter.LoginPresenter;
+import com.example.patrolinspection.presenter.NoticePresenter;
 import com.example.patrolinspection.util.CheckUtil;
 
 import dagger.Module;
@@ -41,5 +42,10 @@ public class MyModule
     public LoginPresenter provideLoginPresenter(Context context, SharedPreferences pref, CheckUtil checkUtil)
     {
         return new LoginPresenter(context,pref,checkUtil);
+    }
+
+    @Provides
+    public NoticePresenter provideNoticePresenter(Context context, SharedPreferences pref){
+        return  new NoticePresenter(context, pref);
     }
 }
