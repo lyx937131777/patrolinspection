@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.patrolinspection.LoginActivity;
 import com.example.patrolinspection.MainActivity;
+import com.example.patrolinspection.NoticeActivity;
 import com.example.patrolinspection.util.CheckUtil;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;

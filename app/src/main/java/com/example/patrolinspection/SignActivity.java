@@ -3,13 +3,17 @@ package com.example.patrolinspection;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.CardView;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.patrolinspection.util.LogUtil;
+
 public class SignActivity extends AppCompatActivity
 {
 
+    private AppCompatCheckBox checkBox;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -24,6 +28,7 @@ public class SignActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        checkBox = findViewById(R.id.sign_defend_school);
         CardView signIn = findViewById(R.id.sign_in);
         CardView signOut = findViewById(R.id.sign_out);
         signIn.setOnClickListener(new View.OnClickListener()
@@ -34,6 +39,11 @@ public class SignActivity extends AppCompatActivity
                 Intent intent = new Intent(SignActivity.this, SwipeCardActivity.class);
                 intent.putExtra("type","signIn");
                 intent.putExtra("title","签到");
+                if(checkBox.isChecked()){
+                    intent.putExtra("attendanceType","school");
+                }else{
+                    intent.putExtra("attendanceType","common");
+                }
                 startActivity(intent);
             }
         });
@@ -45,6 +55,11 @@ public class SignActivity extends AppCompatActivity
                 Intent intent = new Intent(SignActivity.this, SwipeCardActivity.class);
                 intent.putExtra("type","signOut");
                 intent.putExtra("title","签退");
+                if(checkBox.isChecked()){
+                    intent.putExtra("attendanceType","school");
+                }else{
+                    intent.putExtra("attendanceType","common");
+                }
                 startActivity(intent);
             }
         });

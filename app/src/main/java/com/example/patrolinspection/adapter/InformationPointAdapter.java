@@ -1,7 +1,6 @@
 package com.example.patrolinspection.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,23 +10,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.patrolinspection.DataUpdatingActivity;
+import com.example.patrolinspection.PatrolingActivity;
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.db.InformationPoint;
-import com.example.patrolinspection.db.PatrolInspection;
+import com.example.patrolinspection.db.PatrolPointRecord;
+import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+
+import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class InformationPointAdapter extends RecyclerView.Adapter<InformationPointAdapter.ViewHolder>
 {
     private Context mContext;
-    private List<InformationPoint> mList;
-    private InformationPoint temppIP;
+    private List<PatrolPointRecord> mList;
+    private PatrolPointRecord tempPointRecord;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -50,9 +53,17 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
         }
     }
 
-    public InformationPointAdapter(List<InformationPoint> informationPointList)
+    public InformationPointAdapter(List<PatrolPointRecord> patrolPointRecordList)
     {
-        mList = informationPointList;
+        mList = patrolPointRecordList;
+        Collections.sort(mList, new Comparator<PatrolPointRecord>()
+        {
+            @Override
+            public int compare(PatrolPointRecord o1, PatrolPointRecord o2)
+            {
+                return Integer.parseInt(o1.getOrderNo())-Integer.parseInt(o2.getOrderNo());
+            }
+        });
     }
 
     @NonNull
@@ -71,17 +82,17 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
             public void onClick(View v)
             {
                 int position = holder.getAdapterPosition();
-                InformationPoint informationPoint = mList.get(position);
-                if(informationPoint.getState().equals("未巡检")){
+                PatrolPointRecord patrolPointRecord = mList.get(position);
+                if(patrolPointRecord.getState().equals("未巡检")){
                     Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                    String time =  format.format(calendar.getTime());
-                    informationPoint.setTime(time);
-                    informationPoint.setState("巡检中");
-                    if(temppIP != null){
-                        temppIP.setState("已巡检");
+                    patrolPointRecord.setTime(calendar.getTimeInMillis());
+                    patrolPointRecord.setState("巡检中");
+                    if(tempPointRecord != null){
+                        tempPointRecord.setState("已巡检");
+                        tempPointRecord.save();
                     }
-                    temppIP = informationPoint;
+                    tempPointRecord = patrolPointRecord;
+                    ((PatrolingActivity)mContext).addCount();
                     notifyDataSetChanged();
                 }
 //                Intent intent = new Intent(mContext, SwipeCardActivity.class);
@@ -96,12 +107,20 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
     @Override
     public void onBindViewHolder(@NonNull InformationPointAdapter.ViewHolder holder, int position)
     {
-        InformationPoint informationPoint = mList.get(position);
+        PatrolPointRecord patrolPointRecord = mList.get(position);
+        String pointID = patrolPointRecord.getPointId();
+        InformationPoint informationPoint = LitePal.where("internetID = ?",pointID).findFirst(InformationPoint.class);
         holder.ipName.setText(informationPoint.getName());
-        holder.ipNum.setText(""+informationPoint.getNum());
-        Glide.with(mContext).load(MapUtil.get(informationPoint.getState())).into(holder.ipState);
-        holder.ipStateText.setText(informationPoint.getState());
-        holder.ipTime.setText(informationPoint.getTime());
+        holder.ipNum.setText(patrolPointRecord.getOrderNo());
+        Glide.with(mContext).load(MapUtil.getState(patrolPointRecord.getState())).into(holder.ipState);
+        holder.ipStateText.setText(patrolPointRecord.getState());
+        long time = patrolPointRecord.getTime();
+        if(time != 0){
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+            holder.ipTime.setText(format.format(new Date(time)));
+        }else {
+            holder.ipTime.setText("");
+        }
     }
 
     @Override

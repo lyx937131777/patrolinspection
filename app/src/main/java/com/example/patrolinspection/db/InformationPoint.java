@@ -1,9 +1,17 @@
 package com.example.patrolinspection.db;
 
-public class InformationPoint
+import com.google.gson.annotations.SerializedName;
+
+import org.litepal.crud.LitePalSupport;
+
+public class InformationPoint extends LitePalSupport
 {
-    private int num;
-    private String id;
+    private String companyId;
+    @SerializedName("pointNo")
+    private String num;
+    @SerializedName("id")
+    private String internetID;
+    @SerializedName("pointName")
     private String name;
     private String longitude;
     private String latitude;
@@ -12,32 +20,42 @@ public class InformationPoint
     private String time;
     private String state;
 
-    public InformationPoint(int num, String id, String name)
+    public InformationPoint(String num, String internetID, String name)
     {
         this.num = num;
-        this.id = id;
+        this.internetID = internetID;
         this.name = name;
         state = "未巡检";
     }
 
-    public int getNum()
+    public String getCompanyId()
+    {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId)
+    {
+        this.companyId = companyId;
+    }
+
+    public String getNum()
     {
         return num;
     }
 
-    public void setNum(int num)
+    public void setNum(String num)
     {
         this.num = num;
     }
 
-    public String getId()
+    public String getInternetID()
     {
-        return id;
+        return internetID;
     }
 
-    public void setId(String id)
+    public void setInternetID(String internetID)
     {
-        this.id = id;
+        this.internetID = internetID;
     }
 
     public String getName()

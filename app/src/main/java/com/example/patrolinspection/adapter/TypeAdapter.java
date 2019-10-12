@@ -10,20 +10,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.DataUpdatingActivity;
 import com.example.patrolinspection.NfcActivity;
 import com.example.patrolinspection.NoticeActivity;
-import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.PatrolLineActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SignActivity;
 import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.SystemParameterActivity;
-import com.example.patrolinspection.TestActivity;
-import com.example.patrolinspection.db.Notice;
+import com.example.patrolinspection.EventRecordActivity;
 import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.util.LogUtil;
 
@@ -111,7 +108,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "eventList":{
-                        Intent intent = new Intent(mContext, TestActivity.class);
+                        Intent intent = new Intent(mContext, EventRecordActivity.class);
                         mContext.startActivity(intent);
                         break;
                     }

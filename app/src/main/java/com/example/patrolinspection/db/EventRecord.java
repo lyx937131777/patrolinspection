@@ -1,106 +1,106 @@
 package com.example.patrolinspection.db;
 
-public class EventRecord
+import com.google.gson.annotations.SerializedName;
+
+import org.litepal.crud.LitePalSupport;
+
+import java.util.List;
+
+public class EventRecord extends LitePalSupport
 {
-    private int id;
-    private String operate;
-    private int operatorID;
-    private String startTime;
-    private String latestTime;
-    private int eventID;
-    private int PatrolRecordID;
-    private int informationPointID;
+    @SerializedName("id")
+    private String internetID;
+    private String eventId;
+    private String companyId;
+    private String policeId;
 
-    public EventRecord(int id, String operate, int operatorID, String startTime,
-                       String latestTime, int eventID, int patrolRecordID, int informationPointID)
+    private String disposalOperateType;
+
+    private String PatrolRecordId;
+    private String pointId;
+
+//    private String startTime;
+//    private String latestTime;
+
+    private List<HandleRecord> disposalRecordInfos;
+
+    public String getInternetID()
     {
-        this.id = id;
-        this.operate = operate;
-        this.operatorID = operatorID;
-        this.startTime = startTime;
-        this.latestTime = latestTime;
-        this.eventID = eventID;
-        PatrolRecordID = patrolRecordID;
-        this.informationPointID = informationPointID;
+        return internetID;
     }
 
-    public int getId()
+    public void setInternetID(String internetID)
     {
-        return id;
+        this.internetID = internetID;
     }
 
-    public void setId(int id)
+    public String getEventId()
     {
-        this.id = id;
+        return eventId;
     }
 
-    public String getOperate()
+    public void setEventId(String eventId)
     {
-        return operate;
+        this.eventId = eventId;
     }
 
-    public void setOperate(String operate)
+    public String getCompanyId()
     {
-        this.operate = operate;
+        return companyId;
     }
 
-    public int getOperatorID()
+    public void setCompanyId(String companyId)
     {
-        return operatorID;
+        this.companyId = companyId;
     }
 
-    public void setOperatorID(int operatorID)
+    public String getPoliceId()
     {
-        this.operatorID = operatorID;
+        return policeId;
     }
 
-    public String getStartTime()
+    public void setPoliceId(String policeId)
     {
-        return startTime;
+        this.policeId = policeId;
     }
 
-    public void setStartTime(String startTime)
+    public String getDisposalOperateType()
     {
-        this.startTime = startTime;
+        return disposalOperateType;
     }
 
-    public String getLatestTime()
+    public void setDisposalOperateType(String disposalOperateType)
     {
-        return latestTime;
+        this.disposalOperateType = disposalOperateType;
     }
 
-    public void setLatestTime(String latestTime)
+    public String getPatrolRecordId()
     {
-        this.latestTime = latestTime;
+        return PatrolRecordId;
     }
 
-    public int getEventID()
+    public void setPatrolRecordId(String patrolRecordId)
     {
-        return eventID;
+        PatrolRecordId = patrolRecordId;
     }
 
-    public void setEventID(int eventID)
+    public String getPointId()
     {
-        this.eventID = eventID;
+        return pointId;
     }
 
-    public int getPatrolRecordID()
+    public void setPointId(String pointId)
     {
-        return PatrolRecordID;
+        this.pointId = pointId;
     }
 
-    public void setPatrolRecordID(int patrolRecordID)
+    public List<HandleRecord> getDisposalRecordInfos()
     {
-        PatrolRecordID = patrolRecordID;
+        return disposalRecordInfos;
     }
 
-    public int getInformationPointID()
+    public void setDisposalRecordInfos(List<HandleRecord> disposalRecordInfos)
     {
-        return informationPointID;
-    }
-
-    public void setInformationPointID(int informationPointID)
-    {
-        this.informationPointID = informationPointID;
+        this.disposalRecordInfos = disposalRecordInfos;
     }
 }

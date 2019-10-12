@@ -1,99 +1,79 @@
 package com.example.patrolinspection.db;
 
-public class HandleRecord
+import com.google.gson.annotations.SerializedName;
+
+import org.litepal.crud.LitePalSupport;
+
+public class HandleRecord extends LitePalSupport
 {
-    private int id;
-    private int eventRecordID;
-    private String operate;
-    private int operatorID;
-    private String time;
-    private String img;
-    private String remarks;
+    @SerializedName("id")
+    private String internetID;
+    private String eventRecordID;
+    private String policeId;
+    private String photo;
+    @SerializedName("operateime")
+    private String operateTime;
+    private String detail;
     private String reportUnit;
 
-    private String operator;
-
-    public HandleRecord(int id, int eventRecordID, String operate, int operatorID, String time,
-                        String img, String remarks, String reportUnit)
+    public String getInternetID()
     {
-        this.id = id;
-        this.eventRecordID = eventRecordID;
-        this.operate = operate;
-        this.operatorID = operatorID;
-        this.time = time;
-        this.img = img;
-        this.remarks = remarks;
-        this.reportUnit = reportUnit;
+        return internetID;
     }
 
-    public int getId()
+    public void setInternetID(String internetID)
     {
-        return id;
+        this.internetID = internetID;
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    public int getEventRecordID()
+    public String getEventRecordID()
     {
         return eventRecordID;
     }
 
-    public void setEventRecordID(int eventRecordID)
+    public void setEventRecordID(String eventRecordID)
     {
         this.eventRecordID = eventRecordID;
     }
 
-    public String getOperate()
+    public String getPoliceId()
     {
-        return operate;
+        return policeId;
     }
 
-    public void setOperate(String operate)
+    public void setPoliceId(String policeId)
     {
-        this.operate = operate;
+        this.policeId = policeId;
     }
 
-    public int getOperatorID()
+    public String getPhoto()
     {
-        return operatorID;
+        return photo;
     }
 
-    public void setOperatorID(int operatorID)
+    public void setPhoto(String photo)
     {
-        this.operatorID = operatorID;
+        this.photo = photo;
     }
 
-    public String getTime()
+    public String getOperateTime()
     {
-        return time;
+        return operateTime;
     }
 
-    public void setTime(String time)
+    public void setOperateTime(String operateTime)
     {
-        this.time = time;
+        this.operateTime = operateTime;
     }
 
-    public String getImg()
+    public String getDetail()
     {
-        return img;
+        return detail;
     }
 
-    public void setImg(String img)
+    public void setDetail(String detail)
     {
-        this.img = img;
-    }
-
-    public String getRemarks()
-    {
-        return remarks;
-    }
-
-    public void setRemarks(String remarks)
-    {
-        this.remarks = remarks;
+        this.detail = detail;
     }
 
     public String getReportUnit()
@@ -104,15 +84,5 @@ public class HandleRecord
     public void setReportUnit(String reportUnit)
     {
         this.reportUnit = reportUnit;
-    }
-
-    public String getOperator()
-    {
-        return operator;
-    }
-
-    public void setOperator(String operator)
-    {
-        this.operator = operator;
     }
 }

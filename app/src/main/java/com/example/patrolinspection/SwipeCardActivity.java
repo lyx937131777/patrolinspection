@@ -41,7 +41,7 @@ public class SwipeCardActivity extends AppCompatActivity
                 switch (type){
                     case "patrolInspection":{
                         Intent intent = new Intent(SwipeCardActivity.this, FaceRecognitionActivity.class);
-                        intent.putExtra("line",getIntent().getStringExtra("line"));
+                        intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
                         startActivity(intent);
                         break;
                     }
@@ -50,11 +50,13 @@ public class SwipeCardActivity extends AppCompatActivity
                         Intent intent = new Intent(SwipeCardActivity.this, SignInOutActivity.class);
                         intent.putExtra("type",type);
                         intent.putExtra("title",title);
+                        intent.putExtra("attendanceType",getIntent().getStringExtra("attendanceType"));
                         startActivity(intent);
                         break;
                     }
                     case "eventFound":{
                         Intent intent = new Intent(SwipeCardActivity.this,EventFoundActivity.class);
+                        intent.putExtra("type","normal");
                         startActivity(intent);
                         break;
                     }

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">上海巡检</string>
 
+    <string name="password">123456</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

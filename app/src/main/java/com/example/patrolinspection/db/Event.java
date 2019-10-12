@@ -1,21 +1,34 @@
 package com.example.patrolinspection.db;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.litepal.crud.LitePalSupport;
 
 public class Event extends LitePalSupport
 {
-    private int id;
+    @SerializedName("id")
+    private String internetID;
+    private String companyId;
+    @SerializedName("eventType")
     private String type;
+    @SerializedName("eventName")
     private String name;
+    @SerializedName("eventNo")
     private String num;
+    @SerializedName("eventRank")
     private String rank;
+    @SerializedName("share")
     private boolean isShare;
+    @SerializedName("isdefault")
     private boolean isDefault;
 
-    public Event(int id, String type, String name, String num, String rank, boolean isShare,
+    public Event(){
+
+    }
+    public Event(String internetID, String type, String name, String num, String rank, boolean isShare,
                  boolean isDefault)
     {
-        this.id = id;
+        this.internetID = internetID;
         this.type = type;
         this.name = name;
         this.num = num;
@@ -24,14 +37,24 @@ public class Event extends LitePalSupport
         this.isDefault = isDefault;
     }
 
-    public int getId()
+    public String getInternetID()
     {
-        return id;
+        return internetID;
     }
 
-    public void setId(int id)
+    public void setInternetID(String internetID)
     {
-        this.id = id;
+        this.internetID = internetID;
+    }
+
+    public String getCompanyId()
+    {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId)
+    {
+        this.companyId = companyId;
     }
 
     public String getType()

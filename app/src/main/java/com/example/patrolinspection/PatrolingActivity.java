@@ -4,29 +4,54 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.patrolinspection.adapter.InformationPointAdapter;
-import com.example.patrolinspection.adapter.PatrolInspectionAdapter;
-import com.example.patrolinspection.adapter.PatrolLineAdapter;
+import com.example.patrolinspection.dagger2.DaggerMyComponent;
+import com.example.patrolinspection.dagger2.MyComponent;
+import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.InformationPoint;
-import com.example.patrolinspection.db.PatrolInspection;
+import com.example.patrolinspection.db.PatrolIP;
+import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolPointRecord;
+import com.example.patrolinspection.db.PatrolRecord;
+import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.presenter.PatrolingPresenter;
+import com.example.patrolinspection.util.Utility;
 
+import org.litepal.LitePal;
+
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PatrolingActivity extends AppCompatActivity
 {
-    private InformationPoint[] informationPoints = {new InformationPoint(1,"ABC","正门"),new InformationPoint(2,"ABC","食堂"),
-            new InformationPoint(3,"ABC","图书馆"),new InformationPoint(4,"ABC","理科楼"),new InformationPoint(5,"ABC","毛像"),
-            new InformationPoint(6,"ABC","操场操场操场操场"),new InformationPoint(7,"AC","物理楼科技楼地理楼信息楼"),new InformationPoint(8,"ABC","后门")};
-    private List<InformationPoint> informationPointList = new ArrayList<>();
+    private List<PatrolPointRecord> patrolPointRecordList = new ArrayList<>();
     private InformationPointAdapter adapter;
+
+    private TextView ipCount;
+    private Button eventFound;
+    private Button eventHandle;
+    private Button endPatrol;
+
+    private String recordID;
+    private PatrolRecord patrolRecord;
+    private PatrolSchedule patrolSchedule;
+    private String lineID;
+    private PatrolLine patrolLine;
+
+    private int countAll;
+    private int countPatrolled;
+
+    private PatrolingPresenter patrolingPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -40,17 +65,25 @@ public class PatrolingActivity extends AppCompatActivity
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        MyComponent myComponent = DaggerMyComponent.builder().myModule(new MyModule(this)).build();
+        patrolingPresenter = myComponent.patrolingPresenter();
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("line");
-        actionBar.setTitle(title);
+        recordID = intent.getStringExtra("record");
+        patrolRecord = LitePal.where("internetID = ?",recordID).findFirst(PatrolRecord.class);
+        patrolSchedule = LitePal.where("internetID = ?",patrolRecord.getPatrolScheduleId()).findFirst(PatrolSchedule.class);
+        lineID = patrolSchedule.getPatrolLineId();
+        patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
+        actionBar.setTitle(patrolLine.getPatrolLineName());
 
 
-        String startTime = "10:00";
-        String endTime = "11:00";
-        int duringTime = 60 ;
-        int limit = 15;
+        final String startTime = Utility.hmsToHm(patrolSchedule.getStartTime());
+        String endTime = Utility.hmsToHm(patrolSchedule.getEndTime());
+        int duringTime = 60 ;//待修改
+        int limit = Integer.valueOf(patrolSchedule.getErrorRange());
+        Date date = new Time(patrolRecord.getStartTimeLong());
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String realStartTime =  format.format(calendar.getTime());
         calendar.add(Calendar.MINUTE,duringTime-limit);
@@ -64,22 +97,59 @@ public class PatrolingActivity extends AppCompatActivity
         TextView lineInformation = findViewById(R.id.line_information);
         lineInformation.setText(stringBuilder.toString());
 
+        ipCount = findViewById(R.id.ip_count);
         initIP();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new InformationPointAdapter(informationPointList);
+        adapter = new InformationPointAdapter(patrolPointRecordList);
         recyclerView.setAdapter(adapter);
+
+        eventFound = findViewById(R.id.event_found);
+        eventHandle = findViewById(R.id.event_handle);
+        endPatrol = findViewById(R.id.end_patrol);
+        eventFound.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent2 = new Intent(PatrolingActivity.this, EventFoundActivity.class);
+                intent2.putExtra("type","patrol");
+                intent2.putExtra("line",lineID);
+                startActivity(intent2);
+            }
+        });
+        eventHandle.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
+
+        endPatrol.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                patrolingPresenter.endPatrol(recordID);
+            }
+        });
     }
 
     private void initIP()
     {
-        informationPointList.clear();
-        //DataSupport.deleteAll(Type.class);
-        for (int i = 0; i < informationPoints.length; i++)
-        {
-            informationPointList.add(informationPoints[i]);
+        patrolPointRecordList.clear();
+        List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
+        for(PatrolIP patrolIP : patrolIPList){
+            PatrolPointRecord patrolPointRecord = new PatrolPointRecord(recordID,patrolIP);
+            patrolPointRecordList.add(patrolPointRecord);
+            patrolPointRecord.save();
         }
+        countAll = patrolPointRecordList.size();
+        countPatrolled = 0;
+        ipCount.setText(countPatrolled + "/" + countAll);
     }
 
 
@@ -93,5 +163,10 @@ public class PatrolingActivity extends AppCompatActivity
                 break;
         }
         return true;
+    }
+
+    public void addCount(){
+        countPatrolled++;
+        ipCount.setText(countPatrolled + "/" + countAll);
     }
 }

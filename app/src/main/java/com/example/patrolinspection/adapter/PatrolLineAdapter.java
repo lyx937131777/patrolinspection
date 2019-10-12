@@ -10,18 +10,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.db.PatrolInspection;
-import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolSchedule;
+
+import org.litepal.LitePal;
 
 import java.util.List;
 
 public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.ViewHolder>
 {
     private Context mContext;
-    private List<PatrolInspection> mList;
+    private List<PatrolSchedule> mList;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -40,14 +41,14 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
         }
     }
 
-    public PatrolLineAdapter(List<PatrolInspection> patrolInspectionList)
+    public PatrolLineAdapter(List<PatrolSchedule> patrolScheduleList)
     {
-        mList = patrolInspectionList;
+        mList = patrolScheduleList;
     }
 
     @NonNull
     @Override
-    public PatrolLineAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public PatrolLineAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType)
     {
         if(mContext == null)
         {
@@ -61,9 +62,10 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
             public void onClick(View v)
             {
                 int position = holder.getAdapterPosition();
-                PatrolInspection patrolInspection = mList.get(position);
+                PatrolSchedule patrolSchedule = mList.get(position);
                 Intent intent = new Intent(mContext, PatrolInspectionActivity.class);
-                intent.putExtra("line",patrolInspection.getName());
+                intent.putExtra("line",patrolSchedule.getPatrolLineId());
+                intent.putExtra("plan",patrolSchedule.getPatrolPlanId());
                 mContext.startActivity(intent);
             }
         });
@@ -73,10 +75,12 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull PatrolLineAdapter.ViewHolder holder, int position)
     {
-        PatrolInspection patrolInspection = mList.get(position);
-        holder.piName.setText(patrolInspection.getName());
-        Glide.with(mContext).load(MapUtil.get(patrolInspection.getState())).into(holder.piState);
-        holder.piStateText.setText(patrolInspection.getState());
+        PatrolSchedule patrolSchedule = mList.get(position);
+        String lineID = patrolSchedule.getPatrolLineId();
+        PatrolLine patrolLine = LitePal.where("internetId = ?",lineID).findFirst(PatrolLine.class);
+        holder.piName.setText(patrolLine.getPatrolLineName());
+//        Glide.with(mContext).load(MapUtil.getState(patrolInspection.getState())).into(holder.piState);
+        holder.piStateText.setText(patrolLine.getPatrolLineNo());
     }
 
     @Override

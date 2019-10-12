@@ -8,20 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.patrolinspection.adapter.PatrolInspectionAdapter;
-import com.example.patrolinspection.db.PatrolInspection;
+import com.example.patrolinspection.db.PatrolRecord;
+import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolSchedule;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PatrolInspectionActivity extends AppCompatActivity
 {
-    private PatrolInspection[] patrolInspections = {new PatrolInspection("线路1","进行中","10:00","11:00","60min"),
-            new PatrolInspection("线路2","未开始","12:00","14:00","120min"),
-            new PatrolInspection("线路3","已结束","7:00","8:30","90min"),
-            new PatrolInspection("线路4","漏检","9:00","9:30","30min"),
-            new PatrolInspection("线路5","跳检","9:30","10:00","30min")};
-    private List<PatrolInspection> patrolInspectionList = new ArrayList<>();
+    private List<PatrolSchedule> patrolScheduleList = new ArrayList<>();
     private PatrolInspectionAdapter adapter;
+
+    private String planID;
+    private String lineID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,25 +40,24 @@ public class PatrolInspectionActivity extends AppCompatActivity
         }
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("line");
+        lineID = intent.getStringExtra("line");
+        planID = intent.getStringExtra("plan");
+        PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
+        String title = patrolLine.getPatrolLineName();
         actionBar.setTitle(title);
 
         initPI();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new PatrolInspectionAdapter(patrolInspectionList);
+        adapter = new PatrolInspectionAdapter(patrolScheduleList);
         recyclerView.setAdapter(adapter);
     }
 
     private void initPI()
     {
-        patrolInspectionList.clear();
-        //DataSupport.deleteAll(Type.class);
-        for (int i = 0; i < patrolInspections.length; i++)
-        {
-            patrolInspectionList.add(patrolInspections[i]);
-        }
+        patrolScheduleList.clear();
+        patrolScheduleList.addAll(LitePal.where("patrolLineId = ? and patrolPlanId = ?",lineID,planID).find(PatrolSchedule.class));
     }
 
     @Override

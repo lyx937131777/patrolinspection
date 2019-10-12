@@ -10,26 +10,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NfcActivity"
+        <activity android:name=".ScheduleListActivity"></activity>
+        <activity android:name=".PlanListActivity" />
+        <activity android:name=".PointListActivity" />
+        <activity android:name=".LineListActivity" />
+        <activity android:name=".EventListActivity" />
+        <activity
+            android:name=".NfcActivity"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
             <intent-filter>
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
         </activity>
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EventListActivity" />
+        <activity android:name=".EventRecordActivity" />
         <activity android:name=".FaceRecognitionActivity" />
         <activity android:name=".PatrolingActivity" />
         <activity android:name=".EventFoundActivity" />
@@ -50,10 +53,22 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.patrolinspection.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.NFC" />
+
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.NFC" />
 
 </manifest>

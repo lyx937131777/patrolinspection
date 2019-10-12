@@ -7,7 +7,10 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.Type;
+import com.example.patrolinspection.util.LogUtil;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        LogUtil.e("Notice main",timestamp.toString());
         initTypes();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);

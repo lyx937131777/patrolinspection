@@ -14,6 +14,7 @@ import com.example.patrolinspection.util.Utility;
 import org.litepal.LitePal;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
@@ -57,7 +58,7 @@ public class NoticePresenter
                 LogUtil.e("Notice",responsData);
                 LitePal.deleteAll(Notice.class);
                 noticeList.clear();
-                noticeList.addAll(Utility.handlNoticeList(responsData));
+                noticeList.addAll(Utility.handleNoticeList(responsData));
                 LitePal.saveAll(noticeList);
                 ((NoticeActivity)context).runOnUiThread(new Runnable()
                 {

@@ -10,19 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.SwipeCardActivity;
-import com.example.patrolinspection.db.PatrolInspection;
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
 public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspectionAdapter.ViewHolder>
 {
     private Context mContext;
-    private List<PatrolInspection> mList;
+    private List<PatrolSchedule> mList;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -45,9 +44,9 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
         }
     }
 
-    public PatrolInspectionAdapter(List<PatrolInspection> patrolInspectionList)
+    public PatrolInspectionAdapter(List<PatrolSchedule> patrolScheduleList)
     {
-        mList = patrolInspectionList;
+        mList = patrolScheduleList;
     }
 
     @NonNull
@@ -66,11 +65,11 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
             public void onClick(View v)
             {
                 int position = holder.getAdapterPosition();
-                PatrolInspection patrolInspection = mList.get(position);
+                PatrolSchedule patrolSchedule = mList.get(position);
                 Intent intent = new Intent(mContext, SwipeCardActivity.class);
                 intent.putExtra("title","用户认证");
                 intent.putExtra("type","patrolInspection");
-                intent.putExtra("line",((PatrolInspectionActivity)mContext).getIntent().getStringExtra("line"));
+                intent.putExtra("schedule",patrolSchedule.getInternetID());
                 mContext.startActivity(intent);
             }
         });
@@ -80,12 +79,12 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
     @Override
     public void onBindViewHolder(@NonNull PatrolInspectionAdapter.ViewHolder holder, int position)
     {
-        PatrolInspection patrolInspection = mList.get(position);
-        holder.piStartTime.setText(patrolInspection.getStartTime());
-        holder.piEndTime.setText(patrolInspection.getEndTime());
-        Glide.with(mContext).load(MapUtil.get(patrolInspection.getState())).into(holder.piState);
-        holder.piStateText.setText(patrolInspection.getState());
-        holder.piDuringTime.setText(patrolInspection.getDuringTime());
+        PatrolSchedule patrolSchedule = mList.get(position);
+        holder.piStartTime.setText(Utility.hmsToHm(patrolSchedule.getStartTime()));
+        holder.piEndTime.setText(Utility.hmsToHm(patrolSchedule.getEndTime()));
+//        Glide.with(mContext).load(MapUtil.getState(patrolInspection.getState())).into(holder.piState);
+//        holder.piStateText.setText(patrolSchedule.getState());
+        holder.piDuringTime.setText("误差范围："+patrolSchedule.getErrorRange()+"分钟");
     }
 
     @Override

@@ -7,8 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.patrolinspection.dagger2.DaggerMyComponent;
+import com.example.patrolinspection.dagger2.MyComponent;
+import com.example.patrolinspection.dagger2.MyModule;
+import com.example.patrolinspection.presenter.FaceRecognitionPresenter;
+
 public class FaceRecognitionActivity extends AppCompatActivity
 {
+    private FaceRecognitionPresenter faceRecognitionPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,15 +30,16 @@ public class FaceRecognitionActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        MyComponent myComponent = DaggerMyComponent.builder().myModule(new MyModule(this)).build();
+        faceRecognitionPresenter = myComponent.faceRecognitionPresenter();
+
         Button startPatrol = findViewById(R.id.start_patrol);
         startPatrol.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(FaceRecognitionActivity.this, PatrolingActivity.class);
-                intent.putExtra("line",getIntent().getStringExtra("line"));
-                startActivity(intent);
+                faceRecognitionPresenter.startPatrol(getIntent().getStringExtra("schedule"));
             }
         });
     }

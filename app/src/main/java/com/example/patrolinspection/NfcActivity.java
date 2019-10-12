@@ -47,8 +47,7 @@ public class NfcActivity extends AppCompatActivity
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         mPendingIntent = PendingIntent.getActivity(this, 0, startIP, 0);
         if (mNfcAdapter == null) {
-            Toast.makeText(NfcActivity.this, "nfc is not available", Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(NfcActivity.this, "nfc功能无法使用", Toast.LENGTH_SHORT).show();
             return;
         }
     }

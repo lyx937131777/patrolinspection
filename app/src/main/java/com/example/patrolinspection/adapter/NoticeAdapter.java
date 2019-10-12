@@ -6,15 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.Notice;
-import com.example.patrolinspection.db.PatrolInspection;
-import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder>
@@ -69,7 +67,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     public void onBindViewHolder(@NonNull NoticeAdapter.ViewHolder holder, int position)
     {
         Notice notice = mList.get(position);
-        holder.noticeDate.setText(notice.getDate());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String value = simpleDateFormat.format(Utility.stringToDate(notice.getDate()));
+        holder.noticeDate.setText(value);
         holder.noticeTitle.setText(notice.getTitle());
         holder.noticeContent.setText(notice.getContent());
     }
