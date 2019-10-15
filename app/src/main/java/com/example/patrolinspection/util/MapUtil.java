@@ -13,6 +13,7 @@ public class MapUtil
     private static Map<String,String> lineTypeMap = new HashMap<>();
     private static Map<String,String> planTypeMap = new HashMap<>();
     private static Map<String,String> faceTypeMap = new HashMap<>();
+    private static Map<String,String> dutyMap = new HashMap<>();
 
     static {
         stateMap.put("进行中", R.drawable.state_running);
@@ -62,6 +63,21 @@ public class MapUtil
         faceTypeMap.put("signIn","签到");
         faceTypeMap.put("signOut","签退");
 
+        dutyMap.put("1","保安人员");
+        dutyMap.put("2","保安负责");
+        dutyMap.put("3","治安责任人员");
+        dutyMap.put("4","治安服务人员");
+        dutyMap.put("5","治安监督人员");
+        dutyMap.put("6","授权管理人员");
+        dutyMap.put("7","业务绑定人员");
+        dutyMap.put("保安人员","1");
+        dutyMap.put("保安负责","2");
+        dutyMap.put("治安责任人员","3");
+        dutyMap.put("治安服务人员","4");
+        dutyMap.put("治安监督人员","5");
+        dutyMap.put("授权管理人员","6");
+        dutyMap.put("业务绑定人员","7");
+
     }
 
     public static int getState(String s){
@@ -82,5 +98,9 @@ public class MapUtil
 
     public static String getFaceType(String s){
         return faceTypeMap.get(s);
+    }
+
+    public static String getDuty(String s){
+        return dutyMap.get(s);
     }
 }

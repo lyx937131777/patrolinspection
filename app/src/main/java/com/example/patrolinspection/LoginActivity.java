@@ -52,8 +52,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            startActivity(intent_login);
 //            finish();
 //        }
-        loginPresenter.login(phoneID);
+
         phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        loginPresenter.login(phoneID);
         TextView textView = findViewById(R.id.text);
         textView.setText("当前设备机号为："+phoneID+"\n未在系统中注册，请注册后重新登录");
         Button login = findViewById(R.id.login);
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             // 登录按钮
             case R.id.login:
-                loginPresenter.login("vcqasfecds3243");
+                loginPresenter.login("vcqasfecds3243");//待修改 phoneID
                 break;
             default:
                 break;

@@ -11,6 +11,7 @@ import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.db.Police;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
@@ -221,6 +222,28 @@ public class Utility
         }
         return null;
     }
+
+    //更新保安列表
+    public static List<Police> handlePoliceList(String response)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                JSONArray jsonArray = dataObject.getJSONArray("content");
+                String policeJson = jsonArray.toString();
+                return new Gson().fromJson(policeJson, new TypeToken<List<Police>>() {}.getType());
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     //更新事件记录列表
     public static List<EventRecord> handleEventRecordList(String response)

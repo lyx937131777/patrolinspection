@@ -75,13 +75,23 @@ public class DataUpdatingActivity extends AppCompatActivity
             }
         });
 
+        policeCard = findViewById(R.id.du_police);
+        policeCard.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(DataUpdatingActivity.this, PoliceListActivity.class);
+                startActivity(intent);
+            }
+        });
+
         updating = findViewById(R.id.data_updating);
         updating.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                LogUtil.e("DataUpdatingActivity","点击按钮");
                 dataUpdatingPresenter.updateAll();
             }
         });

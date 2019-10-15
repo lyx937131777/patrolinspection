@@ -2,10 +2,87 @@ package com.example.patrolinspection.db;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Police
+import org.litepal.crud.LitePalSupport;
+
+public class Police extends LitePalSupport
 {
     @SerializedName("id")
     private String internetID;
     private String realName;
+    private String companyId;
+    private String securityCardNo;
+    private String icCardNo;
+    private String mainDutyId;
 
+    private boolean officialPolice;//true表示保安卡 false表示自建（IC卡）
+
+    public String getInternetID()
+    {
+        return internetID;
+    }
+
+    public void setInternetID(String internetID)
+    {
+        this.internetID = internetID;
+    }
+
+    public String getRealName()
+    {
+        return realName;
+    }
+
+    public void setRealName(String realName)
+    {
+        this.realName = realName;
+    }
+
+    public String getCompanyId()
+    {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId)
+    {
+        this.companyId = companyId;
+    }
+
+    public String getSecurityCardNo()
+    {
+        return securityCardNo;
+    }
+
+    public void setSecurityCardNo(String securityCardNo)
+    {
+        this.securityCardNo = securityCardNo;
+    }
+
+    public String getIcCardNo()
+    {
+        return icCardNo;
+    }
+
+    public void setIcCardNo(String icCardNo)
+    {
+        this.icCardNo = icCardNo;
+    }
+
+    public String getMainDutyId()
+    {
+        return mainDutyId;
+    }
+
+    public void setMainDutyId(String mainDutyId)
+    {
+        this.mainDutyId = mainDutyId;
+    }
+
+    public boolean isOfficialPolice()
+    {
+        return officialPolice;
+    }
+
+    public void setOfficialPolice(boolean officialPolice)
+    {
+        this.officialPolice = officialPolice;
+    }
 }

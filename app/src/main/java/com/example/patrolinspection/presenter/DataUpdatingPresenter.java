@@ -11,6 +11,7 @@ import com.example.patrolinspection.db.PatrolIP;
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
@@ -38,7 +39,41 @@ public class DataUpdatingPresenter
         updatePatrolPlan();
         updatePatrolLine();
         updateEvent();
+        updatePolice();
     }
+
+    public void updatePolice()
+    {
+        String address = HttpUtil.LocalAddress + "/api/police/list";
+        String companyID = pref.getString("companyID",null);
+        String userID = pref.getString("userID",null);
+        HttpUtil.updatingRequest(address, userID, companyID, new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                e.printStackTrace();
+                ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "服务器连接错误", Toast
+                                .LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                final String responsData = response.body().string();
+                LogUtil.e("DataUpdatingSchedule",responsData);
+                List<Police> policeList = Utility.handlePoliceList(responsData);
+                LitePal.deleteAll(Police.class);
+                LitePal.saveAll(policeList);
+            }
+        });
+    }
+
     public void updatePatrolSchedule(){
         String address = HttpUtil.LocalAddress + "/api/schedule/list";
         String companyID = pref.getString("companyID",null);
