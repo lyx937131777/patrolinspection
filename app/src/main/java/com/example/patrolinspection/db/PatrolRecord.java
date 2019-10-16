@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PatrolRecord extends LitePalSupport
 {
@@ -25,6 +26,8 @@ public class PatrolRecord extends LitePalSupport
     private boolean upload;
     private String duringTime;
     private String state;
+
+    private List<PatrolPointRecord> pointPatrolRecords;
 
     public String getInternetID()
     {
@@ -174,5 +177,41 @@ public class PatrolRecord extends LitePalSupport
     public void setUpload(boolean upload)
     {
         this.upload = upload;
+    }
+
+    public List<PatrolPointRecord> getPointPatrolRecords()
+    {
+        return pointPatrolRecords;
+    }
+
+    public void setPointPatrolRecords(List<PatrolPointRecord> pointPatrolRecords)
+    {
+        this.pointPatrolRecords = pointPatrolRecords;
+    }
+
+    public String toHeadString()
+    {
+        return "{" +
+                "\"id\":\"" + internetID + "\"";
+    }
+    public String toTailString()
+    {
+        String t;
+        if(endTime == 0 ){
+            t = "";
+        }else{
+            t = String.valueOf(endTime);
+        }
+        return ", \"patrolScheduleId\":\"" + patrolScheduleId + "\"" +
+                ", \"companyId\":\"" + companyId + "\"" +
+                ", \"policeId\":\"" + policeId + "\"" +
+                ", \"equipmentId\":\"" + equipmentId + "\"" +
+                ", \"patrolTimeStatus\":\"" + patrolTimeStatus + "\"" +
+                ", \"patrolPointStatus\":\"" + patrolPointStatus + "\"" +
+                ", \"isnonrmal\":\"" + isnonrmal + "\"" +
+                ", \"startTime\":\"" + startTimeLong + "\"" +
+                ", \"endTime\":\"" + t + "\"" +
+                ", \"pointPatrolRecords\":" + pointPatrolRecords +
+                '}';
     }
 }

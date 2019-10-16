@@ -1,13 +1,19 @@
 package com.example.patrolinspection.util;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.patrolinspection.R;
+import com.example.patrolinspection.db.PatrolPointRecord;
+import com.example.patrolinspection.db.PatrolRecord;
 import com.google.gson.Gson;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.Authenticator;
 import okhttp3.Callback;
@@ -110,13 +116,17 @@ public class HttpUtil
     public static void endPatrolRequest(String address, String userID, String companyID, String patrolRecordID, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
-        HashMap<String, String> map = new HashMap<>();
-        map.put("companyId",companyID);
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(map);
+        PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
+        List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
+        for(PatrolPointRecord patrolPointRecord : patrolPointRecordList){
+            LogUtil.e("PatrolingPresenter",patrolPointRecord.toString());
+        }
+        patrolRecord.setPointPatrolRecords(patrolPointRecordList);
+        String jsonStr = patrolRecord.toHeadString() + patrolRecord.toTailString();
+        LogUtil.e("HttpUtil",jsonStr);
         RequestBody requestBody = RequestBody.create(JSON, jsonStr);
         String credential = Credentials.basic(userID, "123456");
-        Request request = new Request.Builder().url(address).put(requestBody).addHeader("Authorization",credential).build();
+        Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
     }
 

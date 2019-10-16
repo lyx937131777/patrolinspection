@@ -35,11 +35,10 @@ public class FaceRecognitionPresenter
 
     }
 
-    public void startPatrol(String scheduleId){
+    public void startPatrol(String policeID, String scheduleId){
         String address = HttpUtil.LocalAddress + "/api/patrolRecord";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
-        String policeID = "5";//待修改
         long time = System.currentTimeMillis();
         HttpUtil.startPatrolRequset(address, userID, companyID, policeID, time, scheduleId, new Callback()
         {
@@ -66,9 +65,10 @@ public class FaceRecognitionPresenter
                 Date date = Utility.stringToDate(patrolRecord.getStartTime());
                 patrolRecord.setStartTimeLong(date.getTime());
                 patrolRecord.setUpload(false);
-                LogUtil.e("FaceRecognitionPresenter","long:"+patrolRecord.getStartTimeLong());
                 patrolRecord.setState("进行中");
                 patrolRecord.save();
+
+                LogUtil.e("FaceRecognitionPresenter","long:"+patrolRecord.getStartTimeLong());
                 Intent intent = new Intent(context, PatrolingActivity.class);
                 intent.putExtra("record",patrolRecord.getInternetID());
                 context.startActivity(intent);

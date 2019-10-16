@@ -77,8 +77,8 @@ public class PatrolingActivity extends AppCompatActivity
         actionBar.setTitle(patrolLine.getPatrolLineName());
 
 
-        final String startTime = Utility.hmsToHm(patrolSchedule.getStartTime());
-        String endTime = Utility.hmsToHm(patrolSchedule.getEndTime());
+        final String startTime =patrolSchedule.getStartTime();
+        String endTime = patrolSchedule.getEndTime();
         int duringTime = 60 ;//待修改
         int limit = Integer.valueOf(patrolSchedule.getErrorRange());
         Date date = new Time(patrolRecord.getStartTimeLong());

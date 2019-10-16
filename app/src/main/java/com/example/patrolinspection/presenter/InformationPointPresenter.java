@@ -1,5 +1,6 @@
 package com.example.patrolinspection.presenter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -8,6 +9,7 @@ import com.example.patrolinspection.InformationPointActivity;
 import com.example.patrolinspection.LoginActivity;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.Utility;
 
 import java.io.IOException;
 
@@ -19,12 +21,16 @@ public class InformationPointPresenter
 {
     private Context context;
     private SharedPreferences pref;
+    private ProgressDialog progressDialog;
+
     public InformationPointPresenter(Context context, SharedPreferences pref){
         this.context = context;
         this.pref = pref;
     }
 
     public void register(String id, String name, String longitude, String latitude, String height, String floor){
+        progressDialog = ProgressDialog.show(context,"","上传中...");//待修改
+
         String address = HttpUtil.LocalAddress + "/api/point";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -48,14 +54,24 @@ public class InformationPointPresenter
             {
                 final String responsData = response.body().string();
                 LogUtil.e("IP",responsData);
-                ((InformationPointActivity)context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "信息点创建成功", Toast
-                                .LENGTH_LONG).show();
-                    }
-                });
-                ((InformationPointActivity) context).finish();
+                if(Utility.checkString(responsData,"code").equals("500")){
+                    ((InformationPointActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    ((InformationPointActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "信息点创建成功", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
+                    ((InformationPointActivity) context).finish();
+                }
             }
         });
     }

@@ -13,13 +13,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
+import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
 import com.example.patrolinspection.util.LogUtil;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +40,7 @@ public class SignInOutActivity extends AppCompatActivity
     private String attendanceType;
     private String policeID;
 
+    private TextView nameText;
     private ImageView photoButton;
 
     private SignInOutPresenter signInOutPresenter;
@@ -62,6 +67,9 @@ public class SignInOutActivity extends AppCompatActivity
         type = intent.getStringExtra("type");
         attendanceType = intent.getStringExtra("attendanceType");
         policeID = intent.getStringExtra("police");
+        Police police = LitePal.where("internetID = ?",policeID).findFirst(Police.class);
+        nameText = findViewById(R.id.sign_name);
+        nameText.setText(police.getRealName());
 
         LogUtil.e("SignInOutActivity",title + " " + type + " " + attendanceType + " " + policeID);
 

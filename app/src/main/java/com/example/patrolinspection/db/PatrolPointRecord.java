@@ -10,6 +10,7 @@ public class PatrolPointRecord extends LitePalSupport
     private String pointId;
     private String orderNo;
     private long time;
+
     private String state;
     private String photoBase64;
     private String photoPath;
@@ -101,5 +102,22 @@ public class PatrolPointRecord extends LitePalSupport
     public void setPhotoURL(String photoURL)
     {
         this.photoURL = photoURL;
+    }
+
+    @Override
+    public String toString()
+    {
+        String t;
+        if(time == 0){
+            t = "";
+        }else{
+            t = String.valueOf(time);
+        }
+        return "{" +
+                "\"patrolRecordId\":\"" + patrolRecordId + "\"" +
+                ", \"pointId\":\"" + pointId + "\"" +
+                ", \"orderNo\":\"" + orderNo + "\"" +
+                ", \"time\":\"" + t + "\"" +
+                "}";
     }
 }

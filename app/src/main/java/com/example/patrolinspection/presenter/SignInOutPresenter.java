@@ -30,7 +30,7 @@ public class SignInOutPresenter
         this.pref = pref;
     }
 
-    public void signInOut(String policeID, String imagePath, final String type, final String attendanceType){
+    public void signInOut(final String policeID, String imagePath, final String type, final String attendanceType){
         progressDialog = ProgressDialog.show(context,"","识别中...");
 
         String address = HttpUtil.LocalAddress + "/api/police/face";
@@ -70,7 +70,6 @@ public class SignInOutPresenter
                     String address = HttpUtil.LocalAddress + "/api/attendance";
                     String companyID = pref.getString("companyID",null);
                     String userID = pref.getString("userID",null);
-                    String policeID = "5";//待修改
                     HttpUtil.attendanceRequest(address, userID, companyID, policeID, attendanceType, type, new Callback()
                     {
                         @Override

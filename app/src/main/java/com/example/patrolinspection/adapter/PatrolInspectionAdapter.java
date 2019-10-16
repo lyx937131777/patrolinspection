@@ -81,8 +81,8 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
     public void onBindViewHolder(@NonNull PatrolInspectionAdapter.ViewHolder holder, int position)
     {
         PatrolSchedule patrolSchedule = mList.get(position);
-        holder.piStartTime.setText(Utility.hmsToHm(patrolSchedule.getStartTime()));
-        holder.piEndTime.setText(Utility.hmsToHm(patrolSchedule.getEndTime()));
+        holder.piStartTime.setText(patrolSchedule.getStartTime());
+        holder.piEndTime.setText(patrolSchedule.getEndTime());
 //        Glide.with(mContext).load(MapUtil.getState(patrolInspection.getState())).into(holder.piState);
 //        holder.piStateText.setText(patrolSchedule.getState());
         holder.piDuringTime.setText("误差范围："+patrolSchedule.getErrorRange()+"分钟");

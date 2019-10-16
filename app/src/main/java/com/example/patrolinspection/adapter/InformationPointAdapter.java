@@ -87,6 +87,7 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
                     Calendar calendar = Calendar.getInstance();
                     patrolPointRecord.setTime(calendar.getTimeInMillis());
                     patrolPointRecord.setState("巡检中");
+                    patrolPointRecord.save();
                     if(tempPointRecord != null){
                         tempPointRecord.setState("已巡检");
                         tempPointRecord.save();
@@ -95,10 +96,6 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
                     ((PatrolingActivity)mContext).addCount();
                     notifyDataSetChanged();
                 }
-//                Intent intent = new Intent(mContext, SwipeCardActivity.class);
-//                intent.putExtra("title","用户认证");
-//                intent.putExtra("type","patrolInspection");
-//                mContext.startActivity(intent);
             }
         });
         return holder;
