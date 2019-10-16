@@ -36,7 +36,7 @@ public class SignActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(SignActivity.this, SwipeCardActivity.class);
+                Intent intent = new Intent(SignActivity.this, SwipeNfcActivity.class);
                 intent.putExtra("type","signIn");
                 intent.putExtra("title","签到");
                 if(checkBox.isChecked()){
@@ -52,7 +52,7 @@ public class SignActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(SignActivity.this, SwipeCardActivity.class);
+                Intent intent = new Intent(SignActivity.this, SwipeNfcActivity.class);
                 intent.putExtra("type","signOut");
                 intent.putExtra("title","签退");
                 if(checkBox.isChecked()){

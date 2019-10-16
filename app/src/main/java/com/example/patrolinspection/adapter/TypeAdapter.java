@@ -19,6 +19,7 @@ import com.example.patrolinspection.PatrolLineActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SignActivity;
 import com.example.patrolinspection.SwipeCardActivity;
+import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.SystemParameterActivity;
 import com.example.patrolinspection.EventRecordActivity;
 import com.example.patrolinspection.db.Type;
@@ -101,7 +102,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "eventFound":{
-                        Intent intent = new Intent(mContext, SwipeCardActivity.class);
+                        Intent intent = new Intent(mContext, SwipeNfcActivity.class);
                         intent.putExtra("type",type.getTypeName());
                         intent.putExtra("title",type.getName());
                         mContext.startActivity(intent);

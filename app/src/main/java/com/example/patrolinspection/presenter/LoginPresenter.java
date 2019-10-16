@@ -64,6 +64,16 @@ public class LoginPresenter
                 int state = response.code();
                 final String responsData = response.body().string();
                 LogUtil.e("Login",state +" " + responsData);
+                if(Utility.checkString(responsData,"code").equals("500")){
+                    ((LoginActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
+                    return;
+                }
                 SharedPreferences.Editor editor = pref.edit();
                 String userID = Utility.getUserID(responsData);
                 editor.putString("userID", userID);
@@ -87,6 +97,8 @@ public class LoginPresenter
                             LogUtil.e("Login",responsData);
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("companyID", Utility.getCompanyID(responsData));
+                            editor.putInt("heartbeat",60);//待修改 由系统设置
+                            editor.putInt("heartbeatWork",2);
                             editor.putString("latest", String.valueOf(System.currentTimeMillis()));
                             editor.apply();
                             LogUtil.e("Login","companyID:"+pref.getString("companyID",null));

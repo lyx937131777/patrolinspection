@@ -11,6 +11,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcA;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -23,6 +24,7 @@ import com.example.patrolinspection.psam.BaoAnBasicInfo;
 import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.psam.DBHelper;
 import com.example.patrolinspection.psam.PsamUtil;
+import com.example.patrolinspection.util.LogUtil;
 
 import java.io.IOException;
 
@@ -45,11 +47,16 @@ public class SwipeCardActivity extends AppCompatActivity
     private ProgressDialog mProgressDialog;
     private boolean isCardReading = false;
 
+    private BaoAnBasicInfo info;
+    private byte[] photoInfoBytes;
+
     private int authType = CARD_TYPE_IC;
     /**保安卡*/
     public static final int CARD_TYPE_SECURITY = 1;
     /**IC卡*/
     public static final int CARD_TYPE_IC = 2;
+
+    private String model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,7 +71,7 @@ public class SwipeCardActivity extends AppCompatActivity
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
+        model = Build.MODEL;
         mContext = this;
         //copy 保安数据库
         try {
@@ -81,35 +88,10 @@ public class SwipeCardActivity extends AppCompatActivity
         actionBar.setTitle(title);
         type = intent.getStringExtra("type");
 
-
-
-
-
-        CardView swipeCard = findViewById(R.id.swipe_card);
-        swipeCard.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-        });
     }
 
     private void initReadBak(){
-        try {
-            mPsamUtil = new PsamUtil(mContext);
-        } catch (Exception e) {
-            e.printStackTrace();
-            mPsamUtil = null;
-        } catch (Error e) {
-            e.printStackTrace();
-            mPsamUtil = null;
-        }
-        if(mPsamUtil == null || mPsamUtil.open() < 0){
-            Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
-            if (mPsamUtil != null) mPsamUtil.close();
-        }
+        initPsam();
         //NFC适配器，所有的关于NFC的操作从该适配器进行
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(!ifNFCUse()){
@@ -127,6 +109,26 @@ public class SwipeCardActivity extends AppCompatActivity
                 new String[] { NfcA.class.getName() },
                 new String[] { IsoDep.class.getName() }
         };// 允许扫描的标签类型
+    }
+
+    private void initPsam()
+    {
+        //待修改 可添加其他型号的PSAM处理方法
+        if(model.equals("A2000L")){
+            try {
+                mPsamUtil = new PsamUtil(mContext);
+            } catch (Exception e) {
+                e.printStackTrace();
+                mPsamUtil = null;
+            } catch (Error e) {
+                e.printStackTrace();
+                mPsamUtil = null;
+            }
+            if(mPsamUtil == null || mPsamUtil.open() < 0){
+                Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                if (mPsamUtil != null) mPsamUtil.close();
+            }
+        }
     }
 
     private boolean ifNFCUse() {
@@ -171,11 +173,16 @@ public class SwipeCardActivity extends AppCompatActivity
         super.onNewIntent(intent);
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())||
                 NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
-            if(mPsamUtil != null){
-                processIntent(intent);
-            } else {
-                Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+            if(model.equals("A2000L")){
+                if(mPsamUtil != null){
+                    processIntent(intent);
+                } else {
+                    Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                }
+            }else{//待修改 可添加其他型号的PSAM处理方法
+                Toast.makeText(mContext,"本机无PSAM卡，无法注册保安卡",Toast.LENGTH_LONG).show();
             }
+
         }
     }
 
@@ -192,6 +199,7 @@ public class SwipeCardActivity extends AppCompatActivity
             public void run() {
                 //get TAG from intent
                 String icid = CommonUtil.bytesToHexString(tagFromIntent.getId());
+                LogUtil.e("SwipeCardActivity","icid: " + icid);
                 for (String tech : tagFromIntent.getTechList()) {
                     Log.d(TAG,"tech = " + tech);
                     if(tech.contains("IsoDep")){
@@ -216,49 +224,19 @@ public class SwipeCardActivity extends AppCompatActivity
 
                     byte[] expendInfoBytes = null;
                     byte[] trackInfoBytes = null;
-                    byte[] photoInfoBytes = null;
+                    photoInfoBytes = null;
                     basicInfoBytes = mPsamUtil.getBasicInfo(isodep);
                     photoInfoBytes = mPsamUtil.getPhotoInfo(isodep);
                     //读照片
                     Log.e(TAG, "photoInfoBytes.length = "+photoInfoBytes.length);
-//                    if(photoInfoBytes != null){
-//                        //BitmapImageFactory类需要右键项目Properties--Android--Library--Add... 添加ImageDecoderService项目
-//                        BitmapImageFactory bif = BitmapImageFactory.get(photoInfoBytes);
-//                        Bitmap bm = null;
-//                        if(bif != null){
-//                            bm = bif.getImage();
-//                            if(bm != null){
-//                                Matrix matrix = new Matrix();
-//                                matrix.postScale(2.0f,2.0f); //长和宽放大缩小的比例
-//                                final Bitmap resizeBmp = Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),matrix,true);
-//
-//                                runOnUiThread(new Runnable()
-//                                {
-//                                    @Override
-//                                    public void run()
-//                                    {
-//                                        imgPhoto.setImageBitmap(resizeBmp);
-//                                    }
-//                                });
-//
-//                            }
-//                        }
-//                    }
+
                     //读基础数据
                     if (basicInfoBytes != null){
                         try {
-                            BaoAnBasicInfo info = mPsamUtil.resolveBasicInfo(basicInfoBytes);
+                            info = mPsamUtil.resolveBasicInfo(basicInfoBytes);
                             Log.e(TAG,info.toString());
                             //expendInfoBytes = mPsamUtil.getJGInfo(isodep);
                             //trackInfoBytes = mPsamUtil.getTrackInfo(isodep);
-//                            mName = info.getBaoAnName().replace(" ", "");
-//                            mIdentityCard = info.getId();
-//                            mSecurityCard = info.getBaoAnID();
-//                            String sex = info.getSex();
-//                            String nation = info.getNation();
-//                            String fzjg = info.getFzjg();
-//                            String fzrq = info.getFzrq();
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             ret = "卡数据解析错误";
@@ -279,34 +257,36 @@ public class SwipeCardActivity extends AppCompatActivity
                 }
                 Log.e(TAG, ret);
 
-                switch (type){
-                    case "patrolInspection":{
-                        Intent intent = new Intent(SwipeCardActivity.this, FaceRecognitionActivity.class);
-                        intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
-                        startActivity(intent);
-                        break;
-                    }
-                    case "signIn":
-                    case "signOut":{
-                        Intent intent = new Intent(SwipeCardActivity.this, SignInOutActivity.class);
-                        intent.putExtra("type",type);
-                        intent.putExtra("title",title);
-                        intent.putExtra("attendanceType",getIntent().getStringExtra("attendanceType"));
-                        startActivity(intent);
-                        break;
-                    }
-                    case "eventFound":{
-                        Intent intent = new Intent(SwipeCardActivity.this,EventFoundActivity.class);
-                        intent.putExtra("type","normal");
-                        startActivity(intent);
-                        break;
-                    }
-                    case "securityStaff":{
-                        Intent intent = new Intent(mContext, PoliceRegisterActivity.class);
-                        mContext.startActivity(intent);
-                        break;
-                    }
+                if(authType == CARD_TYPE_IC){
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"未读到保安卡id，请重新读卡",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    Intent intent = new Intent(mContext, PoliceRegisterActivity.class);
+                    String name = info.getBaoAnName().replace(" ", "");
+                    String identityCard = info.getId();
+                    String securityCard = info.getBaoAnID();
+                    String sex = info.getSex();
+                    String nation = info.getNation();
+                    String birth = info.getBarth();
+                    intent.putExtra("name",name);
+                    intent.putExtra("identityCard",identityCard);
+                    intent.putExtra("securityCard",securityCard);
+                    intent.putExtra("sex",sex);
+                    intent.putExtra("nation",nation);
+                    intent.putExtra("birth",birth);
+                    intent.putExtra("photo",photoInfoBytes);
+                    intent.putExtra("icCard",icid);
+                    mContext.startActivity(intent);
+//                          ((SwipeCardActivity)mContext).finish();
                 }
+
+
 //                if (authType == CARD_TYPE_SECURITY && !ret.equals("")){
 //                    Message msg = mHandler.obtainMessage(1);
 //                    msg.obj = ret;

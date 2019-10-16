@@ -197,24 +197,24 @@ public class CommonUtil {
         return matcher.matches();
     }
     
-    public static String readDSN(Context context){
-        try {
-            Class tm = Class.forName("android.telephony.TelephonyManager");
-            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-            Method getDefault = tm.getMethod("getDefault", null);
-            //read dsn
-            Method getDsn = tm.getMethod("getDsn", Context.class);
-            //read csn
-            Method getDsn2 = tm.getMethod("getDsn2", Context.class);
-
-            String dsn = (String)getDsn.invoke(getDefault.invoke(telephonyManager, null),context);
-            String csn = (String)getDsn2.invoke(getDefault.invoke(telephonyManager, null),context);
-//            Log.e("@@@@@", "dsn="+dsn);
-//            Log.e("@@@@@", "csn="+csn);
-            return dsn;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
+//    public static String readDSN(Context context){
+//        try {
+//            Class tm = Class.forName("android.telephony.TelephonyManager");
+//            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+//            Method getDefault = tm.getMethod("getDefault", null);
+//            //read dsn
+//            Method getDsn = tm.getMethod("getDsn", Context.class);
+//            //read csn
+//            Method getDsn2 = tm.getMethod("getDsn2", Context.class);
+//
+//            String dsn = (String)getDsn.invoke(getDefault.invoke(telephonyManager, null),context);
+//            String csn = (String)getDsn2.invoke(getDefault.invoke(telephonyManager, null),context);
+////            Log.e("@@@@@", "dsn="+dsn);
+////            Log.e("@@@@@", "csn="+csn);
+//            return dsn;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
 }

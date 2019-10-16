@@ -112,7 +112,7 @@ public class EventFoundActivity extends AppCompatActivity
             {
                 // 创建File对象，用于存储拍照后的图片
                 long time = System.currentTimeMillis();
-                File outputImage = new File(getExternalCacheDir(), time+".png");
+                File outputImage = new File(getExternalCacheDir(), time+".jpeg");
                 imagePath = outputImage.getAbsolutePath();
                 try
                 {

@@ -105,6 +105,7 @@ public class HttpUtil
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
     }
+
     //结束巡检
     public static void endPatrolRequest(String address, String userID, String companyID, String patrolRecordID, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
@@ -123,11 +124,11 @@ public class HttpUtil
     public static void fileRequest(String address, String userID, File file, okhttp3.Callback callback)
     {
         OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。
-        MediaType fileType = MediaType.parse("image/png");//数据类型为File格式，
+        MediaType fileType = MediaType.parse("image/jpeg");//数据类型为File格式，
         RequestBody fileBody = RequestBody.create(fileType , file );
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file", "1.jpg", fileBody)
+                .addFormDataPart("file", file.getName(), fileBody)
                 .build();
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).addHeader("Authorization",credential).post(requestBody).build();
@@ -168,7 +169,7 @@ public class HttpUtil
         RequestBody fileBody = RequestBody.create(fileType , file );
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file", "1.jpeg", fileBody)
+                .addFormDataPart("file", file.getName(), fileBody)
                 .addFormDataPart("policeId",policeID)
                 .addFormDataPart("faceType",faceType)
                 .build();
@@ -177,7 +178,7 @@ public class HttpUtil
         client.newCall(request).enqueue(callback);
     }
 
-    //新建前端
+    //新建签到
     public static void attendanceRequest(String address, String userID, String companyID, String policeID, String attendanceType, String signType, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
@@ -187,6 +188,39 @@ public class HttpUtil
         map.put("policeId",policeID);
         map.put("attendanceType",attendanceType);
         map.put("signType",signType);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(map);
+        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    //根据卡号查找保安
+    public static void findPoliceByIcCardRequest(String address, String userID, String icCard, okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address + "?cardNo=" + icCard).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    //新建保安
+    public static void postPoliceRequest(String address, String userID, String companyID, String name, String securityCard, String icCard,
+                                         String identityCard, String birth, String sex, String nation, String tel, String duty, String photo, Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
+        HashMap<String, String> map = new HashMap<>();
+        map.put("realName",name);
+        map.put("companyId",companyID);
+        map.put("photo",photo);
+        map.put("securityCardNo",securityCard);
+        map.put("icCardNo",icCard);
+        map.put("identityNo",identityCard);
+        map.put("birthday",birth);
+        map.put("gender",sex);
+        map.put("nation",nation);
+        map.put("telephone",tel);
+        map.put("mainDutyId",duty);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
         RequestBody requestBody = RequestBody.create(JSON, jsonStr);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.R;
+import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.util.Utility;
 
@@ -66,7 +67,7 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
             {
                 int position = holder.getAdapterPosition();
                 PatrolSchedule patrolSchedule = mList.get(position);
-                Intent intent = new Intent(mContext, SwipeCardActivity.class);
+                Intent intent = new Intent(mContext, SwipeNfcActivity.class);
                 intent.putExtra("title","用户认证");
                 intent.putExtra("type","patrolInspection");
                 intent.putExtra("schedule",patrolSchedule.getInternetID());

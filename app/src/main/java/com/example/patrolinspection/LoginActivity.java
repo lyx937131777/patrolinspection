@@ -1,10 +1,14 @@
 package com.example.patrolinspection;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -19,6 +23,7 @@ import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.presenter.LoginPresenter;
+import com.example.patrolinspection.util.LogUtil;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -53,12 +58,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            finish();
 //        }
 
-        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        phoneID = Build.SERIAL;
+//        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         loginPresenter.login(phoneID);
         TextView textView = findViewById(R.id.text);
-        textView.setText("当前设备机号为："+phoneID+"\n未在系统中注册，请注册后重新登录");
+        textView.setText("当前设备机号为：" + phoneID + "\n未在系统中注册，请注册后重新登录");
         Button login = findViewById(R.id.login);
         login.setOnClickListener(this);
+        LogUtil.e("LoginActivity", "手机型号： " + Build.MODEL);
+        LogUtil.e("LoginActivity", "手机品牌： " + Build.BRAND);
+        LogUtil.e("LoginActivity", "手机ID： " + Build.SERIAL);
+        LogUtil.e("LoginActivity", "安卓版本： " + Build.VERSION.RELEASE);
+        LogUtil.e("LoginActivity", "API版本： " + Build.VERSION.SDK_INT);
+
     }
 
     @Override

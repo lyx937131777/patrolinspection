@@ -1,5 +1,7 @@
 package com.example.patrolinspection.util;
 
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -18,7 +20,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -89,6 +94,25 @@ public class Utility
                 JSONObject dataObject = dataArray.getJSONObject(0);
                 String jsonString = dataObject.toString();
                 return  new Gson().fromJson(jsonString, PatrolRecord.class);
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    //获得Police
+    public static Police handlePolice(String response){
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                String jsonString = dataObject.toString();
+                return  new Gson().fromJson(jsonString, Police.class);
             } catch (JSONException e)
             {
                 e.printStackTrace();
@@ -341,5 +365,20 @@ public class Utility
         }
         LogUtil.e("Push:base64",result.length()+"      "+ result);
         return result;
+    }
+
+    //将Bitmap类型的图片转化成file类型，便于上传到服务器
+    public static File saveFile(Bitmap bm, String fileName) throws IOException {
+        String path = Environment.getExternalStorageDirectory() + "/patrol";
+        File dirFile = new File(path);
+        if(!dirFile.exists()){
+            dirFile.mkdir();
+        }
+        File myCaptureFile = new File(path + fileName);
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+        bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+        bos.flush();
+        bos.close();
+        return myCaptureFile;
     }
 }

@@ -30,6 +30,6 @@ public class NfcUtil
                 sb.append('0');
             sb.append(Integer.toHexString(b));
         }
-        return sb.toString();
+        return sb.toString().toUpperCase();
     }
 }

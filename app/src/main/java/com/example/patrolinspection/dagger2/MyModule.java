@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.presenter.EventRecordPresenter;
@@ -12,6 +13,7 @@ import com.example.patrolinspection.presenter.InformationPointPresenter;
 import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.presenter.NoticePresenter;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
+import com.example.patrolinspection.presenter.PoliceRegisterPresenter;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
 import com.example.patrolinspection.util.CheckUtil;
 
@@ -38,6 +40,7 @@ public class MyModule
     {
         return new CheckUtil(context);
     }
+    //待修改 checkutil
 
     @Provides
     public Context provideContext()
@@ -89,5 +92,10 @@ public class MyModule
     @Provides
     public PatrolingPresenter providePatrolingPresenter(Context context, SharedPreferences pref){
         return new PatrolingPresenter(context,pref);
+    }
+
+    @Provides
+    public PoliceRegisterPresenter providePoliceRegisterPresenter(Context context, SharedPreferences pref){
+        return  new PoliceRegisterPresenter(context, pref);
     }
 }
