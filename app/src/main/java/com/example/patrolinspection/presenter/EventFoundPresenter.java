@@ -1,7 +1,10 @@
 package com.example.patrolinspection.presenter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.patrolinspection.EventFoundActivity;
@@ -23,13 +26,16 @@ public class EventFoundPresenter
 {
     private Context context;
     private SharedPreferences pref;
+    private ProgressDialog progressDialog;
 
     public EventFoundPresenter(Context context, SharedPreferences pref){
         this.context = context;
         this.pref = pref;
     }
 
-    public void postEventRecord(String imagePath,final String eventName,final String patrolRecordID,final String pointID,final String detail){
+    public void postEventRecord(final String policeID, String imagePath,final String eventName,final String patrolRecordID,final String pointID,final String detail){
+        progressDialog = ProgressDialog.show(context,"","上传中...");
+
         String address = HttpUtil.LocalAddress + "/api/file";
         final String userID = pref.getString("userID",null);
         HttpUtil.fileRequest(address, userID, new File(imagePath), new Callback()
@@ -45,6 +51,7 @@ public class EventFoundPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                progressDialog.dismiss();
             }
 
             @Override
@@ -55,8 +62,7 @@ public class EventFoundPresenter
                 String photo = Utility.checkString(responsData,"msg");
                 String address = HttpUtil.LocalAddress + "/api/eventRecord";
                 String companyID = pref.getString("companyID",null);
-                String policeID = "5";//待修改
-                String reportUnit = "保安";//待修改
+                String reportUnit = "保安";//待修改 上报单位到底是什么
                 long time = System.currentTimeMillis();
                 Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
                 String eventID = event.getInternetID();
@@ -74,6 +80,7 @@ public class EventFoundPresenter
                                                 .LENGTH_LONG).show();
                                     }
                                 });
+                                progressDialog.dismiss();
                             }
 
                             @Override
@@ -91,7 +98,7 @@ public class EventFoundPresenter
                                     });
                                     ((EventFoundActivity) context).finish();
                                 }
-
+                                progressDialog.dismiss();
                             }
                         });
             }

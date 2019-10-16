@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
@@ -33,6 +34,7 @@ public class SignInOutActivity extends AppCompatActivity
     private String type;
     private String title;
     private String attendanceType;
+    private String policeID;
 
     private ImageView photoButton;
 
@@ -59,6 +61,9 @@ public class SignInOutActivity extends AppCompatActivity
         actionBar.setTitle(title);
         type = intent.getStringExtra("type");
         attendanceType = intent.getStringExtra("attendanceType");
+        policeID = intent.getStringExtra("police");
+
+        LogUtil.e("SignInOutActivity",title + " " + type + " " + attendanceType + " " + policeID);
 
         Button signInOut = findViewById(R.id.sign_in_out);
         signInOut.setText(title);
@@ -68,7 +73,7 @@ public class SignInOutActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 if(imagePath != null){
-                    signInOutPresenter.signInOut(imagePath,type,attendanceType);
+                    signInOutPresenter.signInOut(policeID,imagePath,type,attendanceType);
                 }
 
             }
@@ -125,7 +130,11 @@ public class SignInOutActivity extends AppCompatActivity
                         // 将拍摄的照片显示出来
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
                                 .openInputStream(imageUri));
-                        photoButton.setImageBitmap(bitmap);
+                        LogUtil.e("camera", getContentResolver().openInputStream(imageUri).toString());
+                        LogUtil.e("camera", "imageUri:" + imageUri.toString());
+                        LogUtil.e("camera","imagePath:"+ imagePath);
+//                        photoButton.setImageBitmap(bitmap);
+                        Glide.with(SignInOutActivity.this).load(imageUri).into(photoButton);
                     } catch (Exception e)
                     {
                         e.printStackTrace();

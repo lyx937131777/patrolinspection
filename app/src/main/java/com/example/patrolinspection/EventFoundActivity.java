@@ -19,15 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 
@@ -47,12 +51,15 @@ public class EventFoundActivity extends AppCompatActivity
     private String lineID;
     private String recordID;
     private String pointRecordID;
+    private String policeID;
 
     private Spinner efClass;
     private Spinner efType;
     private ImageView photoButton;
     private EditText detailText;
     private Button eventFound;
+    private TextView nameText;
+    private TextView dutyText;
 
     private List<String> efClassList = new ArrayList<>();
     private List<String> efTypeList = new ArrayList<>();
@@ -90,6 +97,13 @@ public class EventFoundActivity extends AppCompatActivity
             recordID = intent.getStringExtra("record");
             pointRecordID = intent.getStringExtra("pointRecord");
         }
+        policeID = intent.getStringExtra("police");
+        Police police = LitePal.where("internetID = ?",policeID).findFirst(Police.class);
+        nameText = findViewById(R.id.ef_name);
+        nameText.setText(police.getRealName());
+        dutyText = findViewById(R.id.ef_duty);
+        dutyText.setText(MapUtil.getDuty(police.getMainDutyId()));
+
 
         //待修改 policeId intent传
         efClass = findViewById(R.id.ef_class);
@@ -147,7 +161,7 @@ public class EventFoundActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                eventFoundPresenter.postEventRecord(imagePath,typeString,recordID,pointRecordID,detailText.getText().toString());
+                eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointRecordID,detailText.getText().toString());
             }
         });
     }
@@ -231,7 +245,8 @@ public class EventFoundActivity extends AppCompatActivity
                         LogUtil.e("camera", getContentResolver().openInputStream(imageUri).toString());
                         LogUtil.e("camera", "imageUri:" + imageUri.toString());
                         LogUtil.e("camera","imagePath:"+ imagePath);
-                        photoButton.setImageBitmap(bitmap);
+//                        photoButton.setImageBitmap(bitmap);
+                        Glide.with(EventFoundActivity.this).load(imageUri).into(photoButton);
                     } catch (Exception e)
                     {
                         e.printStackTrace();

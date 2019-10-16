@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.patrolinspection.db.Police;
@@ -152,7 +153,7 @@ public class SwipeNfcActivity extends AppCompatActivity
         new Thread(){
             public void run() {
                 //get TAG from intent
-                String icid = CommonUtil.bytesToHexString(tagFromIntent.getId());
+                final String icid = CommonUtil.bytesToHexString(tagFromIntent.getId());
                 LogUtil.e("SwipeCardActivity","icid: " + icid);
                 for (String tech : tagFromIntent.getTechList()) {
                     Log.d(TAG,"tech = " + tech);
@@ -192,7 +193,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, "未查到该保安信息，请确认是否注册", Toast
+                                        Toast.makeText(mContext, "IC卡号："+icid+"，尚未注册！", Toast
                                                 .LENGTH_LONG).show();
                                     }
                                 });
@@ -200,6 +201,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                                 isCardReading = false;
                             }else{
                                 Police internetPolice = Utility.handlePolice(responsData);
+                                internetPolice.save();
                                 processPolice(internetPolice);
                             }
                         }

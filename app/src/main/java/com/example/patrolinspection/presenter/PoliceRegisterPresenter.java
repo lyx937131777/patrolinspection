@@ -1,7 +1,11 @@
 package com.example.patrolinspection.presenter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.patrolinspection.PoliceRegisterActivity;
@@ -22,6 +26,8 @@ public class PoliceRegisterPresenter
     private Context context;
     private SharedPreferences pref;
 
+    private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
     public PoliceRegisterPresenter(Context context, SharedPreferences pref){
         this.context = context;
         this.pref = pref;
@@ -37,6 +43,9 @@ public class PoliceRegisterPresenter
             Toast.makeText(context,"请输入正确的手机号",Toast.LENGTH_LONG).show();
             return;
         }
+//        progressBar = new ProgressBar(context);
+//        progressBar.setVisibility(View.VISIBLE);
+        progressDialog = ProgressDialog.show(context,"","上传中...");
         if(photo != null){
             String address = HttpUtil.LocalAddress + "/api/file";
             String userID = pref.getString("userID",null);
@@ -51,8 +60,10 @@ public class PoliceRegisterPresenter
                         public void run() {
                             Toast.makeText(context, "服务器连接错误", Toast
                                     .LENGTH_LONG).show();
+//                            progressBar.setVisibility(View.GONE);
                         }
                     });
+                    progressDialog.dismiss();
                 }
 
                 @Override
@@ -85,8 +96,10 @@ public class PoliceRegisterPresenter
                     public void run() {
                         Toast.makeText(context, "服务器连接错误", Toast
                                 .LENGTH_LONG).show();
+//                        progressBar.setVisibility(View.GONE);
                     }
                 });
+                progressDialog.dismiss();
             }
 
             @Override
@@ -100,6 +113,7 @@ public class PoliceRegisterPresenter
                         public void run() {
                             Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
                                     .LENGTH_LONG).show();
+//                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 }else{
@@ -110,11 +124,12 @@ public class PoliceRegisterPresenter
                         public void run() {
                             Toast.makeText(context, Utility.checkString(responsData,"注册成功"), Toast
                                     .LENGTH_LONG).show();
+//                            progressBar.setVisibility(View.GONE);
                         }
                     });
                     ((PoliceRegisterActivity) context).finish();
                 }
-
+                progressDialog.dismiss();
             }
         });
     }
