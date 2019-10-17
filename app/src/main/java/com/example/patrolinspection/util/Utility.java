@@ -290,7 +290,7 @@ public class Utility
 
     //后台给的日期格式 转化为日期Date
     public static Date stringToDate(String s){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 //        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
 //        df2.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = null;
@@ -304,7 +304,7 @@ public class Utility
 
     //后台给的日期格式 转化为目标的日期格式字符串
     public static String dateStringToString(String s, String formatString){
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         DateFormat df2 = new SimpleDateFormat(formatString);
         df2.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = null;
@@ -374,7 +374,7 @@ public class Utility
         }
         File myCaptureFile = new File(path + fileName);
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-        bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+        bm.compress(Bitmap.CompressFormat.PNG, 80, bos);
         bos.flush();
         bos.close();
         return myCaptureFile;

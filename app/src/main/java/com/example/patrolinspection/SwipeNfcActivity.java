@@ -228,7 +228,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                 PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",scheduleID).findFirst(PatrolSchedule.class);
                 String lineID = patrolSchedule.getPatrolLineId();
                 PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
-                if(patrolLine.getPoliceIds().contains(police.getInternetID())){
+                if(patrolLine.getPoliceIds() != null && patrolLine.getPoliceIds().contains(police.getInternetID())){
                     if(patrolLine.getPatrolLineType().equals("publicSecurity") && (!police.isOfficialPolice())){
                         runOnUiThread(new Runnable()
                         {

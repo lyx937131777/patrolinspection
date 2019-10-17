@@ -15,6 +15,7 @@ import com.example.patrolinspection.util.Utility;
 import org.litepal.LitePal;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import okhttp3.Call;
@@ -63,6 +64,8 @@ public class FaceRecognitionPresenter
                 PatrolRecord patrolRecord = Utility.handlePatrolRecord(responsData);
                 LogUtil.e("FaceRecognitionPresenter","id:"+patrolRecord.getInternetID() + "  "+patrolRecord.getPatrolScheduleId()+" "+patrolRecord.getStartTime());
                 Date date = Utility.stringToDate(patrolRecord.getStartTime());
+                SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd  HH:mm:ss");
+                LogUtil.e("FaceRecognitionPresenter","startTime:" + ft.format(date));
                 patrolRecord.setStartTimeLong(date.getTime());
                 patrolRecord.setUpload(false);
                 patrolRecord.setState("进行中");

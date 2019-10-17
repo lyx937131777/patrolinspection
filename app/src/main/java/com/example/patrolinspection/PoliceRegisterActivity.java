@@ -131,7 +131,7 @@ public class PoliceRegisterActivity extends AppCompatActivity
                 long time = System.currentTimeMillis();
                 File temp =  null;
                 try{
-                    temp = Utility.saveFile(resizeBmp,time+".jpg");
+                    temp = Utility.saveFile(resizeBmp,time+".png");
                     LogUtil.e("PoliceRegister","abosolutePath: " + temp.getAbsolutePath());
                     LogUtil.e("PoliceRegister","canonicalPath: " + temp.getCanonicalPath());
                     LogUtil.e("PoliceRegister","Path: " + temp.getPath());

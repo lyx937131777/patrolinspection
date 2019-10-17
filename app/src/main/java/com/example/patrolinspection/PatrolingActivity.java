@@ -358,7 +358,7 @@ public class PatrolingActivity extends AppCompatActivity
     public void takePhoto(){
         // 创建File对象，用于存储拍照后的图片
         long time = System.currentTimeMillis();
-        File outputImage = new File(getExternalCacheDir(), time+".jpeg");
+        File outputImage = new File(getExternalCacheDir(), time+".png");
         imagePath = outputImage.getAbsolutePath();
         try
         {
@@ -394,6 +394,7 @@ public class PatrolingActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK)
                 {
                     tempPointRecord.setPhotoPath(imagePath);
+                    tempPointRecord.save();
                     patrolingPresenter.updatePatrol(recordID,false);
                 }
                 break;

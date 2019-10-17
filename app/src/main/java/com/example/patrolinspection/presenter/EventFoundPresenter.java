@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.patrolinspection.EventFoundActivity;
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
@@ -35,6 +36,12 @@ public class EventFoundPresenter
 
     public void postEventRecord(final String policeID, String imagePath,final String eventName,final String patrolRecordID,final String pointID,final String detail){
         progressDialog = ProgressDialog.show(context,"","上传中...");
+
+        if(patrolRecordID != ""){
+            PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
+            patrolRecord.setIsnonrmal("false");
+            patrolRecord.save();
+        }
 
         String address = HttpUtil.LocalAddress + "/api/file";
         final String userID = pref.getString("userID",null);

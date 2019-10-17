@@ -22,6 +22,9 @@ public class PatrolPointRecord extends LitePalSupport
         this.pointId = patrolIP.getPointId();
         this.orderNo = patrolIP.getOrderNo();
         state = "未巡检";
+        photoURL = "";
+        photoPath = "";
+        photoBase64 = "";
     }
 
     public String getOrderNo()

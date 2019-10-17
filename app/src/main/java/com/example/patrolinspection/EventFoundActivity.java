@@ -27,6 +27,10 @@ import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolPointRecord;
+import com.example.patrolinspection.db.PatrolRecord;
+import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.util.LogUtil;
@@ -125,7 +129,7 @@ public class EventFoundActivity extends AppCompatActivity
             {
                 // 创建File对象，用于存储拍照后的图片
                 long time = System.currentTimeMillis();
-                File outputImage = new File(getExternalCacheDir(), time+".jpeg");
+                File outputImage = new File(getExternalCacheDir(), time+".png");
                 imagePath = outputImage.getAbsolutePath();
                 try
                 {
@@ -167,8 +171,9 @@ public class EventFoundActivity extends AppCompatActivity
 
     private void initEventList()
     {
+        efClassList.clear();
         if(type.equals("normal")){
-            efClassList.clear();
+
             Cursor cursor = LitePal.findBySQL("select distinct type from Event");
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -178,6 +183,15 @@ public class EventFoundActivity extends AppCompatActivity
             }
         }else{
             //TODO
+            PatrolRecord patrolRecord = LitePal.where("internetID = ?", recordID).findFirst(PatrolRecord.class);
+            PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolRecord.getPatrolScheduleId()).findFirst(PatrolSchedule.class);
+            PatrolLine patrolLine = LitePal.where("internetID = ?",patrolSchedule.getPatrolLineId()).findFirst(PatrolLine.class);
+            for(String evenID: patrolLine.getEventInfoIds()){
+                Event event = LitePal.where("internetID = ?",evenID).findFirst(Event.class);
+                if(!efClassList.contains(MapUtil.getEventType(event.getType()))){
+                    efClassList.add(MapUtil.getEventType(event.getType()));
+                }
+            }
         }
 
 //        classString = MapUtil.getEventType(efClassList.get(0));
@@ -224,6 +238,14 @@ public class EventFoundActivity extends AppCompatActivity
 
         }else{
             //TODO
+            PatrolRecord patrolRecord = LitePal.where("internetID = ?", recordID).findFirst(PatrolRecord.class);
+            PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolRecord.getPatrolScheduleId()).findFirst(PatrolSchedule.class);
+            PatrolLine patrolLine = LitePal.where("internetID = ?",patrolSchedule.getPatrolLineId()).findFirst(PatrolLine.class);
+            for(Event event : eventList){
+                if(patrolLine.getEventInfoIds().contains(event.getInternetID())){
+                    efTypeList.add(event.getName());
+                }
+            }
         }
         arrayTypeAdapter.notifyDataSetChanged();
     }

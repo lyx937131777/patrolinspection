@@ -95,7 +95,7 @@ public class SignInOutActivity extends AppCompatActivity
             {
                 // 创建File对象，用于存储拍照后的图片
                 long time = System.currentTimeMillis();
-                File outputImage = new File(getExternalCacheDir(), time+".jpeg");
+                File outputImage = new File(getExternalCacheDir(), time+".png");
                 imagePath = outputImage.getAbsolutePath();
                 try
                 {
