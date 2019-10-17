@@ -1,7 +1,9 @@
 package com.example.patrolinspection.presenter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.patrolinspection.DataUpdatingActivity;
@@ -29,10 +31,13 @@ public class DataUpdatingPresenter
 {
     private Context context;
     private SharedPreferences pref;
+    private ProgressDialog progressDialog;
+    private int count;
 
     public DataUpdatingPresenter(Context context, SharedPreferences pref){
         this.context = context;
         this.pref = pref;
+        count = 0;
     }
 
     public void updateAll(){
@@ -44,6 +49,12 @@ public class DataUpdatingPresenter
 
     public void updatePolice()
     {
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
+
         String address = HttpUtil.LocalAddress + "/api/police/list";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -60,6 +71,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -70,11 +86,21 @@ public class DataUpdatingPresenter
                 List<Police> policeList = Utility.handlePoliceList(responsData);
                 LitePal.deleteAll(Police.class);
                 LitePal.saveAll(policeList);
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
         });
     }
 
     public void updatePatrolSchedule(){
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
         String address = HttpUtil.LocalAddress + "/api/schedule/list";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -91,6 +117,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -100,12 +131,28 @@ public class DataUpdatingPresenter
                 LogUtil.e("DataUpdatingSchedule",responsData);
                 List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responsData);
                 LitePal.deleteAll(PatrolSchedule.class);
-                LitePal.saveAll(patrolScheduleList);
+                for(PatrolSchedule patrolSchedule : patrolScheduleList){
+                    String lineID = patrolSchedule.getPatrolLineId();
+                    List<PatrolLine> patrolLineList = LitePal.where("internetID = ?",lineID).find(PatrolLine.class);
+                    if(patrolLineList.size() > 0){
+                        patrolSchedule.save();
+                    }
+                }
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
         });
     }
 
     public void updatePatrolPlan(){
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
         updatePatrolSchedule();
         String address = HttpUtil.LocalAddress + "/api/plan/list";
         String companyID = pref.getString("companyID",null);
@@ -123,6 +170,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -133,12 +185,21 @@ public class DataUpdatingPresenter
                 List<PatrolPlan> patrolPlanList = Utility.handlePatrolPlanList(responsData);
                 LitePal.deleteAll(PatrolPlan.class);
                 LitePal.saveAll(patrolPlanList);
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
         });
     }
 
     public void updateInformationPoint(){
-
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
         String address = HttpUtil.LocalAddress + "/api/point/all";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -155,6 +216,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -165,6 +231,11 @@ public class DataUpdatingPresenter
                 List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responsData);
                 LitePal.deleteAll(InformationPoint.class);
                 LitePal.saveAll(informationPointList);
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
 //                for(InformationPoint informationPoint : informationPointList){
 //                    LogUtil.e("DataUpdating",informationPoint.getInternetID());
 //                    LogUtil.e("DataUpdating",informationPoint.getCompanyId());
@@ -177,11 +248,16 @@ public class DataUpdatingPresenter
     }
 
     public void updatePatrolLine(){
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
         updateInformationPoint();
-        String address = HttpUtil.LocalAddress + "/api/line/list";
+        String address = HttpUtil.LocalAddress + "/api/line/byEquipment";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
-        HttpUtil.updatingRequest(address, userID, companyID, new Callback()
+        HttpUtil.updatingByEquipmentRequest(address, userID, companyID, new Callback()
         {
             @Override
             public void onFailure(Call call, IOException e)
@@ -194,6 +270,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -210,19 +291,15 @@ public class DataUpdatingPresenter
                         for(PatrolIP patrolIP: patrolLine.getPointLineModels()){
                             patrolIP.setPatrolLineID(patrolLine.getInternetID());
                             LogUtil.e("DataUpdatingPatrolLine",patrolIP.getPatrolLineID() + " " + patrolIP.getOrderNo() + " " + patrolIP.getPointId());
-                            if(patrolIP.save()){
-                                LogUtil.e("DataUpdating","save success!");
-                            }else {
-                                LogUtil.e("DataUpdating","save fail！！！");
-                            }
+                            patrolIP.save();
                         }
                     }
                     patrolLine.save();
                 }
-                List<PatrolIP> patrolIPList = LitePal.findAll(PatrolIP.class);
-                LogUtil.e("DataUpdating","Size: " + patrolIPList.size());
-                for(PatrolIP patrolIP : patrolIPList){
-                    LogUtil.e("DataUpdatingPatrolLine",patrolIP.getPatrolLineID() + " " + patrolIP.getOrderNo() + " " + patrolIP.getPointId());
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
                 }
 //                patrolLineList.clear();
 //                patrolLineList.addAll(LitePal.findAll(PatrolLine.class));
@@ -258,6 +335,11 @@ public class DataUpdatingPresenter
     }
 
     public void updateEvent(){
+        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        if(count == 0){
+            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+        }
+        count++;
         String address = HttpUtil.LocalAddress + "/api/event/list";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -274,6 +356,11 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -284,6 +371,11 @@ public class DataUpdatingPresenter
                 List<Event> eventList = Utility.handleEventList(responsData);
                 LitePal.deleteAll(Event.class);
                 LitePal.saveAll(eventList);
+                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                count--;
+                if(count == 0){
+                    progressDialog.dismiss();
+                }
             }
         });
     }

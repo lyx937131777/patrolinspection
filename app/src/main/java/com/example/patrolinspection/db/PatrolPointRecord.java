@@ -117,6 +117,7 @@ public class PatrolPointRecord extends LitePalSupport
                 "\"patrolRecordId\":\"" + patrolRecordId + "\"" +
                 ", \"pointId\":\"" + pointId + "\"" +
                 ", \"orderNo\":\"" + orderNo + "\"" +
+                ", \"photo\":\"" + photoURL + "\"" +
                 ", \"time\":\"" + t + "\"" +
                 "}";
     }

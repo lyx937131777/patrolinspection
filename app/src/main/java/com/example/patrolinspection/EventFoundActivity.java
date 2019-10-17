@@ -50,7 +50,7 @@ public class EventFoundActivity extends AppCompatActivity
     private String type;
     private String lineID;
     private String recordID;
-    private String pointRecordID;
+    private String pointID;
     private String policeID;
 
     private Spinner efClass;
@@ -92,10 +92,10 @@ public class EventFoundActivity extends AppCompatActivity
         type = intent.getStringExtra("type");
         if(type.equals("normal")){
             recordID = "";
-            pointRecordID = "";
+            pointID = "";
         }else{
             recordID = intent.getStringExtra("record");
-            pointRecordID = intent.getStringExtra("pointRecord");
+            pointID = intent.getStringExtra("point");
         }
         policeID = intent.getStringExtra("police");
         Police police = LitePal.where("internetID = ?",policeID).findFirst(Police.class);
@@ -105,7 +105,6 @@ public class EventFoundActivity extends AppCompatActivity
         dutyText.setText(MapUtil.getDuty(police.getMainDutyId()));
 
 
-        //待修改 policeId intent传
         efClass = findViewById(R.id.ef_class);
         efType = findViewById(R.id.ef_type);
 
@@ -161,7 +160,7 @@ public class EventFoundActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointRecordID,detailText.getText().toString());
+                eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
             }
         });
     }
@@ -178,11 +177,11 @@ public class EventFoundActivity extends AppCompatActivity
                 } while (cursor.moveToNext());
             }
         }else{
-
+            //TODO
         }
 
-        classString = MapUtil.getEventType(efClassList.get(0));
-        changeClass();
+//        classString = MapUtil.getEventType(efClassList.get(0));
+//        changeClass();
         efClass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -224,7 +223,7 @@ public class EventFoundActivity extends AppCompatActivity
             }
 
         }else{
-
+            //TODO
         }
         arrayTypeAdapter.notifyDataSetChanged();
     }

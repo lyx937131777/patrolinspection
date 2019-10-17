@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.psam.BaoAnBasicInfo;
 import com.example.patrolinspection.psam.CommonUtil;
@@ -222,10 +224,37 @@ public class SwipeNfcActivity extends AppCompatActivity
         LogUtil.e("SwipeNfcActivity","duty: "+police.getMainDutyId() + "  " + MapUtil.getDuty(police.getMainDutyId()));
         switch (type){
             case "patrolInspection":{
-                Intent intent = new Intent(mContext, FaceRecognitionActivity.class);
-                intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
-                intent.putExtra("police",police.getInternetID());
-                startActivity(intent);
+                String scheduleID = getIntent().getStringExtra("schedule");
+                PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",scheduleID).findFirst(PatrolSchedule.class);
+                String lineID = patrolSchedule.getPatrolLineId();
+                PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
+                if(patrolLine.getPoliceIds().contains(police.getInternetID())){
+                    if(patrolLine.getPatrolLineType().equals("publicSecurity") && (!police.isOfficialPolice())){
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                Toast.makeText(mContext,"自建保安无法巡检治安巡检线路",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }else{
+                        Intent intent = new Intent(mContext, FaceRecognitionActivity.class);
+                        intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
+                        intent.putExtra("police",police.getInternetID());
+                        startActivity(intent);
+                    }
+                }else{
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"该保安无法巡检此线路",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
                 break;
             }
             case "signIn":

@@ -21,6 +21,9 @@ public class PatrolLine extends LitePalSupport
     private String pictureType;
     private boolean iscanJump;
 
+    private List<String> policeIds;
+
+
 //    public PatrolLine(String internetID, String companyId, String patrolLineNo,
 //                      String patrolLineName, List<Event> eventInfos,
 //                      List<PatrolIP> pointLineModels, String patrolLineType, String pictureType,
@@ -38,6 +41,15 @@ public class PatrolLine extends LitePalSupport
 //    }
 
 
+    public List<String> getPoliceIds()
+    {
+        return policeIds;
+    }
+
+    public void setPoliceIds(List<String> policeIds)
+    {
+        this.policeIds = policeIds;
+    }
 
     public List<String> getEventInfoIds()
     {

@@ -94,6 +94,15 @@ public class HttpUtil
         LogUtil.e("DataUpdating","发送成功");
     }
 
+    //数据更新
+    public static void updatingByEquipmentRequest(String address, String userID, String companyID, okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address + "?companyId=" + companyID + "&equipmentId=" + userID).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+        LogUtil.e("DataUpdating","发送成功");
+    }
+
     //开始巡检
     public static void startPatrolRequset(String address, String userID, String companyID, String policeID, long startTime,String scheduleID, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
@@ -118,11 +127,9 @@ public class HttpUtil
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
         PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
         List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
-        for(PatrolPointRecord patrolPointRecord : patrolPointRecordList){
-            LogUtil.e("PatrolingPresenter",patrolPointRecord.toString());
-        }
+        LogUtil.e("HttpUtil",patrolRecord.toString());
         patrolRecord.setPointPatrolRecords(patrolPointRecordList);
-        String jsonStr = patrolRecord.toHeadString() + patrolRecord.toTailString();
+        String jsonStr = patrolRecord.toString();
         LogUtil.e("HttpUtil",jsonStr);
         RequestBody requestBody = RequestBody.create(JSON, jsonStr);
         String credential = Credentials.basic(userID, "123456");
@@ -239,5 +246,4 @@ public class HttpUtil
         client.newCall(request).enqueue(callback);
     }
 
-    //发送巡检
 }

@@ -163,7 +163,7 @@ public class Utility
         return null;
     }
 
-    //更新线路列表
+    //更新线路列表 TODO 这里和其他不一样
     public static List<PatrolLine> handlePatrolLineList(String response)
     {
         if (!TextUtils.isEmpty(response))
@@ -172,9 +172,7 @@ public class Utility
             {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray dataArray = jsonObject.getJSONArray("datas");
-                JSONObject dataObject = dataArray.getJSONObject(0);
-                JSONArray jsonArray = dataObject.getJSONArray("content");
-                String patrolLineJson = jsonArray.toString();
+                String patrolLineJson = dataArray.toString();
                 return new Gson().fromJson(patrolLineJson, new TypeToken<List<PatrolLine>>() {}.getType());
             } catch (JSONException e)
             {

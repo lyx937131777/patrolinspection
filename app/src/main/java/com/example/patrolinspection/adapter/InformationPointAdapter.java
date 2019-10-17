@@ -76,28 +76,28 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_information_point,parent,false);
         final InformationPointAdapter.ViewHolder holder = new InformationPointAdapter.ViewHolder(view);
-        holder.ipView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                int position = holder.getAdapterPosition();
-                PatrolPointRecord patrolPointRecord = mList.get(position);
-                if(patrolPointRecord.getState().equals("未巡检")){
-                    Calendar calendar = Calendar.getInstance();
-                    patrolPointRecord.setTime(calendar.getTimeInMillis());
-                    patrolPointRecord.setState("巡检中");
-                    patrolPointRecord.save();
-                    if(tempPointRecord != null){
-                        tempPointRecord.setState("已巡检");
-                        tempPointRecord.save();
-                    }
-                    tempPointRecord = patrolPointRecord;
-                    ((PatrolingActivity)mContext).addCount();
-                    notifyDataSetChanged();
-                }
-            }
-        });
+//        holder.ipView.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                int position = holder.getAdapterPosition();
+//                PatrolPointRecord patrolPointRecord = mList.get(position);
+//                if(patrolPointRecord.getState().equals("未巡检")){
+//                    Calendar calendar = Calendar.getInstance();
+//                    patrolPointRecord.setTime(calendar.getTimeInMillis());
+//                    patrolPointRecord.setState("巡检中");
+//                    patrolPointRecord.save();
+//                    if(tempPointRecord != null){
+//                        tempPointRecord.setState("已巡检");
+//                        tempPointRecord.save();
+//                    }
+//                    tempPointRecord = patrolPointRecord;
+//                    ((PatrolingActivity)mContext).addCount();
+//                    notifyDataSetChanged();
+//                }
+//            }
+//        });
         return holder;
     }
 

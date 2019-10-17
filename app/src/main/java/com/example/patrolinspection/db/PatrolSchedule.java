@@ -10,8 +10,8 @@ public class PatrolSchedule extends LitePalSupport
     @SerializedName("id")
     private String internetID;
     private String companyId;
-    private String startTime;//时分秒 24小时制
-    private String endTime;//时分秒 24小时制
+    private String startTime;//时分 24小时制
+    private String endTime;//时分 24小时制
     private String errorRange;//误差范围
     private String patrolLineId;
     private String patrolPlanId;
@@ -31,6 +31,13 @@ public class PatrolSchedule extends LitePalSupport
         this.patrolLineId = patrolLineId;
         this.patrolPlanId = patrolPlanId;
     }
+
+    public int getDuringMin(){
+        int h = (Integer.parseInt(endTime.split(":")[0])+24-Integer.parseInt(startTime.split(":")[0]))%24;
+        int m = (Integer.parseInt(endTime.split(":")[1])-Integer.parseInt(startTime.split(":")[1]));
+        return h*60+m ;
+    }
+
 
     public String getInternetID()
     {

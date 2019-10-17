@@ -3,7 +3,7 @@
 
     <dbname value="patrol_inspection" />
 
-    <version value="15" />
+    <version value="17" />
 
     <list>
         <mapping class="com.example.patrolinspection.db.Notice" />

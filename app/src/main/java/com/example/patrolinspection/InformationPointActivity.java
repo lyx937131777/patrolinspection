@@ -57,6 +57,7 @@ public class InformationPointActivity extends AppCompatActivity
         latitudeText = findViewById(R.id.ip_latitude);
         heightText = findViewById(R.id.ip_height);
         floorText = findViewById(R.id.ip_floor);
+        //TODO 获取经度纬度
 
         register = findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener()

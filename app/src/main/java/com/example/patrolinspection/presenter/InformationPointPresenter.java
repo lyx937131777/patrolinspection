@@ -29,7 +29,7 @@ public class InformationPointPresenter
     }
 
     public void register(String id, String name, String longitude, String latitude, String height, String floor){
-        progressDialog = ProgressDialog.show(context,"","上传中...");//待修改
+        progressDialog = ProgressDialog.show(context,"","上传中...");
 
         String address = HttpUtil.LocalAddress + "/api/point";
         String companyID = pref.getString("companyID",null);
@@ -47,6 +47,7 @@ public class InformationPointPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                progressDialog.dismiss();
             }
 
             @Override
@@ -72,6 +73,7 @@ public class InformationPointPresenter
                     });
                     ((InformationPointActivity) context).finish();
                 }
+                progressDialog.dismiss();
             }
         });
     }

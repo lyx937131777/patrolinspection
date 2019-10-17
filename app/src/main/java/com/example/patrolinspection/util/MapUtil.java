@@ -14,6 +14,7 @@ public class MapUtil
     private static Map<String,String> planTypeMap = new HashMap<>();
     private static Map<String,String> faceTypeMap = new HashMap<>();
     private static Map<String,String> dutyMap = new HashMap<>();
+    private static Map<String,String> photoTypeMap = new HashMap<>();
 
     static {
         stateMap.put("进行中", R.drawable.state_running);
@@ -78,6 +79,9 @@ public class MapUtil
         dutyMap.put("授权管理人员","6");
         dutyMap.put("业务绑定人员","7");
 
+        photoTypeMap.put("must","拍照（必须）");
+        photoTypeMap.put("optional","拍照（可选）");
+        photoTypeMap.put("forbid","拍照（禁止）");
     }
 
     public static int getState(String s){
@@ -102,5 +106,9 @@ public class MapUtil
 
     public static String getDuty(String s){
         return dutyMap.get(s);
+    }
+
+    public static String getPhotoType(String s){
+        return  photoTypeMap.get(s);
     }
 }

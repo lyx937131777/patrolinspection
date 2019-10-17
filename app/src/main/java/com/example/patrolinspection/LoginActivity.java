@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LogUtil.e("LoginActivity", "手机ID： " + Build.SERIAL);
         LogUtil.e("LoginActivity", "安卓版本： " + Build.VERSION.RELEASE);
         LogUtil.e("LoginActivity", "API版本： " + Build.VERSION.SDK_INT);
-
     }
 
     @Override

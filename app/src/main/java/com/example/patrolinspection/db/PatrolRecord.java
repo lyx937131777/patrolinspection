@@ -2,9 +2,13 @@ package com.example.patrolinspection.db;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PatrolRecord extends LitePalSupport
@@ -213,5 +217,55 @@ public class PatrolRecord extends LitePalSupport
                 ", \"endTime\":\"" + t + "\"" +
                 ", \"pointPatrolRecords\":" + pointPatrolRecords +
                 '}';
+    }
+
+    @Override
+    public String toString()
+    {
+        String t;
+        if(endTime == 0 ){
+            t = "";
+        }else{
+            t = String.valueOf(endTime);
+        }
+        return "{" +
+                "\"id\":\"" + internetID + "\"" +
+                ", \"patrolScheduleId\":\"" + patrolScheduleId + "\"" +
+                ", \"companyId\":\"" + companyId + "\"" +
+                ", \"policeId\":\"" + policeId + "\"" +
+                ", \"equipmentId\":\"" + equipmentId + "\"" +
+                ", \"patrolTimeStatus\":\"" + patrolTimeStatus + "\"" +
+                ", \"patrolPointStatus\":\"" + patrolPointStatus + "\"" +
+                ", \"isnonrmal\":\"" + isnonrmal + "\"" +
+                ", \"startTime\":\"" + startTimeLong + "\"" +
+                ", \"endTime\":\"" + t + "\"" +
+                ", \"pointPatrolRecords\":" + pointPatrolRecords +
+                '}';
+    }
+
+    public int getDuringMin(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        return patrolSchedule.getDuringMin();
+    }
+
+    public int getLimit(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        return Integer.valueOf(patrolSchedule.getErrorRange());
+    }
+
+    public long getEndTimeHead(){
+        Date date = new Time(startTimeLong);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE,getDuringMin() - getLimit());
+        return calendar.getTimeInMillis();
+    }
+
+    public long getEndTimeTail(){
+        Date date = new Time(startTimeLong);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE,getDuringMin() + getLimit());
+        return calendar.getTimeInMillis();
     }
 }
