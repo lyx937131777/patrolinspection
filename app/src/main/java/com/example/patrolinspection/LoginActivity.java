@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            finish();
 //        }
 
-        phoneID = Build.SERIAL;
+        phoneID = Build.SERIAL.toUpperCase();
 //        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         loginPresenter.login(phoneID);
         TextView textView = findViewById(R.id.text);
@@ -92,7 +93,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             // 登录按钮
             case R.id.login:
-                loginPresenter.login("vcqasfecds3243");//待修改 phoneID
+//                loginPresenter.login("vcqasfecds3243");//TODO phoneID
+                loginPresenter.login(phoneID);
                 break;
             default:
                 break;

@@ -34,7 +34,7 @@
                 android:id="@+id/pi_state_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="@id/pi_state"
                 app:layout_constraintRight_toRightOf="@id/pi_state"
                 app:layout_constraintTop_toTopOf="@id/pi_state"

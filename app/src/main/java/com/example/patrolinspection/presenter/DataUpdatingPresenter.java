@@ -297,6 +297,7 @@ public class DataUpdatingPresenter
                     patrolLine.save();
                 }
                 Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                updatePatrolSchedule();
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();

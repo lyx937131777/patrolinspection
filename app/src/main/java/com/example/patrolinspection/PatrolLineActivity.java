@@ -1,5 +1,6 @@
 package com.example.patrolinspection;
 
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.patrolinspection.adapter.PatrolLineAdapter;
-import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.util.LogUtil;
@@ -76,12 +76,20 @@ public class PatrolLineActivity extends AppCompatActivity
 
 
         patrolScheduleList.clear();
-        patrolScheduleList.addAll(LitePal.where("patrolPlanId = ?",planID).find(PatrolSchedule.class));
-        //待修改
-//        Cursor cursor = LitePal.findBySQL("select distinct patrolLineId from PatrolSchedule where patrolPlanId = ?",planID);
+        List<PatrolSchedule> tempList = LitePal.where("patrolPlanId = ?",planID).find(PatrolSchedule.class);
+        List<String> lineList = new ArrayList<>();
+        for(PatrolSchedule patrolSchedule : tempList){
+            if(!lineList.contains(patrolSchedule.getPatrolLineId())){
+                patrolScheduleList.add(patrolSchedule);
+                lineList.add(patrolSchedule.getPatrolLineId());
+            }
+        }
+
+//        Cursor cursor = LitePal.findBySQL("select distinct patrolLine from PatrolSchedule where patrolPlan = ?",planID);
 //        if (cursor != null && cursor.moveToFirst()) {
 //            do {
-//                String lineID = cursor.getString(cursor.getColumnIndex("patrolLineId"));
+//                LogUtil.e("PatrolLineActivity","111111111111111111");
+//                String lineID = cursor.getString(cursor.getColumnIndex("patrolLine"));
 //                PatrolSchedule patrolSchedule = new PatrolSchedule();
 //                patrolSchedule.setPatrolLineId(lineID);
 //                patrolSchedule.setPatrolPlanId(planID);

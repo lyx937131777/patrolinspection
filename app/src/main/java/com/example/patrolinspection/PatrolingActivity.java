@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -27,7 +25,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.patrolinspection.adapter.InformationPointAdapter;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
@@ -42,13 +39,11 @@ import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
-import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,11 +127,10 @@ public class PatrolingActivity extends AppCompatActivity
         int duringTime = patrolSchedule.getDuringMin();
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String realStartTime =  format.format(new Date(patrolRecord.getStartTimeLong()));
-        String realEndTime = format.format(new Date(patrolRecord.getEndTimeHead()));
-        String realEndTime2 = format.format(new Date(patrolRecord.getEndTimeTail()));
+        String realEndTime = format.format(new Date(patrolRecord.getRealEndLimit()));
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("计划时间： " + startTime + " - " + endTime + " 共计" + duringTime + "分钟\n");
-        stringBuilder.append("实际开始时间： " + realStartTime + "\n规定结束时间：" + realEndTime + " - " + realEndTime2);
+        stringBuilder.append("实际开始时间： " + realStartTime + "\n请在 " + realEndTime+ " 之前完成巡检");
         TextView lineInformation = findViewById(R.id.line_information);
         lineInformation.setText(stringBuilder.toString());
 
@@ -396,6 +390,20 @@ public class PatrolingActivity extends AppCompatActivity
                     tempPointRecord.setPhotoPath(imagePath);
                     tempPointRecord.save();
                     patrolingPresenter.updatePatrol(recordID,false);
+                }else if(resultCode == RESULT_CANCELED){
+                    if(patrolLine.getPictureType().equals("must")&& tempPointRecord.getPhotoPath().equals("")){
+                        new AlertDialog.Builder(mContext).setTitle("警告").setMessage("此线路必须拍照，请为此信息点拍照！")
+                                .setPositiveButton("是", new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i)
+                                    {
+                                        takePhoto();
+                                    }
+                                }).setCancelable(false).show();
+                    }
+                }else{
+                    Toast.makeText(mContext,"不正常的返回值",Toast.LENGTH_LONG).show();
                 }
                 break;
             default:

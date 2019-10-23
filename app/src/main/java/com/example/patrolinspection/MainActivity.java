@@ -1,5 +1,6 @@
 package com.example.patrolinspection;
 
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,10 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.Utility;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -42,6 +46,19 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TypeAdapter(typeList);
         recyclerView.setAdapter(adapter);
+
+        //TODO 测试时间
+        Date date1 = new Date();
+        Date date2 = new Date(System.currentTimeMillis());
+        Calendar calendar = Calendar.getInstance();
+        Date date3 = new Date(calendar.getTimeInMillis());
+        LogUtil.e("MainActivity","date1: " + Utility.dateToString(date1,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date1.getTime());
+        LogUtil.e("MainActivity","date2: " + Utility.dateToString(date2,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date2.getTime());
+        LogUtil.e("MainActivity","date3: " + Utility.dateToString(date3,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date3.getTime());
+
+        String time = Utility.dateToString(date1,"yyyy-MM-dd")+" 10:00";
+        Date date4 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        LogUtil.e("MainActivity","date4: " + Utility.dateToString(date4,"yyyy-MM-dd HH:mm:ss") + "   long: "+date4.getTime());
     }
 
     private void initTypes()

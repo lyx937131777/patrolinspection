@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.example.patrolinspection.db.Company;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
@@ -50,6 +51,41 @@ public class Utility
             e.printStackTrace();
         }
         return "000";
+    }
+
+    //返回Json数据的设备类型
+    public static String getEquipmentType(String response)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray dataArray = jsonObject.getJSONArray("datas");
+            JSONObject dataObject = dataArray.getJSONObject(0);
+            String equipmentType = dataObject.getString("equipmentType");
+            return equipmentType;
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return "000";
+    }
+
+    //返回Json数据的company类
+    public static Company getCompany(String response)
+    {
+        try
+        {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray dataArray = jsonObject.getJSONArray("datas");
+            JSONObject dataObject = dataArray.getJSONObject(0);
+            JSONObject companyObject = dataObject.getJSONObject("company");
+            String jsonString = companyObject.toString();
+            return  new Gson().fromJson(jsonString, Company.class);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //返回Json数据的userID值
@@ -301,6 +337,17 @@ public class Utility
         }
         return date;
     }
+    //字符串+格式 转化为日期Date
+    public static Date stringToDate(String s, String formatString){
+        DateFormat df = new SimpleDateFormat(formatString);
+        Date date = null;
+        try {
+            date = df.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
     //后台给的日期格式 转化为目标的日期格式字符串
     public static String dateStringToString(String s, String formatString){
@@ -313,6 +360,13 @@ public class Utility
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return df2.format(date);
+    }
+
+    //日期转化为目标的日期格式字符串
+    public static String dateToString(Date date, String formatString){
+        DateFormat df2 = new SimpleDateFormat(formatString);
+//        df2.setTimeZone(TimeZone.getTimeZone("GMT"));
         return df2.format(date);
     }
 

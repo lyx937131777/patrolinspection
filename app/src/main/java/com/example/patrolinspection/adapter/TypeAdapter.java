@@ -2,6 +2,8 @@ package com.example.patrolinspection.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.DataUpdatingActivity;
@@ -92,8 +95,13 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "sign":{
-                        Intent intent = new Intent(mContext, SignActivity.class);
-                        mContext.startActivity(intent);
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        if(pref.getString("equipmentType",null).equals("phone")&&(!pref.getBoolean("isAppAttendance",false))){
+                            Toast.makeText(mContext,"手机无法签到，请用巡更棒进行签到！",Toast.LENGTH_LONG).show();
+                        }else {
+                            Intent intent = new Intent(mContext, SignActivity.class);
+                            mContext.startActivity(intent);
+                        }
                         break;
                     }
                     case "notice":{
@@ -119,17 +127,27 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "securityStaff":{
-                        Intent intent = new Intent(mContext, SwipeCardActivity.class);
-                        intent.putExtra("type",type.getTypeName());
-                        intent.putExtra("title",type.getName());
-                        mContext.startActivity(intent);
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        if(pref.getString("equipmentType",null).equals("phone")){
+                            Toast.makeText(mContext,"手机无法注册保安，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
+                        }else{
+                            Intent intent = new Intent(mContext, SwipeCardActivity.class);
+                            intent.putExtra("type",type.getTypeName());
+                            intent.putExtra("title",type.getName());
+                            mContext.startActivity(intent);
+                        }
                         break;
                     }
                     case "informationPoint":{
-                        Intent intent = new Intent(mContext, NfcActivity.class);
-                        intent.putExtra("type",type.getTypeName());
-                        intent.putExtra("title",type.getName());
-                        mContext.startActivity(intent);
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        if(pref.getString("equipmentType",null).equals("phone")){
+                            Toast.makeText(mContext,"手机无法注册信息点，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
+                        }else{
+                            Intent intent = new Intent(mContext, NfcActivity.class);
+                            intent.putExtra("type",type.getTypeName());
+                            intent.putExtra("title",type.getName());
+                            mContext.startActivity(intent);
+                        }
                         break;
                     }
                     case "systemParameter":{

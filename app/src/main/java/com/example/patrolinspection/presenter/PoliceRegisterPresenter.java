@@ -122,7 +122,7 @@ public class PoliceRegisterPresenter
                     ((PoliceRegisterActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"注册成功"), Toast
+                            Toast.makeText(context, "注册成功", Toast
                                     .LENGTH_LONG).show();
 //                            progressBar.setVisibility(View.GONE);
                         }

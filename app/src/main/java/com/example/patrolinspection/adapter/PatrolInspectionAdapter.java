@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.patrolinspection.PatrolInspectionActivity;
-import com.example.patrolinspection.SwipeCardActivity;
+import com.bumptech.glide.Glide;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.db.PatrolSchedule;
-import com.example.patrolinspection.util.Utility;
+import com.example.patrolinspection.util.MapUtil;
 
 import java.util.List;
 
@@ -67,11 +67,15 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
             {
                 int position = holder.getAdapterPosition();
                 PatrolSchedule patrolSchedule = mList.get(position);
-                Intent intent = new Intent(mContext, SwipeNfcActivity.class);
-                intent.putExtra("title","用户认证");
-                intent.putExtra("type","patrolInspection");
-                intent.putExtra("schedule",patrolSchedule.getInternetID());
-                mContext.startActivity(intent);
+                if(System.currentTimeMillis() < patrolSchedule.getEndLimit()){
+                    Intent intent = new Intent(mContext, SwipeNfcActivity.class);
+                    intent.putExtra("title","用户认证");
+                    intent.putExtra("type","patrolInspection");
+                    intent.putExtra("schedule",patrolSchedule.getInternetID());
+                    mContext.startActivity(intent);
+                }else{
+                    Toast.makeText(mContext,"该巡检已结束，无法巡检",Toast.LENGTH_LONG).show();
+                }
             }
         });
         return holder;
@@ -83,9 +87,18 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
         PatrolSchedule patrolSchedule = mList.get(position);
         holder.piStartTime.setText(patrolSchedule.getStartTime());
         holder.piEndTime.setText(patrolSchedule.getEndTime());
-//        Glide.with(mContext).load(MapUtil.getState(patrolInspection.getState())).into(holder.piState);
-//        holder.piStateText.setText(patrolSchedule.getState());
-        holder.piDuringTime.setText("误差范围："+patrolSchedule.getErrorRange()+"分钟");
+        long time = System.currentTimeMillis();
+        String state = null;
+        if(time < patrolSchedule.getStartTimeHead()){
+            state = "未开始";
+        }else if(time < patrolSchedule.getEndLimit()){
+            state = "进行中";
+        }else{
+            state = "已结束";
+        }
+        Glide.with(mContext).load(MapUtil.getState(state)).into(holder.piState);
+        holder.piStateText.setText(state);
+        holder.piDuringTime.setText(patrolSchedule.getDuringMin()+"分钟");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.patrolinspection.db;
 
+import com.example.patrolinspection.util.Utility;
 import com.google.gson.annotations.SerializedName;
 
 import org.litepal.LitePal;
@@ -253,11 +254,15 @@ public class PatrolRecord extends LitePalSupport
         return Integer.valueOf(patrolSchedule.getErrorRange());
     }
 
-    public long getEndTimeHead(){
+    public long getStartTimeHead(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        String sTime = patrolSchedule.getStartTime();
         Date date = new Time(startTimeLong);
+        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+sTime;
+        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MINUTE,getDuringMin() - getLimit());
+        calendar.setTime(date2);
+        calendar.add(Calendar.MINUTE, -getLimit());
         return calendar.getTimeInMillis();
     }
 
@@ -267,5 +272,29 @@ public class PatrolRecord extends LitePalSupport
         calendar.setTime(date);
         calendar.add(Calendar.MINUTE,getDuringMin() + getLimit());
         return calendar.getTimeInMillis();
+    }
+    public long getEndLimit(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        String eTime = patrolSchedule.getEndTime();
+        Date date = new Time(startTimeLong);
+        if(patrolSchedule.isTwoDay()){
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE,1);
+            date = c.getTime();
+        }
+        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+eTime;
+        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date2);
+        calendar.add(Calendar.MINUTE, getLimit());
+        return calendar.getTimeInMillis();
+    }
+
+    public long getRealEndLimit(){
+        if(getEndTimeTail() < getEndLimit()){
+            return getEndTimeTail();
+        }
+    return getEndLimit();
     }
 }

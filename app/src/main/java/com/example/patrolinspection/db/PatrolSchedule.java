@@ -1,8 +1,14 @@
 package com.example.patrolinspection.db;
 
+import com.example.patrolinspection.util.Utility;
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
+
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 
 //排班 对应一条线路和对应的时间 对应一个计划
 public class PatrolSchedule extends LitePalSupport
@@ -107,5 +113,35 @@ public class PatrolSchedule extends LitePalSupport
     public void setPatrolPlanId(String patrolPlanId)
     {
         this.patrolPlanId = patrolPlanId;
+    }
+
+    public boolean isTwoDay(){
+        return Integer.parseInt(endTime.split(":")[0]) < Integer.parseInt(startTime.split(":")[0]);
+    }
+
+    public long getStartTimeHead(){
+        Date date = new Date();
+        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+startTime;
+        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date2);
+        calendar.add(Calendar.MINUTE, -Integer.parseInt(errorRange));
+        return calendar.getTimeInMillis();
+    }
+
+    public long getEndLimit(){
+        Date date = new Date();
+        if(isTwoDay()){
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE,1);
+            date = c.getTime();
+        }
+        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+endTime;
+        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date2);
+        calendar.add(Calendar.MINUTE, Integer.parseInt(errorRange));
+        return calendar.getTimeInMillis();
     }
 }

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
 import com.example.patrolinspection.adapter.PatrolInspectionAdapter;
-import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolSchedule;
 

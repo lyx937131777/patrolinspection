@@ -56,7 +56,7 @@ public class SignInOutPresenter
             {
                 final String responsData = response.body().string();
                 LogUtil.e("SignInOutPresenter",responsData);
-                //待修改 Utility code 000？
+                //TODO Utility code 000？
                 if(Utility.checkString(responsData,"code").equals("500")){
                     ((SignInOutActivity)context).runOnUiThread(new Runnable() {
                         @Override

@@ -1,7 +1,6 @@
 package com.example.patrolinspection;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
@@ -28,14 +26,12 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.PatrolLine;
-import com.example.patrolinspection.db.PatrolPointRecord;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
-import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 

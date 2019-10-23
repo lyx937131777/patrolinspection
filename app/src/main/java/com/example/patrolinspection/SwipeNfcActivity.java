@@ -15,15 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
-import com.example.patrolinspection.psam.BaoAnBasicInfo;
 import com.example.patrolinspection.psam.CommonUtil;
-import com.example.patrolinspection.psam.PsamUtil;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
@@ -243,6 +240,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                         intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
                         intent.putExtra("police",police.getInternetID());
                         startActivity(intent);
+                        finish();
                     }
                 }else{
                     runOnUiThread(new Runnable()
@@ -254,7 +252,6 @@ public class SwipeNfcActivity extends AppCompatActivity
                         }
                     });
                 }
-
                 break;
             }
             case "signIn":
@@ -265,6 +262,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                 intent.putExtra("attendanceType",getIntent().getStringExtra("attendanceType"));
                 intent.putExtra("police",police.getInternetID());
                 startActivity(intent);
+                finish();
                 break;
             }
             case "eventFound":{
@@ -272,6 +270,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                 intent.putExtra("type","normal");
                 intent.putExtra("police",police.getInternetID());
                 startActivity(intent);
+                finish();
                 break;
             }
         }

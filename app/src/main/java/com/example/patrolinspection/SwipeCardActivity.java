@@ -113,7 +113,7 @@ public class SwipeCardActivity extends AppCompatActivity
 
     private void initPsam()
     {
-        //待修改 可添加其他型号的PSAM处理方法
+        //TODO 可添加其他型号的PSAM处理方法
         if(model.equals("A2000L")){
             try {
                 mPsamUtil = new PsamUtil(mContext);
@@ -179,7 +179,7 @@ public class SwipeCardActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
                 }
-            }else{//待修改 可添加其他型号的PSAM处理方法
+            }else{//TODO 可添加其他型号的PSAM处理方法
                 Toast.makeText(mContext,"本机无PSAM卡，无法注册保安卡",Toast.LENGTH_LONG).show();
             }
 

@@ -1,6 +1,8 @@
 package com.example.patrolinspection;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -29,6 +31,11 @@ public class SignActivity extends AppCompatActivity
         }
 
         checkBox = findViewById(R.id.sign_defend_school);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!pref.getBoolean("isSchool",false)){
+            checkBox.setVisibility(View.GONE);
+        }
+
         CardView signIn = findViewById(R.id.sign_in);
         CardView signOut = findViewById(R.id.sign_out);
         signIn.setOnClickListener(new View.OnClickListener()

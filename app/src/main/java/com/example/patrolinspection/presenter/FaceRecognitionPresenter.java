@@ -75,6 +75,7 @@ public class FaceRecognitionPresenter
                 Intent intent = new Intent(context, PatrolingActivity.class);
                 intent.putExtra("record",patrolRecord.getInternetID());
                 context.startActivity(intent);
+                ((FaceRecognitionActivity)context).finish();
             }
         });
     }

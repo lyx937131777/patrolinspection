@@ -100,12 +100,18 @@ public class PatrolingPresenter
                 }
             }
             patrolRecord.setEndTime(System.currentTimeMillis());
-            if(patrolRecord.getEndTime() < patrolRecord.getEndTimeHead()){
-                patrolRecord.setPatrolTimeStatus("abnormal");
-            }else if(patrolRecord.getEndTime() > patrolRecord.getEndTimeTail()){
-                patrolRecord.setPatrolTimeStatus("overtime");
+            if(patrolRecord.getStartTimeLong() < patrolRecord.getStartTimeHead()){
+                if(patrolRecord.getEndTime() <= patrolRecord.getRealEndLimit()){
+                    patrolRecord.setPatrolTimeStatus("abnormal");
+                }else{
+                    patrolRecord.setPatrolTimeStatus("abnormal_overtime");
+                }
             }else{
-                patrolRecord.setPatrolTimeStatus("normal");
+                if(patrolRecord.getEndTime() <= patrolRecord.getRealEndLimit()){
+                    patrolRecord.setPatrolTimeStatus("normal");
+                }else{
+                    patrolRecord.setPatrolTimeStatus("overtime");
+                }
             }
         }
         patrolRecord.save();
