@@ -1,10 +1,12 @@
 package com.example.patrolinspection;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
@@ -39,6 +42,7 @@ public class SignInOutActivity extends AppCompatActivity
     private String title;
     private String attendanceType;
     private String policeID;
+    private boolean isFace;
 
     private TextView nameText;
     private ImageView photoButton;
@@ -73,21 +77,33 @@ public class SignInOutActivity extends AppCompatActivity
 
         LogUtil.e("SignInOutActivity",title + " " + type + " " + attendanceType + " " + policeID);
 
-        Button signInOut = findViewById(R.id.sign_in_out);
+        final Button signInOut = findViewById(R.id.sign_in_out);
         signInOut.setText(title);
         signInOut.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                if(imagePath != null){
+                if(!isFace){
+                    signInOutPresenter.signInOut(policeID,type,attendanceType);
+                } else if(imagePath != null){
                     signInOutPresenter.signInOut(policeID,imagePath,type,attendanceType);
+                }else {
+                    Toast.makeText(SignInOutActivity.this,"请先拍照！",Toast.LENGTH_LONG).show();
                 }
 
             }
         });
 
         photoButton = findViewById(R.id.photo);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        isFace = pref.getBoolean("isFace",false);
+        if(!isFace){
+            photoButton.setVisibility(View.GONE);
+        }else{
+            Glide.with(this).load(R.drawable.scan).into(photoButton);
+        }
+
         photoButton.setOnClickListener(new View.OnClickListener()
         {
             @Override

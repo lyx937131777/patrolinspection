@@ -96,7 +96,7 @@ public class Utility
             JSONObject jsonObject = new JSONObject(response);
             JSONArray dataArray = jsonObject.getJSONArray("datas");
             JSONObject dataObject = dataArray.getJSONObject(0);
-            String userID = dataObject.getString("id");
+            String userID = "phone-"+dataObject.getString("id");
             return  userID;
         } catch (JSONException e)
         {

@@ -119,6 +119,12 @@ public class FaceRecognitionActivity extends AppCompatActivity
     {
         switch (requestCode)
         {
+            case 0:
+                if(resultCode == RESULT_OK){
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK)
                 {

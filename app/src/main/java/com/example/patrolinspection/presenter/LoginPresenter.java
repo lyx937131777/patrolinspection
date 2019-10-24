@@ -100,6 +100,17 @@ public class LoginPresenter
                         {
                             final String responsData = response.body().string();
                             LogUtil.e("Login",responsData);
+                            if(Utility.checkString(responsData,"code").equals("500")){
+                                ((LoginActivity)context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                                                .LENGTH_LONG).show();
+                                    }
+                                });
+                                progressDialog.dismiss();
+                                return;
+                            }
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("companyID", Utility.getCompanyID(responsData));
                             Company company = Utility.getCompany(responsData);

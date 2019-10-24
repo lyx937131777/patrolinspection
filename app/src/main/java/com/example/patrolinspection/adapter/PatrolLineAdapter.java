@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.patrolinspection.PatrolInspectionActivity;
+import com.example.patrolinspection.PatrolLineActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolSchedule;
@@ -66,7 +67,7 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
                 Intent intent = new Intent(mContext, PatrolInspectionActivity.class);
                 intent.putExtra("line",patrolSchedule.getPatrolLineId());
                 intent.putExtra("plan",patrolSchedule.getPatrolPlanId());
-                mContext.startActivity(intent);
+                ((PatrolLineActivity)mContext).startActivityForResult(intent,0);
             }
         });
         return holder;

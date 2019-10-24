@@ -67,43 +67,47 @@ public class SignInOutPresenter
                     });
                     progressDialog.dismiss();
                 }else{
-                    String address = HttpUtil.LocalAddress + "/api/attendance";
-                    String companyID = pref.getString("companyID",null);
-                    String userID = pref.getString("userID",null);
-                    HttpUtil.attendanceRequest(address, userID, companyID, policeID, attendanceType, type, new Callback()
-                    {
-                        @Override
-                        public void onFailure(Call call, IOException e)
-                        {
-                            e.printStackTrace();
-                            ((SignInOutActivity)context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(context, "服务器连接错误", Toast
-                                            .LENGTH_LONG).show();
-                                }
-                            });
-                            progressDialog.dismiss();
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException
-                        {
-                            final String responsData = response.body().string();
-                            LogUtil.e("SignInOutPresenter",responsData);
-                            ((SignInOutActivity)context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(context, MapUtil.getFaceType(type)+"成功", Toast
-                                            .LENGTH_LONG).show();
-                                }
-                            });
-                            ((SignInOutActivity) context).finish();
-                            progressDialog.dismiss();
-                        }
-                    });
+                    signInOut(policeID,type,attendanceType);
                 }
 
+            }
+        });
+    }
+
+    public void signInOut(final String policeID, final String type, final String attendanceType) {
+        String address = HttpUtil.LocalAddress + "/api/attendance";
+        String companyID = pref.getString("companyID",null);
+        String userID = pref.getString("userID",null);
+        HttpUtil.attendanceRequest(address, userID, companyID, policeID, attendanceType, type, new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                e.printStackTrace();
+                ((SignInOutActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "服务器连接错误", Toast
+                                .LENGTH_LONG).show();
+                    }
+                });
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                final String responsData = response.body().string();
+                LogUtil.e("SignInOutPresenter",responsData);
+                ((SignInOutActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, MapUtil.getFaceType(type)+"成功", Toast
+                                .LENGTH_LONG).show();
+                    }
+                });
+                ((SignInOutActivity) context).finish();
+                progressDialog.dismiss();
             }
         });
     }

@@ -11,6 +11,7 @@ import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcA;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -239,8 +240,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                         Intent intent = new Intent(mContext, FaceRecognitionActivity.class);
                         intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
                         intent.putExtra("police",police.getInternetID());
-                        startActivity(intent);
-                        finish();
+                        startActivityForResult(intent,0);
                     }
                 }else{
                     runOnUiThread(new Runnable()
@@ -279,6 +279,18 @@ public class SwipeNfcActivity extends AppCompatActivity
         isCardReading = false;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        switch (requestCode){
+            case 0:
+                if(resultCode == RESULT_OK){
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

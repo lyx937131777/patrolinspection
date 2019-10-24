@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
@@ -160,7 +161,11 @@ public class EventFoundActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
+                if(imagePath != null){
+                    eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
+                }else{
+                    Toast.makeText(EventFoundActivity.this, "请先拍照！",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -178,7 +183,6 @@ public class EventFoundActivity extends AppCompatActivity
                 } while (cursor.moveToNext());
             }
         }else{
-            //TODO
             PatrolRecord patrolRecord = LitePal.where("internetID = ?", recordID).findFirst(PatrolRecord.class);
             PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolRecord.getPatrolScheduleId()).findFirst(PatrolSchedule.class);
             PatrolLine patrolLine = LitePal.where("internetID = ?",patrolSchedule.getPatrolLineId()).findFirst(PatrolLine.class);

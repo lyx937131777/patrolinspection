@@ -1,6 +1,8 @@
 package com.example.patrolinspection;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -97,6 +99,19 @@ public class PatrolLineActivity extends AppCompatActivity
 //                LogUtil.e("PatrolLineActivity",patrolSchedule.getPatrolLineId());
 //            } while (cursor.moveToNext());
 //        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        switch (requestCode){
+            case 0:
+                if(resultCode == RESULT_OK){
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
+        }
     }
 
     @Override

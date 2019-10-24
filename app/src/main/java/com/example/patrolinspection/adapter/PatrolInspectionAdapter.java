@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.db.PatrolSchedule;
@@ -72,7 +73,7 @@ public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspecti
                     intent.putExtra("title","用户认证");
                     intent.putExtra("type","patrolInspection");
                     intent.putExtra("schedule",patrolSchedule.getInternetID());
-                    mContext.startActivity(intent);
+                    ((PatrolInspectionActivity)mContext).startActivityForResult(intent,0);
                 }else{
                     Toast.makeText(mContext,"该巡检已结束，无法巡检",Toast.LENGTH_LONG).show();
                 }

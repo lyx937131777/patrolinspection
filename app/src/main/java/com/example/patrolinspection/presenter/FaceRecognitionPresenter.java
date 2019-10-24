@@ -74,8 +74,7 @@ public class FaceRecognitionPresenter
                 LogUtil.e("FaceRecognitionPresenter","long:"+patrolRecord.getStartTimeLong());
                 Intent intent = new Intent(context, PatrolingActivity.class);
                 intent.putExtra("record",patrolRecord.getInternetID());
-                context.startActivity(intent);
-                ((FaceRecognitionActivity)context).finish();
+                ((FaceRecognitionActivity)context).startActivityForResult(intent,0);
             }
         });
     }

@@ -41,7 +41,7 @@ public class HeartbeatService extends Service
                 while(isRun){
                     try
                     {
-                        TimeUnit.SECONDS.sleep(2);
+                        TimeUnit.MINUTES.sleep(2);
                         //TODO 心跳
                         heartBeat();
                     }catch (InterruptedException e){

@@ -1,7 +1,9 @@
 package com.example.patrolinspection.presenter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +20,8 @@ import org.litepal.LitePal;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -160,6 +164,7 @@ public class PatrolingPresenter
                     patrolRecord.setUpload(true);
                     patrolRecord.setState("已结束");
                     patrolRecord.save();
+                    ((PatrolingActivity)context).setResult(Activity.RESULT_OK)  ;
                     ((PatrolingActivity)context).finish();
                 }
                 progressDialog.dismiss();
