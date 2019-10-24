@@ -1,5 +1,6 @@
 package com.example.patrolinspection;
 
+import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.Type;
+import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
 
@@ -78,5 +80,25 @@ public class MainActivity extends AppCompatActivity
 //                LogUtil.e("MainActivity","Not save!!!!!!!!!!!");
 //            }
         }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        if(!HeartbeatService.isRun){
+            Intent intent = new Intent(this,HeartbeatService.class);
+            startService(intent);
+        }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        LogUtil.e("MainActivity","onDestroy");
+        Intent intent = new Intent(this, HeartbeatService.class);
+        stopService(intent);
+        LogUtil.e("MainActivity","onDestroy22222");
     }
 }

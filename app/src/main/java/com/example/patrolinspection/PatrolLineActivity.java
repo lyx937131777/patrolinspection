@@ -84,7 +84,7 @@ public class PatrolLineActivity extends AppCompatActivity
                 lineList.add(patrolSchedule.getPatrolLineId());
             }
         }
-
+// 用SQL语句时 字段不能带id ID Id
 //        Cursor cursor = LitePal.findBySQL("select distinct patrolLine from PatrolSchedule where patrolPlan = ?",planID);
 //        if (cursor != null && cursor.moveToFirst()) {
 //            do {

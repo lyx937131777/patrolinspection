@@ -64,6 +64,17 @@ public class HttpUtil
         client.newCall(request).enqueue(callback);
     }
 
+    //心跳
+    public static void heartbeatRequest(String address, String userID, okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("equipmentId", userID)
+                .build();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).put(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
     //注册信息点
     public static void registerIPRequest(String address,String userID, String companyID, String id, String name, String longitude,
                                          String latitude, String height, String floor, okhttp3.Callback callback){
