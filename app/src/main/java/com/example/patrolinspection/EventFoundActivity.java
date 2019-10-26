@@ -53,6 +53,7 @@ public class EventFoundActivity extends AppCompatActivity
     private String recordID;
     private String pointID;
     private String policeID;
+    private String photoType;
 
     private Spinner efClass;
     private Spinner efType;
@@ -94,9 +95,11 @@ public class EventFoundActivity extends AppCompatActivity
         if(type.equals("normal")){
             recordID = "";
             pointID = "";
+            photoType = "";
         }else{
             recordID = intent.getStringExtra("record");
             pointID = intent.getStringExtra("point");
+            photoType = intent.getStringExtra("photoType");
         }
         policeID = intent.getStringExtra("police");
         Police police = LitePal.where("internetID = ?",policeID).findFirst(Police.class);
@@ -119,6 +122,9 @@ public class EventFoundActivity extends AppCompatActivity
 
         detailText = findViewById(R.id.ef_detail);
         photoButton = findViewById(R.id.photo);
+        if(photoType.equals("forbid")){
+            photoButton.setVisibility(View.GONE);
+        }
         photoButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -161,7 +167,9 @@ public class EventFoundActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(imagePath != null){
+                if(photoType.equals("forbid")){
+                    eventFoundPresenter.postEventRecord(policeID,typeString,recordID,pointID,detailText.getText().toString());
+                }else if(imagePath != null){
                     eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
                 }else{
                     Toast.makeText(EventFoundActivity.this, "请先拍照！",Toast.LENGTH_LONG).show();
@@ -272,6 +280,8 @@ public class EventFoundActivity extends AppCompatActivity
                     {
                         e.printStackTrace();
                     }
+                }else{
+                    imagePath = null;
                 }
                 break;
             default:

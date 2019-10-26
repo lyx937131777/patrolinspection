@@ -68,7 +68,7 @@ public class HttpUtil
     public static void heartbeatRequest(String address, String userID, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
-                .add("equipmentId", userID)
+                .add("equipmentId", userID.split("-")[1])
                 .build();
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).put(requestBody).addHeader("Authorization",credential).build();
@@ -109,7 +109,7 @@ public class HttpUtil
     public static void updatingByEquipmentRequest(String address, String userID, String companyID, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();
         String credential = Credentials.basic(userID, "123456");
-        Request request = new Request.Builder().url(address + "?companyId=" + companyID + "&equipmentId=" + userID).addHeader("Authorization",credential).build();
+        Request request = new Request.Builder().url(address + "?companyId=" + companyID + "&equipmentId=" + userID.split("-")[1]).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
         LogUtil.e("DataUpdating","发送成功");
     }
@@ -121,7 +121,7 @@ public class HttpUtil
         HashMap<String, String> map = new HashMap<>();
         map.put("companyId",companyID);
         map.put("patrolScheduleId",scheduleID);
-        map.put("equipmentId",userID);
+        map.put("equipmentId",userID.split("-")[1]);
         map.put("policeId",policeID);
         map.put("startTime",""+startTime);
         Gson gson = new Gson();
@@ -171,7 +171,7 @@ public class HttpUtil
         HashMap<String, String> map = new HashMap<>();
         map.put("companyId",companyID);
         map.put("eventId",eventID);
-        map.put("equipmentId",userID);
+        map.put("equipmentId",userID.split("-")[1]);
         map.put("policeId",policeID);
         map.put("disposalOperateType",disposalOperateType);
         map.put("reportUnit",reportUnit);
@@ -211,7 +211,7 @@ public class HttpUtil
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
         HashMap<String, String> map = new HashMap<>();
         map.put("companyId",companyID);
-        map.put("equipmentId",userID);
+        map.put("equipmentId",userID.split("-")[1]);
         map.put("policeId",policeID);
         map.put("attendanceType",attendanceType);
         map.put("signType",signType);

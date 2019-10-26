@@ -110,7 +110,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -163,7 +169,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -211,7 +223,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -258,7 +276,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
 //                for(InformationPoint informationPoint : informationPointList){
 //                    LogUtil.e("DataUpdating",informationPoint.getInternetID());
@@ -325,7 +349,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
 //                patrolLineList.clear();
 //                patrolLineList.addAll(LitePal.findAll(PatrolLine.class));
@@ -401,7 +431,13 @@ public class DataUpdatingPresenter
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
-                    Toast.makeText(context,"数据更新完毕",Toast.LENGTH_LONG).show();
+                    ((DataUpdatingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "数据更新完毕", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });

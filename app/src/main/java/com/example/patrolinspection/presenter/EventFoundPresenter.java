@@ -110,7 +110,59 @@ public class EventFoundPresenter
                         });
             }
         });
+    }
 
+    public void postEventRecord(final String policeID,final String eventName,final String patrolRecordID,final String pointID,final String detail){
+        progressDialog = ProgressDialog.show(context,"","上传中...");
 
+        if(patrolRecordID != ""){
+            PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
+            patrolRecord.setIsnonrmal("false");
+            patrolRecord.save();
+        }
+
+        final String userID = pref.getString("userID",null);
+        String photo = "";
+        String address = HttpUtil.LocalAddress + "/api/eventRecord";
+        String companyID = pref.getString("companyID",null);
+        String reportUnit = "保安";//TODO 上报单位到底是什么
+        long time = System.currentTimeMillis();
+        Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
+        String eventID = event.getInternetID();
+        HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, "find",photo, time,
+                patrolRecordID, pointID, new Callback()
+                {
+                    @Override
+                    public void onFailure(Call call, IOException e)
+                    {
+                        e.printStackTrace();
+                        ((EventFoundActivity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "服务器连接错误", Toast
+                                        .LENGTH_LONG).show();
+                            }
+                        });
+                        progressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException
+                    {
+                        final String responsData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responsData);
+                        if(Utility.checkString(responsData,"code").equals("000")){
+                            ((EventFoundActivity)context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "发布成功", Toast
+                                            .LENGTH_LONG).show();
+                                }
+                            });
+                            ((EventFoundActivity) context).finish();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
     }
 }

@@ -163,6 +163,8 @@ public class SignInOutActivity extends AppCompatActivity
                     {
                         e.printStackTrace();
                     }
+                }else{
+                    imagePath = null;
                 }
                 break;
             default:

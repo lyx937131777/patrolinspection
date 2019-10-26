@@ -173,6 +173,7 @@ public class PatrolingActivity extends AppCompatActivity
                     intent2.putExtra("record",recordID);
                     intent2.putExtra("point",tempPointRecord.getPointId());
                     intent2.putExtra("police",patrolRecord.getPoliceId());
+                    intent2.putExtra("photoType",patrolLine.getPictureType());
                     startActivity(intent2);
                 }else{
                     LogUtil.e(TAG,"button clicked!");
