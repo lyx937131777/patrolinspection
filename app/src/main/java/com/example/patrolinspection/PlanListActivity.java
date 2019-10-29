@@ -69,6 +69,19 @@ public class PlanListActivity extends AppCompatActivity
         patrolPlanList.addAll(LitePal.findAll(PatrolPlan.class));
     }
 
+    public void refresh()
+    {
+        initPatrolPlan();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

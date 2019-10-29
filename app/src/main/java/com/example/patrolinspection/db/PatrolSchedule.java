@@ -144,4 +144,12 @@ public class PatrolSchedule extends LitePalSupport
         calendar.add(Calendar.MINUTE, Integer.parseInt(errorRange));
         return calendar.getTimeInMillis();
     }
+
+    public String getLineName(){
+        PatrolLine patrolLine = LitePal.where("internetID = ?",patrolLineId).findFirst(PatrolLine.class);
+        if(patrolLine == null){
+            return "线路已被删除";
+        }
+        return patrolLine.getPatrolLineName();
+    }
 }

@@ -45,14 +45,6 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public PointListAdapter(List<PatrolIP> patrolIPList)
     {
         mList = patrolIPList;
-        Collections.sort(mList, new Comparator<PatrolIP>()
-        {
-            @Override
-            public int compare(PatrolIP o1, PatrolIP o2)
-            {
-                return Integer.parseInt(o1.getOrderNo())-Integer.parseInt(o2.getOrderNo());
-            }
-        });
     }
 
     @NonNull

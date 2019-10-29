@@ -21,6 +21,7 @@ public class DataUpdatingActivity extends AppCompatActivity
     private CardView lineCard;
     private CardView eventCard;
     private CardView policeCard;
+    private CardView uploadCard;
 
     private DataUpdatingPresenter dataUpdatingPresenter;
 
@@ -85,6 +86,16 @@ public class DataUpdatingActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        uploadCard = findViewById(R.id.du_upload);
+        uploadCard.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(DataUpdatingActivity.this, UploadListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         updating = findViewById(R.id.data_updating);
         updating.setOnClickListener(new View.OnClickListener()
@@ -95,6 +106,7 @@ public class DataUpdatingActivity extends AppCompatActivity
                 dataUpdatingPresenter.updateAll();
             }
         });
+
     }
 
     @Override

@@ -151,7 +151,7 @@ public class HttpUtil
     public static void fileRequest(String address, String userID, File file, okhttp3.Callback callback)
     {
         OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。
-        MediaType fileType = MediaType.parse("image/png");//数据类型为File格式，
+        MediaType fileType = MediaType.parse("image/jpeg");//数据类型为File格式，
         RequestBody fileBody = RequestBody.create(fileType , file );
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
@@ -192,7 +192,7 @@ public class HttpUtil
     //人脸识别
     public static void faceRecognitionRequest(String address, String userID, String policeID, String faceType, File file, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。
-        MediaType fileType = MediaType.parse("image/png");//数据类型为File格式，
+        MediaType fileType = MediaType.parse("image/jpeg");//数据类型为File格式，
         RequestBody fileBody = RequestBody.create(fileType , file );
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

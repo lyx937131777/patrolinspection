@@ -82,6 +82,19 @@ public class ScheduleListActivity extends AppCompatActivity
         patrolScheduleList.addAll(LitePal.where("patrolPlanId = ?",planID).find(PatrolSchedule.class));
     }
 
+    public void refresh()
+    {
+        initPatrolSchedule();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

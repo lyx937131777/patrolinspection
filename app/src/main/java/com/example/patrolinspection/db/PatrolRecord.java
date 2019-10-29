@@ -295,6 +295,14 @@ public class PatrolRecord extends LitePalSupport
         if(getEndTimeTail() < getEndLimit()){
             return getEndTimeTail();
         }
-    return getEndLimit();
+        return getEndLimit();
+    }
+
+    public String getLineName(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        if(patrolSchedule == null){
+            return "排班已被删除";
+        }
+        return patrolSchedule.getLineName();
     }
 }

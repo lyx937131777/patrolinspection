@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.patrolinspection.adapter.PatrolLineAdapter;
 import com.example.patrolinspection.db.PatrolPlan;
@@ -71,6 +72,11 @@ public class PatrolLineActivity extends AppCompatActivity
             int week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             LogUtil.e("PatrolLineActivity","week: "+week);
             PatrolPlan patrolPlan = LitePal.where("patrolPlanType = ?", MapUtil.getPlanType(String.valueOf(week))).findFirst(PatrolPlan.class);
+            if(patrolPlan == null){
+                Toast.makeText(PatrolLineActivity.this,"本地尚无计划数据，请先进行数据更新！",Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
             planID = patrolPlan.getInternetID();
             this.setTitle(patrolPlan.getName());
             LogUtil.e("PatrolLineActivity","planID: "+planID +"          name: "+patrolPlan.getName());

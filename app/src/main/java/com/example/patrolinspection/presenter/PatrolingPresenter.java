@@ -120,14 +120,12 @@ public class PatrolingPresenter
         }
         patrolRecord.save();
         LogUtil.e("patrolingPresenter",patrolRecord.toString());
-        Log.e("PatrolingPresenter","此时的count: "+count+ "   ");
         if(count == 0){
             update(patrolRecordID,isEnd);
         }
     }
 
     public void update(final String patrolRecordID, final boolean isEnd){
-        Log.e("PatrolingPresenter","update开始时的count: "+count+ "   ");
         String address = HttpUtil.LocalAddress + "/api/patrolRecord/put";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -149,9 +147,10 @@ public class PatrolingPresenter
                     patrolRecord.setUpload(false);
                     patrolRecord.setState("已结束");
                     patrolRecord.save();
+                    ((PatrolingActivity)context).setResult(Activity.RESULT_OK)  ;
+                    ((PatrolingActivity)context).finish();
                 }
                 progressDialog.dismiss();
-                Log.e("PatrolingPresenter","update结束时的count: "+count+ "   ");
             }
 
             @Override
@@ -168,7 +167,6 @@ public class PatrolingPresenter
                     ((PatrolingActivity)context).finish();
                 }
                 progressDialog.dismiss();
-                Log.e("PatrolingPresenter","update结束时的count: "+count+ "   ");
             }
         });
     }

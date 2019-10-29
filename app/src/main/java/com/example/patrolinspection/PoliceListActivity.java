@@ -69,6 +69,19 @@ public class PoliceListActivity extends AppCompatActivity
         policeList.addAll(LitePal.findAll(Police.class));
     }
 
+    public void refresh()
+    {
+        initPolice();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

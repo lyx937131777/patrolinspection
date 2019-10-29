@@ -94,6 +94,19 @@ public class EventListActivity extends AppCompatActivity
         }
     }
 
+    public void refresh()
+    {
+        initEvent();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

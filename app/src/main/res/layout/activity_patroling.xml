@@ -103,7 +103,7 @@
             android:id="@+id/patrol_photo"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textColor="@color/white"
             android:background="@color/colorPrimary"
             android:layout_marginLeft="2dp"

@@ -70,6 +70,19 @@ public class LineListActivity extends AppCompatActivity
         patrolLineList.addAll(LitePal.findAll(PatrolLine.class));
     }
 
+    public void refresh()
+    {
+        initPatrolLine();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
