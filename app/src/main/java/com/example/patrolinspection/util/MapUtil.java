@@ -15,6 +15,7 @@ public class MapUtil
     private static Map<String,String> faceTypeMap = new HashMap<>();
     private static Map<String,String> dutyMap = new HashMap<>();
     private static Map<String,String> photoTypeMap = new HashMap<>();
+    private static Map<String,String> handleTypeMap = new HashMap<>();
 
     static {
         //patrol schedule
@@ -87,6 +88,15 @@ public class MapUtil
         photoTypeMap.put("must","拍照（必须）");
         photoTypeMap.put("optional","拍照（可选）");
         photoTypeMap.put("forbid","拍照（禁止）");
+
+        handleTypeMap.put("find","触发");
+        handleTypeMap.put("disposal","处置");
+        handleTypeMap.put("report","上报");
+        handleTypeMap.put("end","结束");
+        handleTypeMap.put("触发","find");
+        handleTypeMap.put("处置","disposal");
+        handleTypeMap.put("上报","report");
+        handleTypeMap.put("结束","end");
     }
 
     public static int getState(String s){
@@ -115,5 +125,9 @@ public class MapUtil
 
     public static String getPhotoType(String s){
         return  photoTypeMap.get(s);
+    }
+
+    public static String getHandleType(String s){
+        return handleTypeMap.get(s);
     }
 }

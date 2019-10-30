@@ -1,18 +1,35 @@
 package com.example.patrolinspection;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import com.example.patrolinspection.adapter.HandleRecordAdapter;
+import com.example.patrolinspection.dagger2.DaggerMyComponent;
+import com.example.patrolinspection.dagger2.MyComponent;
+import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.HandleRecord;
+import com.example.patrolinspection.presenter.HandleRecordPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HandleRecordActivity extends AppCompatActivity
 {
-    List<HandleRecord> handleRecordList = new ArrayList<>();
+    private String eventRecordID;
+    private String type;
 
+    private List<HandleRecord> handleRecordList = new ArrayList<>();
+    private HandleRecordAdapter adapter;
+
+    private Button handleButton;
+
+    private HandleRecordPresenter handleRecordPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,9 +44,42 @@ public class HandleRecordActivity extends AppCompatActivity
         {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        MyComponent myComponent = DaggerMyComponent.builder().myModule(new MyModule(this)).build();
+        handleRecordPresenter = myComponent.handleRecordPresenter();
 
+        Intent intent = getIntent();
+        eventRecordID = intent.getStringExtra("eventRecord");
+        type = intent.getStringExtra("type");
+
+        initHandleRecord();
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new HandleRecordAdapter(handleRecordList);
+        recyclerView.setAdapter(adapter);
+
+        handleButton = findViewById(R.id.handle);
+        if(type.equals("ended")){
+            handleButton.setVisibility(View.GONE);
+        }
+        handleButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+        handleRecordPresenter.updateRecord(handleRecordList,adapter,eventRecordID);
 
     }
+
+    private void initHandleRecord()
+    {
+        handleRecordList.clear();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

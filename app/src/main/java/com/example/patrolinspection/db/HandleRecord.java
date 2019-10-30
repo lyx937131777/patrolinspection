@@ -2,6 +2,7 @@ package com.example.patrolinspection.db;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
 public class HandleRecord extends LitePalSupport
@@ -15,6 +16,17 @@ public class HandleRecord extends LitePalSupport
     private String operateTime;
     private String detail;
     private String reportUnit;
+    private String disposalOperateType;
+
+    public String getDisposalOperateType()
+    {
+        return disposalOperateType;
+    }
+
+    public void setDisposalOperateType(String disposalOperateType)
+    {
+        this.disposalOperateType = disposalOperateType;
+    }
 
     public String getInternetID()
     {
@@ -84,5 +96,13 @@ public class HandleRecord extends LitePalSupport
     public void setReportUnit(String reportUnit)
     {
         this.reportUnit = reportUnit;
+    }
+
+    public String getPoliceName(){
+        Police police = LitePal.where("internetID = ?",policeId).findFirst(Police.class);
+        if(police != null){
+            return police.getRealName();
+        }
+        return "本地无该保安信息";
     }
 }

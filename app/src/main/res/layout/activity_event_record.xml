@@ -28,7 +28,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/fuchsia" />
+        android:background="@color/lightyellow" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

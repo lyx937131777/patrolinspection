@@ -8,6 +8,7 @@ import android.util.Base64;
 import com.example.patrolinspection.db.Company;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
+import com.example.patrolinspection.db.HandleRecord;
 import com.example.patrolinspection.db.InformationPoint;
 import com.example.patrolinspection.db.Notice;
 import com.example.patrolinspection.db.PatrolLine;
@@ -316,6 +317,27 @@ public class Utility
                 JSONArray jsonArray = dataObject.getJSONArray("content");
                 String eventRecordJson = jsonArray.toString();
                 return new Gson().fromJson(eventRecordJson, new TypeToken<List<EventRecord>>() {}.getType());
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    //更新处置记录列表
+    public static List<HandleRecord> handleHandleRecordList(String response)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                JSONArray jsonArray = dataObject.getJSONArray("disposalRecordInfos");
+                String handleRecordJson = jsonArray.toString();
+                return new Gson().fromJson(handleRecordJson, new TypeToken<List<HandleRecord>>() {}.getType());
             } catch (JSONException e)
             {
                 e.printStackTrace();

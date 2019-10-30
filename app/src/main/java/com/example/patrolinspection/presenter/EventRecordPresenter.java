@@ -51,7 +51,7 @@ public class EventRecordPresenter
             public void onResponse(Call call, Response response) throws IOException
             {
                 final String responsData = response.body().string();
-                LogUtil.e("EventRecordActivity",responsData);
+                LogUtil.e("EventRecordPresenter",responsData);
                 eventRecordList.clear();
                 List<EventRecord> tempList = Utility.handleEventRecordList(responsData);
                 for(EventRecord eventRecord : tempList){
@@ -71,6 +71,7 @@ public class EventRecordPresenter
                         adapter.notifyDataSetChanged();
                     }
                 });
+                //TODO 本地保存
             }
         });
     }

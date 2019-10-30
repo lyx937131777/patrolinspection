@@ -9,6 +9,7 @@ import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.presenter.EventRecordPresenter;
 import com.example.patrolinspection.presenter.FaceRecognitionPresenter;
+import com.example.patrolinspection.presenter.HandleRecordPresenter;
 import com.example.patrolinspection.presenter.InformationPointPresenter;
 import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.presenter.NoticePresenter;
@@ -97,5 +98,10 @@ public class MyModule
     @Provides
     public PoliceRegisterPresenter providePoliceRegisterPresenter(Context context, SharedPreferences pref){
         return  new PoliceRegisterPresenter(context, pref);
+    }
+
+    @Provides
+    public HandleRecordPresenter provideHandleRecordPresenter(Context context, SharedPreferences pref){
+        return new HandleRecordPresenter(context, pref);
     }
 }

@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.patrolinspection.EventListActivity;
+import com.example.patrolinspection.HandleRecordActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
+import com.example.patrolinspection.ui.main.EventRecordFragment;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.Utility;
@@ -65,12 +67,10 @@ public class EventRecordAdapter extends RecyclerView.Adapter<EventRecordAdapter.
             {
                 int position = holder.getAdapterPosition();
                 EventRecord eventRecord = mList.get(position);
-//                if(type.equals("eventType")){
-//                    Intent intent = new Intent(mContext, EventListActivity.class);
-//                    intent.putExtra("type","eventName");
-//                    intent.putExtra("eventType",event.getType());
-//                    mContext.startActivity(intent);
-//                }
+                Intent intent = new Intent(mContext, HandleRecordActivity.class);
+                intent.putExtra("eventRecord",eventRecord.getInternetID());
+                intent.putExtra("type",type);
+                mContext.startActivity(intent);
             }
         });
         return holder;

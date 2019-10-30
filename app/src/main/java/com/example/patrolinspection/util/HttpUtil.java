@@ -32,6 +32,9 @@ public class HttpUtil
 {
     public static final String LocalAddress = "http://47.104.70.81:8887";
 
+    public static String getPhotoURL(String url){
+        return LocalAddress + "/resources/" + url;
+    }
 
     //登陆界面
     public static void loginRequest(String address, String physicalNo,
@@ -57,9 +60,7 @@ public class HttpUtil
 //        OkHttpClient client = buildBasicAuthClient(userID,"123456");
         OkHttpClient client = new OkHttpClient();
         String credential = Credentials.basic(userID, "123456");
-        Request request = new Request.Builder().url(address)
-                .addHeader("Authorization",credential)
-                .build();
+        Request request = new Request.Builder().url(address).addHeader("Authorization",credential).build();
         LogUtil.e("Login","111111111   " + request.header("Authorization"));
         client.newCall(request).enqueue(callback);
     }
