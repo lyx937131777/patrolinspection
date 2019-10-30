@@ -353,7 +353,7 @@ public class Utility
     public static String dateStringToString(String s, String formatString){
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         DateFormat df2 = new SimpleDateFormat(formatString);
-        df2.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        df2.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date date = null;
         try {
             date = df.parse(s);

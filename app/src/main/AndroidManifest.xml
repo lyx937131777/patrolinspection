@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UploadListActivity"></activity>
+        <activity android:name=".HandleRecordActivity"></activity>
+        <activity android:name=".UploadListActivity" />
         <activity android:name=".SwipeNfcActivity" />
         <activity android:name=".PoliceRegisterActivity" />
         <activity android:name=".PoliceListActivity" />
@@ -74,13 +75,13 @@
             android:enabled="true"
             android:exported="true" />
     </application>
-    <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.NFC" />
 
 </manifest>

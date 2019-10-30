@@ -61,6 +61,7 @@ public class DataUpdatingPresenter
         updatePatrolLine();
         updateEvent();
         updatePolice();
+        uploadPatrolRecordPhoto();
         new Thread(){
             public void run(){
                 try{

@@ -315,14 +315,24 @@ public class PatrolingActivity extends AppCompatActivity
     private void initIP()
     {
         patrolPointRecordList.clear();
-        List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
-        for(PatrolIP patrolIP : patrolIPList){
-            PatrolPointRecord patrolPointRecord = new PatrolPointRecord(recordID,patrolIP);
-            patrolPointRecordList.add(patrolPointRecord);
-            patrolPointRecord.save();
+        List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
+        if(tempList.size() > 0){
+            patrolPointRecordList.addAll(tempList);
+        }else{
+            List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
+            for(PatrolIP patrolIP : patrolIPList){
+                PatrolPointRecord patrolPointRecord = new PatrolPointRecord(recordID,patrolIP);
+                patrolPointRecordList.add(patrolPointRecord);
+                patrolPointRecord.save();
+            }
         }
         countAll = patrolPointRecordList.size();
         countPatrolled = 0;
+        for(PatrolPointRecord patrolPointRecord : patrolPointRecordList){
+            if(patrolPointRecord.getTime() != 0){
+                countPatrolled++;
+            }
+        }
         ipCount.setText(countPatrolled + "/" + countAll);
     }
 

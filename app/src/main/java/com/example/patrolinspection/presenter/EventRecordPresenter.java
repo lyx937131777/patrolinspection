@@ -28,7 +28,7 @@ public class EventRecordPresenter
         this.pref = pref;
     }
 
-    public void updateRecord(final List<EventRecord> eventRecordList, final EventRecordAdapter adapter){
+    public void updateRecord(final List<EventRecord> eventRecordList, final EventRecordAdapter adapter, final String type){
         String address = HttpUtil.LocalAddress + "/api/eventRecord/list";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
@@ -53,7 +53,18 @@ public class EventRecordPresenter
                 final String responsData = response.body().string();
                 LogUtil.e("EventRecordActivity",responsData);
                 eventRecordList.clear();
-                eventRecordList.addAll(Utility.handleEventRecordList(responsData));
+                List<EventRecord> tempList = Utility.handleEventRecordList(responsData);
+                for(EventRecord eventRecord : tempList){
+                    if(type.equals("ended")){
+                        if(eventRecord.getDisposalOperateType().equals("end")){
+                            eventRecordList.add(eventRecord);
+                        }
+                    }else{
+                        if(!eventRecord.getDisposalOperateType().equals("end")){
+                            eventRecordList.add(eventRecord);
+                        }
+                    }
+                }
                 ((EventRecordActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

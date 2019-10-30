@@ -19,10 +19,16 @@ public class EventRecord extends LitePalSupport
     private String PatrolRecordId;
     private String pointId;
 
+    private String policeName;
+    private String firstTime;
+    private String eventName;
+
 //    private String startTime;
 //    private String latestTime;
 
     private List<HandleRecord> disposalRecordInfos;
+
+
 
     public String getInternetID()
     {
@@ -102,5 +108,35 @@ public class EventRecord extends LitePalSupport
     public void setDisposalRecordInfos(List<HandleRecord> disposalRecordInfos)
     {
         this.disposalRecordInfos = disposalRecordInfos;
+    }
+
+    public String getPoliceName()
+    {
+        return policeName;
+    }
+
+    public void setPoliceName(String policeName)
+    {
+        this.policeName = policeName;
+    }
+
+    public String getFirstTime()
+    {
+        return firstTime;
+    }
+
+    public void setFirstTime(String firstTime)
+    {
+        this.firstTime = firstTime;
+    }
+
+    public String getEventName()
+    {
+        return eventName;
+    }
+
+    public void setEventName(String eventName)
+    {
+        this.eventName = eventName;
     }
 }

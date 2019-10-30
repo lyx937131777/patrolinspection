@@ -13,10 +13,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.patrolinspection.adapter.TypeAdapter;
+import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
+
+import org.litepal.LitePal;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -105,6 +108,12 @@ public class MainActivity extends AppCompatActivity
         if(!HeartbeatService.isRun){
             Intent intent = new Intent(this,HeartbeatService.class);
             startService(intent);
+        }
+        PatrolRecord patrolRecord = LitePal.where("state = ?","进行中").findFirst(PatrolRecord.class);
+        if(patrolRecord != null){
+            Intent intent = new Intent(this, PatrolingActivity.class);
+            intent.putExtra("record",patrolRecord.getInternetID());
+            startActivityForResult(intent,0);
         }
     }
 

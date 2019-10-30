@@ -44,5 +44,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginRight="10dp"/>
+        
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

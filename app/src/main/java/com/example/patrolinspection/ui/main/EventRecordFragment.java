@@ -73,7 +73,7 @@ public class EventRecordFragment extends Fragment
         adapter = new EventRecordAdapter(eventRecordList,getType());
         recyclerView.setAdapter(adapter);
 
-        eventRecordPresenter.updateRecord(eventRecordList,adapter);
+        eventRecordPresenter.updateRecord(eventRecordList,adapter,getType());
         return root;
     }
 
@@ -89,8 +89,5 @@ public class EventRecordFragment extends Fragment
     private void initEventRecord()
     {
         eventRecordList.clear();
-        for(int i = 0; i < 5; i++){
-            eventRecordList.add(new EventRecord());
-        }
     }
 }

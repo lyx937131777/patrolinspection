@@ -17,14 +17,17 @@ public class MapUtil
     private static Map<String,String> photoTypeMap = new HashMap<>();
 
     static {
+        //patrol schedule
         stateMap.put("进行中", R.drawable.state_running);
         stateMap.put("未开始",R.drawable.state_unstart);
         stateMap.put("已结束",R.drawable.state_ended);
 //        stateMap.put("漏检",R.drawable.state_miss);
 //        stateMap.put("跳检",R.drawable.state_jump);
+        //patrolingActivity  point state
         stateMap.put("未巡检",R.drawable.state_unstart);
         stateMap.put("已巡检",R.drawable.state_ended);
         stateMap.put("巡检中",R.drawable.state_running);
+        //upload
         stateMap.put("未上传",R.drawable.state_miss);
         stateMap.put("已上传",R.drawable.state_ended);
 
