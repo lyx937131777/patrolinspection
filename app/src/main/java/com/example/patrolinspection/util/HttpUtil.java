@@ -190,6 +190,29 @@ public class HttpUtil
         client.newCall(request).enqueue(callback);
     }
 
+    //处置事件
+    public static void postHandleRecordRequest(String address, String userID, String eventRecordID, String policeID,
+                                              String reportUnit, String detail, String disposalOperateType, String photo,long operateTime,
+                                               okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式
+        HashMap<String, String> map = new HashMap<>();
+        map.put("eventRecordId",eventRecordID);
+        map.put("equipmentId",userID.split("-")[1]);
+        map.put("policeId",policeID);
+        map.put("disposalOperateType",disposalOperateType);
+        map.put("reportUnit",reportUnit);
+        map.put("photo",photo);
+        map.put("detail",detail);
+        map.put("operateime",""+operateTime);
+        Gson gson = new Gson();
+        String jsonStr = gson.toJson(map);
+        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
     //人脸识别
     public static void faceRecognitionRequest(String address, String userID, String policeID, String faceType, File file, okhttp3.Callback callback){
         OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。

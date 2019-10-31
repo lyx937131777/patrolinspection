@@ -77,6 +77,13 @@ public class EventRecordFragment extends Fragment
         return root;
     }
 
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        eventRecordPresenter.updateRecord(eventRecordList,adapter,getType());
+    }
+
     private String getType()
     {
         if(index == 1){

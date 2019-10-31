@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
+import com.example.patrolinspection.presenter.EventHandlePresenter;
 import com.example.patrolinspection.presenter.EventRecordPresenter;
 import com.example.patrolinspection.presenter.FaceRecognitionPresenter;
 import com.example.patrolinspection.presenter.HandleRecordPresenter;
@@ -103,5 +104,10 @@ public class MyModule
     @Provides
     public HandleRecordPresenter provideHandleRecordPresenter(Context context, SharedPreferences pref){
         return new HandleRecordPresenter(context, pref);
+    }
+
+    @Provides
+    public EventHandlePresenter provideEventHandlePresenter(Context context, SharedPreferences pref){
+        return new EventHandlePresenter(context,pref);
     }
 }

@@ -28,17 +28,13 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
     static class ViewHolder extends RecyclerView.ViewHolder
     {
         View piView;
-        ImageView piState;
-        TextView piName;
-        TextView piStateText;
+        TextView plName;
 
         public  ViewHolder(View view)
         {
             super(view);
             piView = view;
-            piName = view.findViewById(R.id.pi_name);
-            piState = view.findViewById(R.id.pi_state);
-            piStateText = view.findViewById(R.id.pi_state_text);
+            plName = view.findViewById(R.id.pl_name);
         }
     }
 
@@ -79,9 +75,7 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
         PatrolSchedule patrolSchedule = mList.get(position);
         String lineID = patrolSchedule.getPatrolLineId();
         PatrolLine patrolLine = LitePal.where("internetId = ?",lineID).findFirst(PatrolLine.class);
-        holder.piName.setText(patrolLine.getPatrolLineName());
-//        Glide.with(mContext).load(MapUtil.getState(patrolInspection.getState())).into(holder.piState);
-        holder.piStateText.setText(patrolLine.getPatrolLineNo());
+        holder.plName.setText(patrolLine.getPatrolLineName());
     }
 
     @Override

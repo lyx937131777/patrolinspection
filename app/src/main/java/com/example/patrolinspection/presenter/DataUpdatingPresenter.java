@@ -156,11 +156,13 @@ public class DataUpdatingPresenter
                 LogUtil.e("DataUpdatingSchedule",responsData);
                 List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responsData);
                 LitePal.deleteAll(PatrolSchedule.class);
-                for(PatrolSchedule patrolSchedule : patrolScheduleList){
-                    String lineID = patrolSchedule.getPatrolLineId();
-                    List<PatrolLine> patrolLineList = LitePal.where("internetID = ?",lineID).find(PatrolLine.class);
-                    if(patrolLineList.size() > 0){
-                        patrolSchedule.save();
+                if(patrolScheduleList != null && patrolScheduleList.size() > 0){
+                    for(PatrolSchedule patrolSchedule : patrolScheduleList){
+                        String lineID = patrolSchedule.getPatrolLineId();
+                        List<PatrolLine> patrolLineList = LitePal.where("internetID = ?",lineID).find(PatrolLine.class);
+                        if(patrolLineList.size() > 0){
+                            patrolSchedule.save();
+                        }
                     }
                 }
                 reduceCount();

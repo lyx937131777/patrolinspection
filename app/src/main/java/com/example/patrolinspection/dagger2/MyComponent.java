@@ -5,6 +5,7 @@ import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
 import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
+import com.example.patrolinspection.presenter.EventHandlePresenter;
 import com.example.patrolinspection.presenter.EventRecordPresenter;
 import com.example.patrolinspection.presenter.FaceRecognitionPresenter;
 import com.example.patrolinspection.presenter.HandleRecordPresenter;
@@ -41,4 +42,6 @@ public interface MyComponent
     PoliceRegisterPresenter policeRegisterPresenter();
 
     HandleRecordPresenter handleRecordPresenter();
+
+    EventHandlePresenter eventHandlePresenter();
 }

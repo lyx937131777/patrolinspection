@@ -182,7 +182,6 @@ public class EventFoundActivity extends AppCompatActivity
     {
         efClassList.clear();
         if(type.equals("normal")){
-
             Cursor cursor = LitePal.findBySQL("select distinct type from Event");
             if (cursor != null && cursor.moveToFirst()) {
                 do {
@@ -288,6 +287,7 @@ public class EventFoundActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {

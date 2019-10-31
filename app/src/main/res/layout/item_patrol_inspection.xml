@@ -42,10 +42,10 @@
 
             <TextView
                 android:id="@+id/pi_start_time"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:maxLines="1"
                 android:textColor="@color/gray"
                 app:layout_constraintTop_toTopOf="parent"
@@ -54,7 +54,7 @@
                 android:id="@+id/pi_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:maxLines="1"
                 android:textColor="@color/gray"
                 android:layout_marginLeft="15dp"

@@ -84,7 +84,7 @@ public class HandleRecordAdapter extends RecyclerView.Adapter<HandleRecordAdapte
     {
         HandleRecord handleRecord = mList.get(position);
         holder.nameText.setText(handleRecord.getPoliceName());
-        holder.detailText.setText(handleRecord.getDetail());
+        holder.detailText.setText("备注："+handleRecord.getDetail());
         holder.typeText.setText(MapUtil.getHandleType(handleRecord.getDisposalOperateType()));
         holder.timeText.setText(Utility.dateStringToString(handleRecord.getOperateTime(),"yyyy-MM-dd HH:mm"));
         Glide.with(mContext).load(HttpUtil.getPhotoURL(handleRecord.getPhoto())).into(holder.photo);

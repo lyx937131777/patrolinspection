@@ -125,7 +125,7 @@ public class EventFoundPresenter
         String photo = "";
         String address = HttpUtil.LocalAddress + "/api/eventRecord";
         String companyID = pref.getString("companyID",null);
-        String reportUnit = "保安";//TODO 上报单位到底是什么
+        String reportUnit = "保安";//TODO 上报单位到底是什么 question3
         long time = System.currentTimeMillis();
         Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
         String eventID = event.getInternetID();

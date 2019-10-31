@@ -1,6 +1,7 @@
 package com.example.patrolinspection;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,7 +68,10 @@ public class HandleRecordActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-
+                Intent startIntent = new Intent(HandleRecordActivity.this, SwipeNfcActivity.class);
+                startIntent.putExtra("type","eventHandle");
+                startIntent.putExtra("eventRecord",eventRecordID);
+                startActivityForResult(startIntent,0);
             }
         });
 
@@ -80,6 +84,18 @@ public class HandleRecordActivity extends AppCompatActivity
         handleRecordList.clear();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+    {
+        switch (requestCode){
+            case 0:
+                if(resultCode == RESULT_OK){
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

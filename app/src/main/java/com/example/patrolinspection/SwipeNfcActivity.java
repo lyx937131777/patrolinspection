@@ -273,6 +273,13 @@ public class SwipeNfcActivity extends AppCompatActivity
                 finish();
                 break;
             }
+            case "eventHandle":{
+                Intent intent = new Intent(mContext,EventHandleActivity.class);
+                intent.putExtra("eventRecord",getIntent().getStringExtra("eventRecord"));
+                intent.putExtra("police",police.getInternetID());
+                startActivityForResult(intent,0);
+                break;
+            }
         }
 
         mProgressDialog.dismiss();
