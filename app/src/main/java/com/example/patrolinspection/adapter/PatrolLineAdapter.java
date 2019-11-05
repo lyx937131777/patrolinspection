@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.patrolinspection.PatrolInspectionActivity;
 import com.example.patrolinspection.PatrolLineActivity;
 import com.example.patrolinspection.R;
+import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolSchedule;
 
@@ -60,10 +61,18 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
             {
                 int position = holder.getAdapterPosition();
                 PatrolSchedule patrolSchedule = mList.get(position);
-                Intent intent = new Intent(mContext, PatrolInspectionActivity.class);
-                intent.putExtra("line",patrolSchedule.getPatrolLineId());
-                intent.putExtra("plan",patrolSchedule.getPatrolPlanId());
-                ((PatrolLineActivity)mContext).startActivityForResult(intent,0);
+                if(patrolSchedule.getPlanType().equals("freeSchedule")){
+                    Intent intent = new Intent(mContext, SwipeNfcActivity.class);
+                    intent.putExtra("title","用户认证");
+                    intent.putExtra("type","patrolInspection");
+                    intent.putExtra("schedule",patrolSchedule.getInternetID());
+                    ((PatrolLineActivity)mContext).startActivityForResult(intent,0);
+                }else{
+                    Intent intent = new Intent(mContext, PatrolInspectionActivity.class);
+                    intent.putExtra("line",patrolSchedule.getPatrolLineId());
+                    intent.putExtra("plan",patrolSchedule.getPatrolPlanId());
+                    ((PatrolLineActivity)mContext).startActivityForResult(intent,0);
+                }
             }
         });
         return holder;
@@ -73,9 +82,12 @@ public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.Vi
     public void onBindViewHolder(@NonNull PatrolLineAdapter.ViewHolder holder, int position)
     {
         PatrolSchedule patrolSchedule = mList.get(position);
-        String lineID = patrolSchedule.getPatrolLineId();
-        PatrolLine patrolLine = LitePal.where("internetId = ?",lineID).findFirst(PatrolLine.class);
-        holder.plName.setText(patrolLine.getPatrolLineName());
+        if(patrolSchedule.getPlanType().equals("freeSchedule")){
+            holder.plName.setText(patrolSchedule.getLineName()+"（自由排班）");
+        }else {
+            holder.plName.setText(patrolSchedule.getLineName());
+        }
+
     }
 
     @Override

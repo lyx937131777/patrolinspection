@@ -37,6 +37,7 @@ import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.psam.CommonUtil;
+import com.example.patrolinspection.ui.main.EventRecordFragment;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 
@@ -73,6 +74,7 @@ public class PatrolingActivity extends AppCompatActivity
 
     //View控件
     private TextView ipCount;
+    private TextView lineInformation;
     private Button eventFound;
     private Button eventHandle;
     private Button endPatrol;
@@ -122,27 +124,24 @@ public class PatrolingActivity extends AppCompatActivity
         actionBar.setTitle(patrolLine.getPatrolLineName());
 
         //显示信息
-        final String startTime =patrolSchedule.getStartTime();
-        String endTime = patrolSchedule.getEndTime();
-        int duringTime = patrolSchedule.getDuringMin();
+        lineInformation = findViewById(R.id.line_information);
+        StringBuilder stringBuilder = new StringBuilder();
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String realStartTime =  format.format(new Date(patrolRecord.getStartTimeLong()));
-        String realEndTime = format.format(new Date(patrolRecord.getRealEndLimit()));
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("计划时间： " + startTime + " - " + endTime + " 共计" + duringTime + "分钟\n");
-        stringBuilder.append("实际开始时间： " + realStartTime + "\n请在 " + realEndTime+ " 之前完成巡检");
-        TextView lineInformation = findViewById(R.id.line_information);
+        if(patrolSchedule.getPlanType().equals("freeSchedule")){
+            stringBuilder.append("开始时间： " + realStartTime + "\n");
+            stringBuilder.append("此巡检为自由排班,无时间限制。");
+        }else{
+            String startTime =patrolSchedule.getStartTime();
+            String endTime = patrolSchedule.getEndTime();
+            int duringTime = patrolSchedule.getDuringMin();
+            String realEndTime = format.format(new Date(patrolRecord.getRealEndLimit()));
+            stringBuilder.append("计划时间： " + startTime + " - " + endTime + " 共计" + duringTime + "分钟\n");
+            stringBuilder.append("实际开始时间： " + realStartTime + "\n请在 " + realEndTime+ " 之前完成巡检");
+        }
         lineInformation.setText(stringBuilder.toString());
 
-        //recycleView
-        ipCount = findViewById(R.id.ip_count);
-        initIP();
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new InformationPointAdapter(patrolPointRecordList);
-        recyclerView.setAdapter(adapter);
-
+        //Button
         eventFound = findViewById(R.id.event_found);
         eventHandle = findViewById(R.id.event_handle);
         endPatrol = findViewById(R.id.end_patrol);
@@ -186,7 +185,8 @@ public class PatrolingActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-
+                Intent intent2 = new Intent(PatrolingActivity.this, EventRecordActivity.class);
+                startActivity(intent2);
             }
         });
 
@@ -210,7 +210,18 @@ public class PatrolingActivity extends AppCompatActivity
                 }
             }
         });
+
+        //recycleView
+        ipCount = findViewById(R.id.ip_count);
+        initIP();
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new InformationPointAdapter(patrolPointRecordList);
+        recyclerView.setAdapter(adapter);
+
     }
+
     private void initReadBak(){
         //NFC适配器，所有的关于NFC的操作从该适配器进行
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -317,7 +328,17 @@ public class PatrolingActivity extends AppCompatActivity
         patrolPointRecordList.clear();
         List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
         if(tempList.size() > 0){
-            patrolPointRecordList.addAll(tempList);
+            for(PatrolPointRecord patrolPointRecord : tempList){
+                patrolPointRecordList.add(patrolPointRecord);
+                if(patrolPointRecord.getState().equals("巡检中")){
+                    tempPointRecord = patrolPointRecord;
+                    eventFound.setEnabled(true);
+                    eventHandle.setEnabled(true);
+                    if(!patrolLine.getPictureType().equals("forbid")){
+                        patrolPhoto.setEnabled(true);
+                    }
+                }
+            }
         }else{
             List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
             for(PatrolIP patrolIP : patrolIPList){

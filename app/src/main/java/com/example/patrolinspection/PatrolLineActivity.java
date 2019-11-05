@@ -92,6 +92,10 @@ public class PatrolLineActivity extends AppCompatActivity
                 lineList.add(patrolSchedule.getPatrolLineId());
             }
         }
+
+        PatrolPlan freePlan = LitePal.where("patrolPlanType = ?","freeSchedule").findFirst(PatrolPlan.class);
+        List<PatrolSchedule> freeScheduleList = LitePal.where("patrolPlanId = ?",freePlan.getInternetID()).find(PatrolSchedule.class);
+        patrolScheduleList.addAll(freeScheduleList);
 // 用SQL语句时 字段不能带id ID Id
 //        Cursor cursor = LitePal.findBySQL("select distinct patrolLine from PatrolSchedule where patrolPlan = ?",planID);
 //        if (cursor != null && cursor.moveToFirst()) {

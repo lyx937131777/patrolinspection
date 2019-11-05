@@ -164,8 +164,6 @@ public class SwipeNfcActivity extends AppCompatActivity
                         authType = CARD_TYPE_IC;
                     }
                 }
-                final Police police = LitePal.where("icCardNo = ?",icid).findFirst(Police.class);
-                if(police == null){
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                     String address = HttpUtil.LocalAddress + "/api/police/cardNo";
                     String userID = preferences.getString("userID",null);
@@ -200,15 +198,13 @@ public class SwipeNfcActivity extends AppCompatActivity
                                 mProgressDialog.dismiss();
                                 isCardReading = false;
                             }else{
+                                LitePal.deleteAll(Police.class,"icCardNo = ?",icid);
                                 Police internetPolice = Utility.handlePolice(responsData);
                                 internetPolice.save();
                                 processPolice(internetPolice);
                             }
                         }
                     });
-                }else{
-                    processPolice(police);
-                }
 
             };
         }.start();
@@ -220,37 +216,61 @@ public class SwipeNfcActivity extends AppCompatActivity
         LogUtil.e("SwipeNfcActivity","companyId: "+police.getCompanyId());
         LogUtil.e("SwipeNfcActivity","icid: "+police.getIcCardNo());
         LogUtil.e("SwipeNfcActivity","duty: "+police.getMainDutyId() + "  " + MapUtil.getDuty(police.getMainDutyId()));
+        if(!police.isInService()){
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Toast.makeText(mContext,"该保安已离职！",Toast.LENGTH_LONG).show();
+                }
+            });
+            mProgressDialog.dismiss();
+            isCardReading = false;
+            return;
+        }
         switch (type){
             case "patrolInspection":{
-                String scheduleID = getIntent().getStringExtra("schedule");
-                PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",scheduleID).findFirst(PatrolSchedule.class);
-                String lineID = patrolSchedule.getPatrolLineId();
-                PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
-                if(patrolLine.getPoliceIds() != null && patrolLine.getPoliceIds().contains(police.getInternetID())){
-                    if(patrolLine.getPatrolLineType().equals("publicSecurity") && (!police.isOfficialPolice())){
-                        runOnUiThread(new Runnable()
-                        {
-                            @Override
-                            public void run()
-                            {
-                                Toast.makeText(mContext,"自建保安无法巡检治安巡检线路",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }else{
-                        Intent intent = new Intent(mContext, FaceRecognitionActivity.class);
-                        intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
-                        intent.putExtra("police",police.getInternetID());
-                        startActivityForResult(intent,0);
-                    }
-                }else{
+               if(!police.isOnDuty()){
                     runOnUiThread(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            Toast.makeText(mContext,"该保安无法巡检此线路",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"该保安尚未签到！",Toast.LENGTH_LONG).show();
                         }
                     });
+                }else{
+                    String scheduleID = getIntent().getStringExtra("schedule");
+                    PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",scheduleID).findFirst(PatrolSchedule.class);
+                    String lineID = patrolSchedule.getPatrolLineId();
+                    PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
+                    if(patrolLine.getPoliceIds() != null && patrolLine.getPoliceIds().contains(police.getInternetID())){
+                        if(patrolLine.getPatrolLineType().equals("publicSecurity") && (!police.isOfficialPolice())){
+                            runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    Toast.makeText(mContext,"自建保安无法巡检治安巡检线路",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }else{
+                            Intent intent = new Intent(mContext, FaceRecognitionActivity.class);
+                            intent.putExtra("schedule",getIntent().getStringExtra("schedule"));
+                            intent.putExtra("police",police.getInternetID());
+                            startActivityForResult(intent,0);
+                        }
+                    }else{
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                Toast.makeText(mContext,"该保安无法巡检此线路",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
                 break;
             }
@@ -266,18 +286,40 @@ public class SwipeNfcActivity extends AppCompatActivity
                 break;
             }
             case "eventFound":{
-                Intent intent = new Intent(mContext,EventFoundActivity.class);
-                intent.putExtra("type","normal");
-                intent.putExtra("police",police.getInternetID());
-                startActivity(intent);
-                finish();
+                if(!police.isOnDuty()){
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"该保安尚未签到！",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    Intent intent = new Intent(mContext,EventFoundActivity.class);
+                    intent.putExtra("type","normal");
+                    intent.putExtra("police",police.getInternetID());
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             }
             case "eventHandle":{
-                Intent intent = new Intent(mContext,EventHandleActivity.class);
-                intent.putExtra("eventRecord",getIntent().getStringExtra("eventRecord"));
-                intent.putExtra("police",police.getInternetID());
-                startActivityForResult(intent,0);
+                if(!police.isOnDuty()){
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"该保安尚未签到！",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    Intent intent = new Intent(mContext,EventHandleActivity.class);
+                    intent.putExtra("eventRecord",getIntent().getStringExtra("eventRecord"));
+                    intent.putExtra("police",police.getInternetID());
+                    startActivityForResult(intent,0);
+                }
                 break;
             }
         }

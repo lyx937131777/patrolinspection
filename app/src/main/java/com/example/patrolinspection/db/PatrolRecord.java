@@ -305,4 +305,12 @@ public class PatrolRecord extends LitePalSupport
         }
         return patrolSchedule.getLineName();
     }
+
+    public String getPlanType(){
+        PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolScheduleId).findFirst(PatrolSchedule.class);
+        if(patrolSchedule == null){
+            return "排班已被删除";
+        }
+        return patrolSchedule.getPlanType();
+    }
 }

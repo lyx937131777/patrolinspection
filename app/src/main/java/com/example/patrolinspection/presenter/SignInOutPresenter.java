@@ -75,6 +75,9 @@ public class SignInOutPresenter
     }
 
     public void signInOut(final String policeID, final String type, final String attendanceType) {
+        if(progressDialog == null || !progressDialog.isShowing()){
+            progressDialog = ProgressDialog.show(context,"","识别中...");
+        }
         String address = HttpUtil.LocalAddress + "/api/attendance";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);

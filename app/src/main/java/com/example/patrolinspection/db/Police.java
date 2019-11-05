@@ -15,6 +15,28 @@ public class Police extends LitePalSupport
     private String mainDutyId;
 
     private boolean officialPolice;//true表示保安卡 false表示自建（IC卡）
+    private boolean inService;
+    private boolean onDuty;
+
+    public boolean isInService()
+    {
+        return inService;
+    }
+
+    public void setInService(boolean inService)
+    {
+        this.inService = inService;
+    }
+
+    public boolean isOnDuty()
+    {
+        return onDuty;
+    }
+
+    public void setOnDuty(boolean onDuty)
+    {
+        this.onDuty = onDuty;
+    }
 
     public String getInternetID()
     {

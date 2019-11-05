@@ -72,8 +72,8 @@ public class EventRecordFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new EventRecordAdapter(eventRecordList,getType());
         recyclerView.setAdapter(adapter);
-
-        eventRecordPresenter.updateRecord(eventRecordList,adapter,getType());
+        LogUtil.e("EventRecordFragment","onCreateView");
+//        eventRecordPresenter.updateRecord(eventRecordList,adapter,getType());
         return root;
     }
 
@@ -81,6 +81,7 @@ public class EventRecordFragment extends Fragment
     public void onStart()
     {
         super.onStart();
+        LogUtil.e("EventRecordFragment","onStart");
         eventRecordPresenter.updateRecord(eventRecordList,adapter,getType());
     }
 
