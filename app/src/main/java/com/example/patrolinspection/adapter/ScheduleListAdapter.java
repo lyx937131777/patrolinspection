@@ -80,7 +80,11 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         String lineID = patrolSchedule.getPatrolLineId();
         PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
         holder.name.setText(patrolLine.getPatrolLineName());
-        holder.errorRange.setText("误差范围："+ patrolSchedule.getErrorRange()+"分钟");
+        if(patrolSchedule.getPlanType().equals("freeSchedule")){
+            holder.errorRange.setText(patrolSchedule.getScheduleName());
+        }else{
+            holder.errorRange.setText("误差范围："+ patrolSchedule.getErrorRange()+"分钟");
+        }
         holder.startTime.setText(patrolSchedule.getStartTime());
         holder.endTime.setText(patrolSchedule.getEndTime());
         LogUtil.e("DataUpdatingSchedule","scheduleId: "+patrolSchedule.getInternetID());

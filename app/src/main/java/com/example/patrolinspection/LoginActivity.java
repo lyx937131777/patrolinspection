@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
@@ -29,6 +32,7 @@ import com.example.patrolinspection.util.LogUtil;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private String phoneID;
+    private TextView textView;
 
     private LoginPresenter loginPresenter;
 
@@ -58,12 +62,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            startActivity(intent_login);
 //            finish();
 //        }
+        textView = findViewById(R.id.text);
+        checkAllPermissions();
 
-        phoneID = Build.SERIAL.toUpperCase();
-//        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        loginPresenter.login(phoneID);
-        TextView textView = findViewById(R.id.text);
-        textView.setText("当前设备机号为：" + phoneID + "\n未在系统中注册，请注册后重新登录");
+
         Button login = findViewById(R.id.login);
         login.setOnClickListener(this);
         LogUtil.e("LoginActivity", "手机型号： " + Build.MODEL);
@@ -71,6 +73,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LogUtil.e("LoginActivity", "手机ID： " + Build.SERIAL);
         LogUtil.e("LoginActivity", "安卓版本： " + Build.VERSION.RELEASE);
         LogUtil.e("LoginActivity", "API版本： " + Build.VERSION.SDK_INT);
+    }
+
+    private void checkAllPermissions()
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+        } else
+        {
+            checkReadPhoneStatePermission();
+        }
+    }
+
+    private void checkReadPhoneStatePermission()
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 2);
+        } else
+        {
+            readSerial();
+        }
+
+    }
+
+    private void readSerial()
+    {
+        phoneID = Build.SERIAL.toUpperCase();
+        if (phoneID.equals("UNKNOWN"))
+        {
+            phoneID = Build.getSerial().toUpperCase();
+        }
+
+//        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        loginPresenter.login(phoneID);
+        textView.setText("当前设备机号为：" + phoneID + "\n未在系统中注册，请注册后重新登录");
     }
 
     @Override
@@ -111,4 +149,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.loginPresenter = loginPresenter;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    checkReadPhoneStatePermission();
+                } else {
+                    Toast.makeText(this, "你拒绝了网络权限请求！", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    readSerial();
+                } else {
+                    Toast.makeText(this, "你拒绝了读序列号权限请求！", Toast.LENGTH_LONG).show();
+                }
+        }
+    }
 }

@@ -242,9 +242,7 @@ public class EventFoundActivity extends AppCompatActivity
             for(Event event : eventList){
                 efTypeList.add(event.getName());
             }
-
         }else{
-            //TODO
             PatrolRecord patrolRecord = LitePal.where("internetID = ?", recordID).findFirst(PatrolRecord.class);
             PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",patrolRecord.getPatrolScheduleId()).findFirst(PatrolSchedule.class);
             PatrolLine patrolLine = LitePal.where("internetID = ?",patrolSchedule.getPatrolLineId()).findFirst(PatrolLine.class);

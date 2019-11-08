@@ -300,7 +300,6 @@ public class PatrolingActivity extends AppCompatActivity
                         eventFound.setEnabled(true);
                         eventHandle.setEnabled(true);
                         adapter.notifyDataSetChanged();
-                        //TODO 判断是否要拍照
                         if(patrolLine.getPictureType().equals("must")){
                             takePhoto();
                             patrolPhoto.setEnabled(true);

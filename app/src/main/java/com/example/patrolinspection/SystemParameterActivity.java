@@ -72,7 +72,12 @@ public class SystemParameterActivity extends AppCompatActivity
 
         nameText.setText(Build.BRAND);
         modelText.setText(Build.MODEL);
-        idText.setText(Build.SERIAL);
+        if(Build.SERIAL.equals("unknown")){
+            idText.setText(Build.getSerial().toUpperCase());
+        }else{
+            idText.setText(Build.SERIAL.toUpperCase());
+        }
+
         androidVersionText.setText(Build.VERSION.RELEASE);
 
         PackageManager manager = getPackageManager();

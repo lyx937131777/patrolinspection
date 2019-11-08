@@ -22,6 +22,18 @@ public class PatrolSchedule extends LitePalSupport
     private String patrolLineId;
     private String patrolPlanId;
 
+    private String scheduleName;
+
+    public String getScheduleName()
+    {
+        return scheduleName;
+    }
+
+    public void setScheduleName(String scheduleName)
+    {
+        this.scheduleName = scheduleName;
+    }
+
     public PatrolSchedule(){
 
     }
