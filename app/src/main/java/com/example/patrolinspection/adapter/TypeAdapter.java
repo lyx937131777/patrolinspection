@@ -140,6 +140,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                     }
                     case "informationPoint":{
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        //TODO 取消注释
                         if(pref.getString("equipmentType",null).equals("phone")){
                             Toast.makeText(mContext,"手机无法注册信息点，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
                         }else{

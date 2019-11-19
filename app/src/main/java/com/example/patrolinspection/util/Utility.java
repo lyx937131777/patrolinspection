@@ -1,6 +1,7 @@
 package com.example.patrolinspection.util;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -464,16 +465,37 @@ public class Utility
 
     //将Bitmap类型的图片转化成file类型，便于上传到服务器
     public static File saveFile(Bitmap bm, String fileName) throws IOException {
-        String path = Environment.getExternalStorageDirectory() + "/patrol";
+        String path = Environment.getExternalStorageDirectory() + "/上海巡检";
         File dirFile = new File(path);
         if(!dirFile.exists()){
             dirFile.mkdir();
         }
-        File myCaptureFile = new File(path + fileName);
+        File myCaptureFile = new File(path + "/"+fileName);
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-        bm.compress(Bitmap.CompressFormat.PNG, 80, bos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 75, bos);
         bos.flush();
         bos.close();
         return myCaptureFile;
+    }
+
+    public static String compressImagePathToImagePath(String imagePath){
+        long time = System.currentTimeMillis();
+        File temp =  null;
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+        File file = new File(imagePath);
+        LogUtil.e("Utility","before: "+file.length()/1024 +"KB");
+        try{
+            temp = saveFile(bitmap,time+".jpeg");
+            LogUtil.e("Utility","abosolutePath: " + temp.getAbsolutePath());
+            LogUtil.e("Utility","canonicalPath: " + temp.getCanonicalPath());
+            LogUtil.e("Utility","Path: " + temp.getPath());
+            LogUtil.e("Utility","parentPath: " + temp.getParent());
+            LogUtil.e("Utility","Name: " + temp.getName());
+        }catch (IOException e){
+            e.printStackTrace();
+            LogUtil.e("Utility","文件创建失败");
+        }
+        LogUtil.e("Utility","after: "+ temp.length()/1024 +"KB");
+        return temp.getPath();
     }
 }

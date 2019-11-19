@@ -11,6 +11,7 @@ public class HandleRecord extends LitePalSupport
     private String internetID;
     private String eventRecordID;
     private String policeId;
+    private Police police;
     private String photo;
     @SerializedName("operateime")
     private String operateTime;
@@ -98,11 +99,20 @@ public class HandleRecord extends LitePalSupport
         this.reportUnit = reportUnit;
     }
 
+    public Police getPolice()
+    {
+        return police;
+    }
+
+    public void setPolice(Police police)
+    {
+        this.police = police;
+    }
+
     public String getPoliceName(){
-        Police police = LitePal.where("internetID = ?",policeId).findFirst(Police.class);
         if(police != null){
             return police.getRealName();
         }
-        return "本地无该保安信息";
+        return "保安信息异常";
     }
 }

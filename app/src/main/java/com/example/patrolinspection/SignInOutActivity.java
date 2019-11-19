@@ -1,13 +1,18 @@
 package com.example.patrolinspection;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 
@@ -87,6 +93,8 @@ public class SignInOutActivity extends AppCompatActivity
                 if(!isFace){
                     signInOutPresenter.signInOut(policeID,type,attendanceType);
                 } else if(imagePath != null){
+                    //压缩图片
+                    imagePath = Utility.compressImagePathToImagePath(imagePath);
                     signInOutPresenter.signInOut(policeID,imagePath,type,attendanceType);
                 }else {
                     Toast.makeText(SignInOutActivity.this,"请先拍照！",Toast.LENGTH_LONG).show();
@@ -109,36 +117,49 @@ public class SignInOutActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                // 创建File对象，用于存储拍照后的图片
-                long time = System.currentTimeMillis();
-                File outputImage = new File(getExternalCacheDir(), time+".jpeg");
-                imagePath = outputImage.getAbsolutePath();
-                try
+                if (ContextCompat.checkSelfPermission(SignInOutActivity.this, Manifest
+                        .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 {
-                    if (outputImage.exists())
-                    {
-                        outputImage.delete();
-                    }
-                    outputImage.createNewFile();
-                } catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                if (Build.VERSION.SDK_INT < 24)
-                {
-                    imageUri = Uri.fromFile(outputImage);
+                    ActivityCompat.requestPermissions(SignInOutActivity.this, new
+                            String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 } else
                 {
-                    imageUri = FileProvider.getUriForFile(SignInOutActivity.this,
-                            "com.example.patrolinspection.fileprovider", outputImage);
+                    takePhoto();
                 }
-                // 启动相机程序
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                startActivityForResult(intent, TAKE_PHOTO);
+
             }
         });
+    }
+
+    private void takePhoto(){
+        // 创建File对象，用于存储拍照后的图片
+        long time = System.currentTimeMillis();
+        File outputImage = new File(getExternalCacheDir(), time+".jpeg");
+        imagePath = outputImage.getAbsolutePath();
+        try
+        {
+            if (outputImage.exists())
+            {
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT < 24)
+        {
+            imageUri = Uri.fromFile(outputImage);
+        } else
+        {
+            imageUri = FileProvider.getUriForFile(SignInOutActivity.this,
+                    "com.example.patrolinspection.fileprovider", outputImage);
+        }
+        // 启动相机程序
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+        startActivityForResult(intent, TAKE_PHOTO);
     }
 
     @Override
@@ -168,6 +189,21 @@ public class SignInOutActivity extends AppCompatActivity
                 }
                 break;
             default:
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto();
+                } else {
+                    Toast.makeText(this, "你拒绝了权限请求！", Toast.LENGTH_LONG).show();
+                }
                 break;
         }
     }

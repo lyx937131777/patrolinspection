@@ -1,11 +1,13 @@
 package com.example.patrolinspection;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -13,6 +15,9 @@ import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcA;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +45,7 @@ import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.ui.main.EventRecordFragment;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 
@@ -157,7 +163,15 @@ public class PatrolingActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                takePhoto();
+                if (ContextCompat.checkSelfPermission(PatrolingActivity.this, Manifest
+                        .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(PatrolingActivity.this, new
+                            String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                } else
+                {
+                    takePhoto();
+                }
             }
         });
 
@@ -418,6 +432,7 @@ public class PatrolingActivity extends AppCompatActivity
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK)
                 {
+                    imagePath = Utility.compressImagePathToImagePath(imagePath);
                     tempPointRecord.setPhotoPath(imagePath);
                     tempPointRecord.setPhotoURL("");
                     tempPointRecord.save();
@@ -442,4 +457,20 @@ public class PatrolingActivity extends AppCompatActivity
                 break;
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takePhoto();
+                } else {
+                    Toast.makeText(this, "你拒绝了权限请求！", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
 }

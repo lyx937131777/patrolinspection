@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.4"
+        versionCode 7
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a"
@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.0.2'
     implementation 'javax.annotation:jsr250-api:1.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
+
     implementation files('libs/odm.jar')
     implementation project(path: ':imageDecoderService')
 }

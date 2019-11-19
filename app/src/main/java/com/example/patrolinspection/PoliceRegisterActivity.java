@@ -1,8 +1,13 @@
 package com.example.patrolinspection;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
@@ -128,22 +134,34 @@ public class PoliceRegisterActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                long time = System.currentTimeMillis();
-                File temp =  null;
-                try{
-                    temp = Utility.saveFile(resizeBmp,time+".png");
-                    LogUtil.e("PoliceRegister","abosolutePath: " + temp.getAbsolutePath());
-                    LogUtil.e("PoliceRegister","canonicalPath: " + temp.getCanonicalPath());
-                    LogUtil.e("PoliceRegister","Path: " + temp.getPath());
-                    LogUtil.e("PoliceRegister","parentPath: " + temp.getParent());
-                    LogUtil.e("PoliceRegister","Name: " + temp.getName());
-                }catch (IOException e){
-                    e.printStackTrace();
-                    LogUtil.e("PoliceRegister","文件创建失败");
+                if (ContextCompat.checkSelfPermission(PoliceRegisterActivity.this, Manifest
+                        .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(PoliceRegisterActivity.this, new
+                            String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                } else
+                {
+                    savePhoto();
                 }
-                policeRegisterPresenter.register(name,securityCard,icCard,identityCard,birth,sex,nation,telEdit.getText().toString(),duty,temp);
             }
         });
+    }
+
+    private void savePhoto(){
+        long time = System.currentTimeMillis();
+        File temp =  null;
+        try{
+            temp = Utility.saveFile(resizeBmp,time+".jpeg");
+            LogUtil.e("PoliceRegister","abosolutePath: " + temp.getAbsolutePath());
+            LogUtil.e("PoliceRegister","canonicalPath: " + temp.getCanonicalPath());
+            LogUtil.e("PoliceRegister","Path: " + temp.getPath());
+            LogUtil.e("PoliceRegister","parentPath: " + temp.getParent());
+            LogUtil.e("PoliceRegister","Name: " + temp.getName());
+        }catch (IOException e){
+            e.printStackTrace();
+            LogUtil.e("PoliceRegister","文件创建失败");
+        }
+        policeRegisterPresenter.register(name,securityCard,icCard,identityCard,birth,sex,nation,telEdit.getText().toString(),duty,temp);
     }
 
     private void initDutyList()
@@ -179,6 +197,21 @@ public class PoliceRegisterActivity extends AppCompatActivity
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    savePhoto();
+                } else {
+                    Toast.makeText(this, "你拒绝了权限请求！", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 
 }
