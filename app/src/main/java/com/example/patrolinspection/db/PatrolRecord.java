@@ -19,6 +19,7 @@ public class PatrolRecord extends LitePalSupport
     private String patrolScheduleId;
     private String companyId;
     private String policeId;
+    private String policeName;
     private String equipmentId;
     private String patrolTimeStatus;
     private String patrolPointStatus;
@@ -194,6 +195,16 @@ public class PatrolRecord extends LitePalSupport
         this.pointPatrolRecords = pointPatrolRecords;
     }
 
+    public String getPoliceName()
+    {
+        return policeName;
+    }
+
+    public void setPoliceName(String policeName)
+    {
+        this.policeName = policeName;
+    }
+
     public String toHeadString()
     {
         return "{" +
@@ -210,6 +221,7 @@ public class PatrolRecord extends LitePalSupport
         return ", \"patrolScheduleId\":\"" + patrolScheduleId + "\"" +
                 ", \"companyId\":\"" + companyId + "\"" +
                 ", \"policeId\":\"" + policeId + "\"" +
+                ", \"policeName\":\"" + policeName + "\"" +
                 ", \"equipmentId\":\"" + equipmentId + "\"" +
                 ", \"patrolTimeStatus\":\"" + patrolTimeStatus + "\"" +
                 ", \"patrolPointStatus\":\"" + patrolPointStatus + "\"" +
@@ -217,7 +229,7 @@ public class PatrolRecord extends LitePalSupport
                 ", \"startTime\":\"" + startTimeLong + "\"" +
                 ", \"endTime\":\"" + t + "\"" +
                 ", \"pointPatrolRecords\":" + pointPatrolRecords +
-                '}';
+                "}";
     }
 
     @Override
@@ -241,7 +253,7 @@ public class PatrolRecord extends LitePalSupport
                 ", \"startTime\":\"" + startTimeLong + "\"" +
                 ", \"endTime\":\"" + t + "\"" +
                 ", \"pointPatrolRecords\":" + pointPatrolRecords +
-                '}';
+                "}";
     }
 
     public int getDuringMin(){

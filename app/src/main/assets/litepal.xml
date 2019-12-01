@@ -3,7 +3,7 @@
 
     <dbname value="patrol_inspection" />
 
-    <version value="10" />
+    <version value="15" />
 
     <list>
         <mapping class="com.example.patrolinspection.db.Notice" />
@@ -15,6 +15,7 @@
         <mapping class="com.example.patrolinspection.db.PatrolSchedule" />
         <mapping class="com.example.patrolinspection.db.PatrolRecord" />
         <mapping class="com.example.patrolinspection.db.PatrolPointRecord" />
+        <mapping class="com.example.patrolinspection.db.PointPhotoRecord" />
         <mapping class="com.example.patrolinspection.db.EventRecord" />
         <mapping class="com.example.patrolinspection.db.HandleRecord" />
         <mapping class="com.example.patrolinspection.db.Police" />

@@ -25,6 +25,7 @@ import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolPointRecord;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
@@ -102,7 +103,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -142,7 +143,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -189,7 +190,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -227,7 +228,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -273,7 +274,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -352,7 +353,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -381,46 +382,49 @@ public class DataUpdatingPresenter
             final String patrolRecordID = patrolRecord.getInternetID();
             List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
             for(final PatrolPointRecord patrolPointRecord : patrolPointRecordList){
-                if((!patrolPointRecord.getPhotoPath().equals("")) && patrolPointRecord.getPhotoURL().equals("")){
-                    LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   ++");
-                    photoCount++;
-                    String address = HttpUtil.LocalAddress + "/api/file";
-                    final String userID = pref.getString("userID",null);
-                    HttpUtil.fileRequest(address, userID, new File(patrolPointRecord.getPhotoPath()), new Callback()
-                    {
-                        @Override
-                        public void onFailure(Call call, IOException e)
+                for(final PointPhotoRecord pointPhotoRecord : patrolPointRecord.getPointPhotoInfos()){
+                    if(pointPhotoRecord.getPhotoURL().equals("")){
+                        LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   ++");
+                        photoCount++;
+                        String address = HttpUtil.LocalAddress + "/api/file";
+                        final String userID = pref.getString("userID",null);
+                        HttpUtil.fileRequest(address, userID, new File(pointPhotoRecord.getPhotoPath()), new Callback()
                         {
-                            e.printStackTrace();
-                            ((AppCompatActivity)context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(context, "服务器连接错误", Toast
-                                            .LENGTH_LONG).show();
+                            @Override
+                            public void onFailure(Call call, IOException e)
+                            {
+                                e.printStackTrace();
+                                ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "服务器连接错误", Toast
+                                                .LENGTH_LONG).show();
+                                    }
+                                });
+                                LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
+                                photoCount--;
+                                if(photoCount == 0){
+                                    uploadPatrolRecord();
                                 }
-                            });
-                            LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
-                            photoCount--;
-                            if(photoCount == 0){
-                                uploadPatrolRecord();
                             }
-                        }
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException
-                        {
-                            final String responsData = response.body().string();
-                            LogUtil.e("DataUpdatingPresenter",responsData);
-                            String photo = Utility.checkString(responsData,"msg");
-                            patrolPointRecord.setPhotoURL(photo);
-                            patrolPointRecord.save();
-                            LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
-                            photoCount--;
-                            if(photoCount == 0){
-                                uploadPatrolRecord();
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException
+                            {
+                                final String responsData = response.body().string();
+                                LogUtil.e("DataUpdatingPresenter",responsData);
+                                String photo = Utility.checkString(responsData,"msg");
+                                pointPhotoRecord.setPhotoURL(photo);
+                                pointPhotoRecord.save();
+                                patrolPointRecord.save();
+                                LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
+                                photoCount--;
+                                if(photoCount == 0){
+                                    uploadPatrolRecord();
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
@@ -475,7 +479,7 @@ public class DataUpdatingPresenter
 
 
     private void addCount() {
-        Log.e("DataUpdatingPresenter","count: "+count+ "   ++");
+        LogUtil.e("DataUpdatingPresenter","count: "+count+ "   ++");
         if(count == 0 && (progressDialog == null ||!progressDialog.isShowing())){
             progressDialog = ProgressDialog.show(context,"","数据更新中...");
         }
@@ -483,7 +487,7 @@ public class DataUpdatingPresenter
     }
 
     private void reduceCount(){
-        Log.e("DataUpdatingPresenter","count: "+count+ "   --");
+        LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
         count--;
         if(count == 0){
             progressDialog.dismiss();

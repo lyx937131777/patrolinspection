@@ -339,7 +339,11 @@ public class PatrolingActivity extends AppCompatActivity
     private void initIP()
     {
         patrolPointRecordList.clear();
+        LogUtil.e("PatrolingActivity","00000 : " + recordID);
+        LitePal.where("patrolRecordId = ?",recordID).findFirst(PatrolPointRecord.class);
+        LogUtil.e("PatrolingActivity","11111 : " + recordID);
         List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
+        LogUtil.e("PatrolingActivity","22222 : " + recordID);
         if(tempList.size() > 0){
             for(PatrolPointRecord patrolPointRecord : tempList){
                 patrolPointRecordList.add(patrolPointRecord);
@@ -433,12 +437,12 @@ public class PatrolingActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK)
                 {
                     imagePath = Utility.compressImagePathToImagePath(imagePath);
-                    tempPointRecord.setPhotoPath(imagePath);
-                    tempPointRecord.setPhotoURL("");
+                    Calendar calendar = Calendar.getInstance();
+                    tempPointRecord.addPhoto(imagePath,calendar.getTimeInMillis());
                     tempPointRecord.save();
                     patrolingPresenter.updatePatrol(recordID,false);
                 }else if(resultCode == RESULT_CANCELED){
-                    if(patrolLine.getPictureType().equals("must")&& tempPointRecord.getPhotoPath().equals("")){
+                    if(patrolLine.getPictureType().equals("must")&& !tempPointRecord.hasPhoto()){
                         new AlertDialog.Builder(mContext).setTitle("警告").setMessage("此线路必须拍照，请为此信息点拍照！")
                                 .setPositiveButton("是", new DialogInterface.OnClickListener()
                                 {

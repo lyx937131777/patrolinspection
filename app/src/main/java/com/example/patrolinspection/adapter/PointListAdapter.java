@@ -72,10 +72,8 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public void onBindViewHolder(@NonNull PointListAdapter.ViewHolder holder, int position)
     {
         PatrolIP patrolIP = mList.get(position);
-        String id = patrolIP.getPointId();
-        InformationPoint informationPoint = LitePal.where("internetID = ?",id).findFirst(InformationPoint.class);
-        holder.name.setText(informationPoint.getName());
-        holder.num.setText(informationPoint.getNum());
+        holder.name.setText(patrolIP.getPointName());
+        holder.num.setText(patrolIP.getPointNo());
     }
 
     @Override

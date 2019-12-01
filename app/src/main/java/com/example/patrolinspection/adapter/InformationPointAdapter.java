@@ -105,9 +105,7 @@ public class InformationPointAdapter extends RecyclerView.Adapter<InformationPoi
     public void onBindViewHolder(@NonNull InformationPointAdapter.ViewHolder holder, int position)
     {
         PatrolPointRecord patrolPointRecord = mList.get(position);
-        String pointID = patrolPointRecord.getPointId();
-        InformationPoint informationPoint = LitePal.where("internetID = ?",pointID).findFirst(InformationPoint.class);
-        holder.ipName.setText(informationPoint.getName());
+        holder.ipName.setText(patrolPointRecord.getPointName());
         holder.ipNum.setText(patrolPointRecord.getOrderNo());
         Glide.with(mContext).load(MapUtil.getState(patrolPointRecord.getState())).into(holder.ipState);
         holder.ipStateText.setText(patrolPointRecord.getState());

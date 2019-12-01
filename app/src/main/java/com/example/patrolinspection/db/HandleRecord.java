@@ -11,7 +11,7 @@ public class HandleRecord extends LitePalSupport
     private String internetID;
     private String eventRecordID;
     private String policeId;
-    private Police police;
+    private String policeName;
     private String photo;
     @SerializedName("operateime")
     private String operateTime;
@@ -99,20 +99,13 @@ public class HandleRecord extends LitePalSupport
         this.reportUnit = reportUnit;
     }
 
-    public Police getPolice()
+    public String getPoliceName()
     {
-        return police;
+        return policeName;
     }
 
-    public void setPolice(Police police)
+    public void setPoliceName(String policeName)
     {
-        this.police = police;
-    }
-
-    public String getPoliceName(){
-        if(police != null){
-            return police.getRealName();
-        }
-        return "保安信息异常";
+        this.policeName = policeName;
     }
 }

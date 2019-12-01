@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.patrolinspection.PatrolingActivity;
 import com.example.patrolinspection.db.PatrolPointRecord;
 import com.example.patrolinspection.db.PatrolRecord;
+import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
@@ -44,49 +45,52 @@ public class PatrolingPresenter
     public void updatePatrol(final String patrolRecordID, final boolean isEnd){
         progressDialog = ProgressDialog.show(context,"","上传中...");
 
-        PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
+        PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class,true);
         List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
         for(final PatrolPointRecord patrolPointRecord : patrolPointRecordList){
-            if((!patrolPointRecord.getPhotoPath().equals("")) && patrolPointRecord.getPhotoURL().equals("")){
-                Log.e("PatrolingPresenter","count: "+count+ "   ++");
-                count++;
-                String address = HttpUtil.LocalAddress + "/api/file";
-                final String userID = pref.getString("userID",null);
-                HttpUtil.fileRequest(address, userID, new File(patrolPointRecord.getPhotoPath()), new Callback()
-                {
-                    @Override
-                    public void onFailure(Call call, IOException e)
+            for(final PointPhotoRecord pointPhotoRecord : patrolPointRecord.getPointPhotoInfos()){
+                if(pointPhotoRecord.getPhotoURL().equals("")){
+                    LogUtil.e("PatrolingPresenter","count: "+count+ "   ++");
+                    count++;
+                    String address = HttpUtil.LocalAddress + "/api/file";
+                    final String userID = pref.getString("userID",null);
+                    HttpUtil.fileRequest(address, userID, new File(pointPhotoRecord.getPhotoPath()), new Callback()
                     {
-                        e.printStackTrace();
-                        ((PatrolingActivity)context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(context, "服务器连接错误", Toast
-                                        .LENGTH_LONG).show();
+                        @Override
+                        public void onFailure(Call call, IOException e)
+                        {
+                            e.printStackTrace();
+                            ((PatrolingActivity)context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, "服务器连接错误", Toast
+                                            .LENGTH_LONG).show();
+                                }
+                            });
+                            LogUtil.e("PatrolingPresenter","count: "+count+ "   --");
+                            count--;
+                            if(count == 0){
+                                update(patrolRecordID,isEnd);
                             }
-                        });
-                        Log.e("PatrolingPresenter","count: "+count+ "   --");
-                        count--;
-                        if(count == 0){
-                            update(patrolRecordID,isEnd);
                         }
-                    }
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException
-                    {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        String photo = Utility.checkString(responsData,"msg");
-                        patrolPointRecord.setPhotoURL(photo);
-                        patrolPointRecord.save();
-                        Log.e("PatrolingPresenter","count: "+count+ "   --");
-                        count--;
-                        if(count == 0){
-                            update(patrolRecordID,isEnd);
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException
+                        {
+                            final String responsData = response.body().string();
+                            LogUtil.e("PatrolingPresenter",responsData);
+                            String photo = Utility.checkString(responsData,"msg");
+                            pointPhotoRecord.setPhotoURL(photo);
+                            pointPhotoRecord.save();
+                            patrolPointRecord.save();
+                            LogUtil.e("PatrolingPresenter","count: "+count+ "   --");
+                            count--;
+                            if(count == 0){
+                                update(patrolRecordID,isEnd);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
@@ -151,6 +155,12 @@ public class PatrolingPresenter
                     patrolRecord.setUpload(false);
                     patrolRecord.setState("已结束");
                     patrolRecord.save();
+                    ((PatrolingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "巡检结束，暂未上传。", Toast.LENGTH_LONG).show();
+                        }
+                    });
                     ((PatrolingActivity)context).setResult(Activity.RESULT_OK)  ;
                     ((PatrolingActivity)context).finish();
                 }
@@ -167,8 +177,16 @@ public class PatrolingPresenter
                     patrolRecord.setUpload(true);
                     patrolRecord.setState("已结束");
                     patrolRecord.save();
+                    ((PatrolingActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "巡检结束，已上传。", Toast
+                                    .LENGTH_LONG).show();
+                        }
+                    });
                     ((PatrolingActivity)context).setResult(Activity.RESULT_OK)  ;
                     ((PatrolingActivity)context).finish();
+
                 }
                 progressDialog.dismiss();
             }

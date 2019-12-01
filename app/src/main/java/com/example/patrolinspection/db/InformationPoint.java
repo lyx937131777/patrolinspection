@@ -25,7 +25,6 @@ public class InformationPoint extends LitePalSupport
         this.num = num;
         this.internetID = internetID;
         this.name = name;
-        state = "未巡检";
     }
 
     public String getCompanyId()

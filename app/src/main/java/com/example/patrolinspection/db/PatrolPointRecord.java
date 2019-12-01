@@ -1,30 +1,39 @@
 package com.example.patrolinspection.db;
 
+import com.example.patrolinspection.util.LogUtil;
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatrolPointRecord extends LitePalSupport
 {
     private String patrolRecordId;
     private String pointId;
+    private String pointNo;
+    private String pointName;
     private String orderNo;
     private long time;
 
     private String state;
-    private String photoBase64;
-    private String photoPath;
-    @SerializedName("photo")
-    private String photoURL;
+    private List<PointPhotoRecord> pointPhotoInfos;
+
+    public PatrolPointRecord(){
+
+    }
 
     public PatrolPointRecord(String patrolRecordId, PatrolIP patrolIP){
         this.patrolRecordId = patrolRecordId;
-        this.pointId = patrolIP.getPointId();
-        this.orderNo = patrolIP.getOrderNo();
+        pointId = patrolIP.getPointId();
+        orderNo = patrolIP.getOrderNo();
+        LogUtil.e("PatrolPointRecord",  patrolRecordId + " kkkk "+patrolIP.getPointId() + " hhhh " + patrolIP.getOrderNo() + " jjj " + patrolIP.getPatrolLineID());
+        pointName = patrolIP.getPointName();
+        pointNo = patrolIP.getPointNo();
         state = "未巡检";
-        photoURL = "";
-        photoPath = "";
-        photoBase64 = "";
+        pointPhotoInfos = new ArrayList<>();
     }
 
     public String getOrderNo()
@@ -77,39 +86,58 @@ public class PatrolPointRecord extends LitePalSupport
         this.state = state;
     }
 
-    public String getPhotoBase64()
+
+    public String getPointNo()
     {
-        return photoBase64;
+        return pointNo;
     }
 
-    public void setPhotoBase64(String photoBase64)
+    public void setPointNo(String pointNo)
     {
-        this.photoBase64 = photoBase64;
+        this.pointNo = pointNo;
     }
 
-    public String getPhotoPath()
+    public String getPointName()
     {
-        return photoPath;
+        return pointName;
     }
 
-    public void setPhotoPath(String photoPath)
+    public void setPointName(String pointName)
     {
-        this.photoPath = photoPath;
+        this.pointName = pointName;
     }
 
-    public String getPhotoURL()
+    public List<PointPhotoRecord> getPointPhotoInfos()
     {
-        return photoURL;
+        if(pointPhotoInfos == null){
+            pointPhotoInfos = LitePal.where("patrolRecordId = ? and pointId = ?",patrolRecordId,pointId).find(PointPhotoRecord.class);
+        }
+        return pointPhotoInfos;
     }
 
-    public void setPhotoURL(String photoURL)
+    public void setPointPhotoInfos(List<PointPhotoRecord> pointPhotoInfos)
     {
-        this.photoURL = photoURL;
+        this.pointPhotoInfos = pointPhotoInfos;
+    }
+
+    public void addPhoto(String photoPath, long time){
+        if(pointPhotoInfos == null){
+            pointPhotoInfos = getPointPhotoInfos();
+        }
+        pointPhotoInfos.add(new PointPhotoRecord(patrolRecordId,pointId,photoPath, time));
+    }
+
+    public boolean hasPhoto(){
+        if(pointPhotoInfos == null){
+            pointPhotoInfos = getPointPhotoInfos();
+        }
+        return pointPhotoInfos.size() > 0;
     }
 
     @Override
     public String toString()
     {
+        pointPhotoInfos = getPointPhotoInfos();
         String t;
         if(time == 0){
             t = "";
@@ -119,8 +147,10 @@ public class PatrolPointRecord extends LitePalSupport
         return "{" +
                 "\"patrolRecordId\":\"" + patrolRecordId + "\"" +
                 ", \"pointId\":\"" + pointId + "\"" +
+                ",\"pointNo\":\"" + pointNo + "\"" +
+                ",\"pointName\":\"" + pointName + "\"" +
                 ", \"orderNo\":\"" + orderNo + "\"" +
-                ", \"photo\":\"" + photoURL + "\"" +
+                ", \"pointPhotoInfos\":" + pointPhotoInfos +
                 ", \"time\":\"" + t + "\"" +
                 "}";
     }
