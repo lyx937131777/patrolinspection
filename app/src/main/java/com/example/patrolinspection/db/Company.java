@@ -5,10 +5,21 @@ public class Company
     private boolean isschool;
     private boolean isface;
     private boolean isappAttendance;
+    private boolean isschoolLogin;
     private String longitude;
     private String latitude;
     private String floor;
     private String hight;
+
+    public boolean isIsschoolLogin()
+    {
+        return isschoolLogin;
+    }
+
+    public void setIsschoolLogin(boolean isschoolLogin)
+    {
+        this.isschoolLogin = isschoolLogin;
+    }
 
     public boolean isIsschool()
     {

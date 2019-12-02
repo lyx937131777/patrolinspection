@@ -38,6 +38,7 @@ import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.SortUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -188,6 +189,7 @@ public class EventFoundActivity extends AppCompatActivity
                 }
             }
         }
+        SortUtil.sortStringList(efClassList);
 
 //        classString = MapUtil.getEventType(efClassList.get(0));
 //        changeClass();

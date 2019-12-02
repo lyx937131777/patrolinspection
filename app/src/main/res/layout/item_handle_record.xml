@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/detail"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:lines="3"
@@ -35,9 +35,11 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintBottom_toTopOf="@id/type"
+            app:layout_constraintRight_toLeftOf="@+id/photo"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
 
         <TextView
             android:id="@+id/type"

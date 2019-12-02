@@ -115,6 +115,7 @@ public class LoginPresenter
                             editor.putString("companyID", Utility.getCompanyID(responsData));
                             Company company = Utility.getCompany(responsData);
                             editor.putBoolean("isSchool",company.isIsschool());
+                            editor.putBoolean("isSchoolLogin",company.isIsschoolLogin());
                             editor.putBoolean("isFace",company.isIsface());
                             editor.putBoolean("isAppAttendance",company.isIsappAttendance());//TODO 经度纬度楼层 公司名
                             editor.putInt("heartbeat",60);//TODO 由系统设置

@@ -210,7 +210,7 @@ public class PatrolingActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 if(countAll == countPatrolled){
-                    patrolingPresenter.updatePatrol(recordID,true);
+                    endPatrol();
                 }else{
                     new AlertDialog.Builder(mContext).setTitle("警告").setMessage("还有未检查的巡检点，是否结束巡检？")
                             .setPositiveButton("是", new DialogInterface.OnClickListener()
@@ -218,7 +218,7 @@ public class PatrolingActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i)
                                 {
-                                    patrolingPresenter.updatePatrol(recordID,true);
+                                    endPatrol();
                                 }
                             }).setNegativeButton("否",null).show();
                 }
@@ -234,6 +234,14 @@ public class PatrolingActivity extends AppCompatActivity
         adapter = new InformationPointAdapter(patrolPointRecordList);
         recyclerView.setAdapter(adapter);
 
+    }
+
+    private void endPatrol(){
+        if(tempPointRecord != null){
+            tempPointRecord.setState("已巡检");
+            tempPointRecord.save();
+        }
+        patrolingPresenter.updatePatrol(recordID,true);
     }
 
     private void initReadBak(){
@@ -339,11 +347,7 @@ public class PatrolingActivity extends AppCompatActivity
     private void initIP()
     {
         patrolPointRecordList.clear();
-        LogUtil.e("PatrolingActivity","00000 : " + recordID);
-        LitePal.where("patrolRecordId = ?",recordID).findFirst(PatrolPointRecord.class);
-        LogUtil.e("PatrolingActivity","11111 : " + recordID);
         List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
-        LogUtil.e("PatrolingActivity","22222 : " + recordID);
         if(tempList.size() > 0){
             for(PatrolPointRecord patrolPointRecord : tempList){
                 patrolPointRecordList.add(patrolPointRecord);

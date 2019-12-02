@@ -1,6 +1,7 @@
 package com.example.patrolinspection.service;
 
 import android.app.KeyguardManager;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -20,17 +21,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
 import com.example.patrolinspection.db.PatrolIP;
 import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolPlan;
+import com.example.patrolinspection.db.PatrolPointRecord;
+import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
+import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +60,8 @@ public class HeartbeatService extends Service
     private int countTime;
     private boolean isScreenOff;
     private SharedPreferences pref;
+
+    private int photoCount;
 
     //广播
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -103,6 +111,7 @@ public class HeartbeatService extends Service
 
         isRun = true;
         countTime = 0;
+        photoCount = 0;
         isScreenOff = false;
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         heartbeat = pref.getInt("heartbeat",2);
@@ -225,6 +234,8 @@ public class HeartbeatService extends Service
                 }
             }
         });
+        uploadPatrolRecordPhoto();
+        uploadEventRecord();
     }
 
 
@@ -367,5 +378,146 @@ public class HeartbeatService extends Service
                 LitePal.saveAll(eventList);
             }
         });
+    }
+
+    public void uploadPatrolRecordPhoto(){
+        List<PatrolRecord> patrolRecordList = LitePal.where("upload = ?","0").find(PatrolRecord.class);
+        for(PatrolRecord patrolRecord : patrolRecordList){
+            final String patrolRecordID = patrolRecord.getInternetID();
+            List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
+            for(final PatrolPointRecord patrolPointRecord : patrolPointRecordList){
+                for(final PointPhotoRecord pointPhotoRecord : patrolPointRecord.getPointPhotoInfos()){
+                    if(pointPhotoRecord.getPhotoURL().equals("")){
+                        LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   ++");
+                        photoCount++;
+                        String address = HttpUtil.LocalAddress + "/api/file";
+                        final String userID = pref.getString("userID",null);
+                        HttpUtil.fileRequest(address, userID, new File(pointPhotoRecord.getPhotoPath()), new Callback()
+                        {
+                            @Override
+                            public void onFailure(Call call, IOException e)
+                            {
+                                e.printStackTrace();
+                                LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
+                                photoCount--;
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException
+                            {
+                                final String responsData = response.body().string();
+                                LogUtil.e("DataUpdatingPresenter",responsData);
+                                String photo = Utility.checkString(responsData,"msg");
+                                pointPhotoRecord.setPhotoURL(photo);
+                                pointPhotoRecord.save();
+                                patrolPointRecord.save();
+                                LogUtil.e("DataUpdatingPresenter","photoCount: "+photoCount+ "   --");
+                                photoCount--;
+                                if(photoCount == 0){
+                                    uploadPatrolRecord();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        if(photoCount == 0){
+            uploadPatrolRecord();
+        }
+    }
+
+    public void uploadPatrolRecord(){
+        List<PatrolRecord> patrolRecordList = LitePal.where("upload = ?","0").find(PatrolRecord.class);
+        for(PatrolRecord patrolRecord : patrolRecordList) {
+            final String patrolRecordID = patrolRecord.getInternetID();
+            String address = HttpUtil.LocalAddress + "/api/patrolRecord/put";
+            String companyID = pref.getString("companyID",null);
+            String userID = pref.getString("userID",null);
+            HttpUtil.endPatrolRequest(address, userID, companyID, patrolRecordID, new Callback()
+            {
+                @Override
+                public void onFailure(Call call, IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException
+                {
+                    final String responsData = response.body().string();
+                    LogUtil.e("DataUpdatingPresenter",responsData);
+                    PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
+                    patrolRecord.setUpload(true);
+                    patrolRecord.save();
+                }
+            });
+        }
+    }
+
+    public void uploadEventRecord(){
+        List<EventRecord> eventRecordList = LitePal.where("upload = ?","0").find(EventRecord.class);
+        for(final EventRecord eventRecord : eventRecordList){
+            if(!eventRecord.getPhotoPath().equals("") && eventRecord.getPhotoURL().equals("")){
+                String address = HttpUtil.LocalAddress + "/api/file";
+                final String userID = pref.getString("userID",null);
+                HttpUtil.fileRequest(address, userID, new File(eventRecord.getPhotoPath()), new Callback()
+                {
+                    @Override
+                    public void onFailure(Call call, IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException
+                    {
+                        final String responsData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responsData);
+                        String photo = Utility.checkString(responsData,"msg");
+                        eventRecord.setPhotoURL(photo);
+                        eventRecord.save();
+                        postEventRecord(eventRecord);
+                    }
+                });
+            }else{
+                postEventRecord(eventRecord);
+            }
+        }
+    }
+
+    public void postEventRecord(final EventRecord eventRecord){
+        String userID = pref.getString("userID",null);
+        String photo = eventRecord.getPhotoURL();
+        String address = HttpUtil.LocalAddress + "/api/eventRecord";
+        String companyID = pref.getString("companyID",null);
+        String reportUnit = eventRecord.getReportUnit();
+        String disposalOperateType = eventRecord.getDisposalOperateType();
+        long time = eventRecord.getTime();
+        String eventID = eventRecord.getEventId();
+        String policeID = eventRecord.getPoliceId();
+        String detail = eventRecord.getDetail();
+        String patrolRecordID = eventRecord.getPatrolRecordId();
+        String pointID = eventRecord.getPointId();
+        HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, disposalOperateType,photo, time,
+                patrolRecordID, pointID, new Callback()
+                {
+                    @Override
+                    public void onFailure(Call call, IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException
+                    {
+                        final String responsData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responsData);
+                        if(Utility.checkString(responsData,"code").equals("000")){
+                            eventRecord.setUpload(true);
+                            eventRecord.save();
+                        }
+                    }
+                });
     }
 }

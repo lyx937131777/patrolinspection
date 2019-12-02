@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.DataUpdatingActivity;
+import com.example.patrolinspection.InformationRegisterActivity;
 import com.example.patrolinspection.NfcActivity;
 import com.example.patrolinspection.NoticeActivity;
 import com.example.patrolinspection.PatrolLineActivity;
@@ -25,8 +26,10 @@ import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.SystemParameterActivity;
 import com.example.patrolinspection.EventRecordActivity;
+import com.example.patrolinspection.TestActivity;
 import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.MapUtil;
 
 import java.util.List;
 
@@ -104,6 +107,15 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         }
                         break;
                     }
+                    case "signIn":
+                    case "signOut":{
+                        Intent intent = new Intent(mContext, SwipeNfcActivity.class);
+                        intent.putExtra("type",typeName);
+                        intent.putExtra("title", MapUtil.getFaceType(typeName));
+                        intent.putExtra("attendanceType",type.getName());
+                        mContext.startActivity(intent);
+                        break;
+                    }
                     case "notice":{
                         Intent intent = new Intent(mContext, NoticeActivity.class);
                         mContext.startActivity(intent);
@@ -111,7 +123,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                     }
                     case "eventFound":{
                         Intent intent = new Intent(mContext, SwipeNfcActivity.class);
-                        intent.putExtra("type",type.getTypeName());
+                        intent.putExtra("type",typeName);
                         intent.putExtra("title",type.getName());
                         mContext.startActivity(intent);
                         break;
@@ -132,7 +144,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                             Toast.makeText(mContext,"手机无法注册保安，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
                         }else{
                             Intent intent = new Intent(mContext, SwipeCardActivity.class);
-                            intent.putExtra("type",type.getTypeName());
+                            intent.putExtra("type",typeName);
                             intent.putExtra("title",type.getName());
                             mContext.startActivity(intent);
                         }
@@ -145,7 +157,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                             Toast.makeText(mContext,"手机无法注册信息点，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
                         }else{
                             Intent intent = new Intent(mContext, NfcActivity.class);
-                            intent.putExtra("type",type.getTypeName());
+                            intent.putExtra("type",typeName);
                             intent.putExtra("title",type.getName());
                             mContext.startActivity(intent);
                         }
@@ -153,6 +165,16 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                     }
                     case "systemParameter":{
                         Intent intent = new Intent(mContext, SystemParameterActivity.class);
+                        mContext.startActivity(intent);
+                        break;
+                    }
+                    case "schoolEvent":{
+//                        Intent intent = new Intent(mContext, TestActivity.class);
+//                        mContext.startActivity(intent);
+                        break;
+                    }
+                    case "informationRegister":{
+                        Intent intent = new Intent(mContext, InformationRegisterActivity.class);
                         mContext.startActivity(intent);
                         break;
                     }

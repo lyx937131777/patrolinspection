@@ -180,6 +180,8 @@ public class SwipeNfcActivity extends AppCompatActivity
                                             .LENGTH_LONG).show();
                                 }
                             });
+                            mProgressDialog.dismiss();
+                            isCardReading = false;
                         }
 
                         @Override

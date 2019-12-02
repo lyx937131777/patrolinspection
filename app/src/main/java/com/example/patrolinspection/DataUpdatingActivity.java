@@ -22,6 +22,7 @@ public class DataUpdatingActivity extends AppCompatActivity
     private CardView eventCard;
     private CardView policeCard;
     private CardView uploadCard;
+    private CardView eventRecordCard;
 
     private DataUpdatingPresenter dataUpdatingPresenter;
 
@@ -86,6 +87,7 @@ public class DataUpdatingActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
         uploadCard = findViewById(R.id.du_upload);
         uploadCard.setOnClickListener(new View.OnClickListener()
         {
@@ -96,6 +98,18 @@ public class DataUpdatingActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        eventRecordCard = findViewById(R.id.du_upload_event_record);
+        eventRecordCard.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(DataUpdatingActivity.this, EventRecordListActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         updating = findViewById(R.id.data_updating);
         updating.setOnClickListener(new View.OnClickListener()

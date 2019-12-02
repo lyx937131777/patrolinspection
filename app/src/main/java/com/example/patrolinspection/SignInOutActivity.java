@@ -108,8 +108,6 @@ public class SignInOutActivity extends AppCompatActivity
         isFace = pref.getBoolean("isFace",false);
         if(!isFace){
             photoButton.setVisibility(View.GONE);
-        }else{
-            Glide.with(this).load(R.drawable.scan).into(photoButton);
         }
 
         photoButton.setOnClickListener(new View.OnClickListener()

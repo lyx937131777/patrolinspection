@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.patrolinspection.EventFoundActivity;
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
@@ -34,7 +35,7 @@ public class EventFoundPresenter
         this.pref = pref;
     }
 
-    public void postEventRecord(final String policeID, String imagePath,final String eventName,final String patrolRecordID,final String pointID,final String detail){
+    public void postEventRecord(final String policeID, final String imagePath, final String eventName, final String patrolRecordID, final String pointID, final String detail){
         progressDialog = ProgressDialog.show(context,"","上传中...");
 
         if(patrolRecordID != ""){
@@ -58,6 +59,15 @@ public class EventFoundPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
+                String companyID = pref.getString("companyID",null);
+                String reportUnit = "保安";//TODO 上报单位到底是什么
+                String disposalOperateType = "find";
+                long time = System.currentTimeMillis();
+                Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
+                String eventID = event.getInternetID();
+                EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,imagePath,"",false);
+                eventRecord.save();
+                ((EventFoundActivity) context).finish();
                 progressDialog.dismiss();
             }
 
@@ -66,14 +76,15 @@ public class EventFoundPresenter
             {
                 final String responsData = response.body().string();
                 LogUtil.e("EventFoundPresenter",responsData);
-                String photo = Utility.checkString(responsData,"msg");
+                final String photo = Utility.checkString(responsData,"msg");
                 String address = HttpUtil.LocalAddress + "/api/eventRecord";
                 String companyID = pref.getString("companyID",null);
-                String reportUnit = "保安";//TODO 上报单位到底是什么
-                long time = System.currentTimeMillis();
+                final String reportUnit = "保安";//TODO 上报单位到底是什么
+                final String disposalOperateType = "find";
+                final long time = System.currentTimeMillis();
                 Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
-                String eventID = event.getInternetID();
-                HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, "find",photo, time,
+                final String eventID = event.getInternetID();
+                HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, disposalOperateType,photo, time,
                         patrolRecordID, pointID, new Callback()
                         {
                             @Override
@@ -87,6 +98,9 @@ public class EventFoundPresenter
                                                 .LENGTH_LONG).show();
                                     }
                                 });
+                                EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,imagePath,photo,false);
+                                eventRecord.save();
+                                ((EventFoundActivity) context).finish();
                                 progressDialog.dismiss();
                             }
 
@@ -103,8 +117,19 @@ public class EventFoundPresenter
                                                     .LENGTH_LONG).show();
                                         }
                                     });
-                                    ((EventFoundActivity) context).finish();
+                                    EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,imagePath,photo,true);
+                                    eventRecord.save();
+                                }else{
+                                    ((EventFoundActivity)context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,imagePath,photo,false);
+                                    eventRecord.save();
                                 }
+                                ((EventFoundActivity) context).finish();
                                 progressDialog.dismiss();
                             }
                         });
@@ -122,14 +147,15 @@ public class EventFoundPresenter
         }
 
         final String userID = pref.getString("userID",null);
-        String photo = "";
+        final String photo = "";
         String address = HttpUtil.LocalAddress + "/api/eventRecord";
         String companyID = pref.getString("companyID",null);
-        String reportUnit = "保安";//TODO 上报单位到底是什么 question3
-        long time = System.currentTimeMillis();
+        final String reportUnit = "保安";//TODO 上报单位到底是什么 question3
+        final String disposalOperateType = "find";
+        final long time = System.currentTimeMillis();
         Event event = LitePal.where("name = ?",eventName).findFirst(Event.class);
-        String eventID = event.getInternetID();
-        HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, "find",photo, time,
+        final String eventID = event.getInternetID();
+        HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, disposalOperateType,photo, time,
                 patrolRecordID, pointID, new Callback()
                 {
                     @Override
@@ -143,6 +169,9 @@ public class EventFoundPresenter
                                         .LENGTH_LONG).show();
                             }
                         });
+                        EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,photo,photo,false);
+                        eventRecord.save();
+                        ((EventFoundActivity) context).finish();
                         progressDialog.dismiss();
                     }
 
@@ -159,8 +188,19 @@ public class EventFoundPresenter
                                             .LENGTH_LONG).show();
                                 }
                             });
-                            ((EventFoundActivity) context).finish();
+                            EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,photo,photo,true);
+                            eventRecord.save();
+                        } else{
+                            ((EventFoundActivity)context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,photo,photo,false);
+                            eventRecord.save();
                         }
+                        ((EventFoundActivity) context).finish();
                         progressDialog.dismiss();
                     }
                 });

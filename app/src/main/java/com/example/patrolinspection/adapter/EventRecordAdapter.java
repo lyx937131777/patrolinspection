@@ -82,7 +82,7 @@ public class EventRecordAdapter extends RecyclerView.Adapter<EventRecordAdapter.
         EventRecord eventRecord = mList.get(position);
         holder.nameText.setText(eventRecord.getPoliceName());
         holder.detailText.setText(eventRecord.getEventName());
-        holder.timeText.setText(Utility.dateStringToString(eventRecord.getFirstTime(),"yyyy-MM-dd HH:mm"));
+        holder.timeText.setText(Utility.dateStringToString(eventRecord.getLastTime(),"yyyy-MM-dd HH:mm"));
 //        if(type.equals("ended")){
 //
 //        }else{

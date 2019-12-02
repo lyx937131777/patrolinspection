@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.patrolinspection.HandleRecordActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.HandleRecord;
@@ -61,19 +62,14 @@ public class HandleRecordAdapter extends RecyclerView.Adapter<HandleRecordAdapte
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_handle_record, parent,false);
         final HandleRecordAdapter.ViewHolder holder = new HandleRecordAdapter.ViewHolder(view);
-        holder.view.setOnClickListener(new View.OnClickListener()
+        holder.photo.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 int position = holder.getAdapterPosition();
                 HandleRecord handleRecord = mList.get(position);
-//                if(type.equals("eventType")){
-//                    Intent intent = new Intent(mContext, EventListActivity.class);
-//                    intent.putExtra("type","eventName");
-//                    intent.putExtra("eventType",event.getType());
-//                    mContext.startActivity(intent);
-//                }
+                ((HandleRecordActivity)mContext).showDialog(handleRecord.getPhoto());
             }
         });
         return holder;

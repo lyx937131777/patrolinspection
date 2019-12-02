@@ -18,6 +18,7 @@ import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.SortUtil;
 
 import org.litepal.LitePal;
 
@@ -87,6 +88,7 @@ public class EventListActivity extends AppCompatActivity
                     eventList.add(event);
                 } while (cursor.moveToNext());
             }
+            SortUtil.sortEventList(eventList);
         }else{
             Intent intent = getIntent();
             String title = intent.getStringExtra("eventType");

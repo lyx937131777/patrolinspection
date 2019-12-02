@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.patrolinspection.DataUpdatingActivity;
 import com.example.patrolinspection.EventListActivity;
+import com.example.patrolinspection.EventRecordListActivity;
 import com.example.patrolinspection.LineListActivity;
 import com.example.patrolinspection.PatrolingActivity;
 import com.example.patrolinspection.PlanListActivity;
@@ -18,6 +19,7 @@ import com.example.patrolinspection.PoliceListActivity;
 import com.example.patrolinspection.ScheduleListActivity;
 import com.example.patrolinspection.UploadListActivity;
 import com.example.patrolinspection.db.Event;
+import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
 import com.example.patrolinspection.db.PatrolIP;
 import com.example.patrolinspection.db.PatrolLine;
@@ -63,19 +65,19 @@ public class DataUpdatingPresenter
         updateEvent();
         updatePolice();
         uploadPatrolRecordPhoto();
+        uploadEventRecord();
         new Thread(){
             public void run(){
                 try{
                     TimeUnit.SECONDS.sleep(20);
                     if(progressDialog != null && progressDialog.isShowing()){
-                        progressDialog.dismiss();
                         ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, "传输超时！", Toast
-                                        .LENGTH_LONG).show();
+                                Toast.makeText(context, "传输超时！", Toast.LENGTH_LONG).show();
                             }
                         });
+                        progressDialog.dismiss();
                     }
                 }catch (InterruptedException e){
                     e.printStackTrace();
@@ -457,7 +459,11 @@ public class DataUpdatingPresenter
                     PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
                     patrolRecord.setUpload(false);
                     patrolRecord.save();
-                    reduceCount();
+                    LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
+                    count--;
+                    if(count == 0){
+                        progressDialog.dismiss();
+                    }
                 }
 
                 @Override
@@ -477,11 +483,130 @@ public class DataUpdatingPresenter
         }
     }
 
+    public void uploadEventRecord(){
+        if(progressDialog == null || !progressDialog.isShowing()){
+            progressDialog = ProgressDialog.show(context,"","上传中...");
+        }
+
+        List<EventRecord> eventRecordList = LitePal.where("upload = ?","0").find(EventRecord.class);
+        for(final EventRecord eventRecord : eventRecordList){
+            addCount();
+            if(!eventRecord.getPhotoPath().equals("") && eventRecord.getPhotoURL().equals("")){
+                String address = HttpUtil.LocalAddress + "/api/file";
+                final String userID = pref.getString("userID",null);
+                HttpUtil.fileRequest(address, userID, new File(eventRecord.getPhotoPath()), new Callback()
+                {
+                    @Override
+                    public void onFailure(Call call, IOException e)
+                    {
+                        e.printStackTrace();
+                        ((AppCompatActivity) context).runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                Toast.makeText(context, "服务器连接错误", Toast
+                                        .LENGTH_LONG).show();
+                            }
+                        });
+                        LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
+                        count--;
+                        if(count == 0){
+                            progressDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException
+                    {
+                        final String responsData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responsData);
+                        String photo = Utility.checkString(responsData,"msg");
+                        eventRecord.setPhotoURL(photo);
+                        eventRecord.save();
+                        postEventRecord(eventRecord);
+                    }
+                });
+            }else{
+                postEventRecord(eventRecord);
+            }
+        }
+        if(count == 0){
+            progressDialog.dismiss();
+        }
+    }
+
+    public void postEventRecord(final EventRecord eventRecord){
+        String userID = pref.getString("userID",null);
+        String photo = eventRecord.getPhotoURL();
+        String address = HttpUtil.LocalAddress + "/api/eventRecord";
+        String companyID = pref.getString("companyID",null);
+        String reportUnit = eventRecord.getReportUnit();
+        String disposalOperateType = eventRecord.getDisposalOperateType();
+        long time = eventRecord.getTime();
+        String eventID = eventRecord.getEventId();
+        String policeID = eventRecord.getPoliceId();
+        String detail = eventRecord.getDetail();
+        String patrolRecordID = eventRecord.getPatrolRecordId();
+        String pointID = eventRecord.getPointId();
+        HttpUtil.postEventRecordRequest(address, userID, companyID, eventID, policeID, reportUnit, detail, disposalOperateType,photo, time,
+                patrolRecordID, pointID, new Callback()
+                {
+                    @Override
+                    public void onFailure(Call call, IOException e)
+                    {
+                        e.printStackTrace();
+                        ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "服务器连接错误", Toast
+                                        .LENGTH_LONG).show();
+                            }
+                        });
+                        LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
+                        count--;
+                        if(count == 0){
+                            progressDialog.dismiss();
+                        }
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException
+                    {
+                        final String responsData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responsData);
+                        if(Utility.checkString(responsData,"code").equals("000")){
+                            eventRecord.setUpload(true);
+                            eventRecord.save();
+                            reduceCount();
+                        } else{
+                            ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
+                            count--;
+                            if(count == 0){
+                                progressDialog.dismiss();
+                            }
+                        }
+                    }
+                });
+    }
 
     private void addCount() {
         LogUtil.e("DataUpdatingPresenter","count: "+count+ "   ++");
         if(count == 0 && (progressDialog == null ||!progressDialog.isShowing())){
-            progressDialog = ProgressDialog.show(context,"","数据更新中...");
+            ((AppCompatActivity)context).runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    progressDialog = ProgressDialog.show(context, "", "数据更新中...");
+                }
+            });
         }
         count++;
     }
@@ -491,7 +616,7 @@ public class DataUpdatingPresenter
         count--;
         if(count == 0){
             progressDialog.dismiss();
-            if(!(context instanceof  UploadListActivity)){
+            if(!(context instanceof UploadListActivity) && !(context instanceof EventRecordListActivity)){
                 ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -513,6 +638,14 @@ public class DataUpdatingPresenter
                 ((PoliceListActivity) context).refresh();
             }else if(context instanceof UploadListActivity){
                 ((UploadListActivity) context).refresh();
+                ((AppCompatActivity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "上传成功", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }else if(context instanceof EventRecordListActivity){
+                ((EventRecordListActivity) context).refresh();
                 ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

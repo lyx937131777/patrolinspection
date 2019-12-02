@@ -3,14 +3,17 @@ package com.example.patrolinspection;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.PatrolRecord;
@@ -30,11 +33,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-    private Type[] types = {new Type("巡检", R.drawable.patrol_inspection,R.drawable.patrol_inspection_press,"patrolInspection"), new Type("签到/签退", R.drawable.sign,R.drawable.sign_press,"sign")
-            , new Type("公告", R.drawable.notice,R.drawable.notice_press,"notice"), new Type("发现异常", R.drawable.event_found,R.drawable.event_found_press,"eventFound"),
-            new Type("异常事件列表", R.drawable.event_list,R.drawable.event_list_press,"eventList"), new Type("数据更新", R.drawable.data_updating,R.drawable.data_updating_press,"dataUpdating"),
-            new Type("保安注册", R.drawable.security_staff,R.drawable.security_staff_press,"securityStaff"), new Type("信息点注册", R.drawable.information_point,R.drawable.information_point_press,"informationPoint"),
-            new Type("系统参数", R.drawable.system_parameter,R.drawable.system_parameter_press,"systemParameter")};
+    private Type[] types = {new Type("巡检", R.drawable.patrol_inspection,R.drawable.patrol_inspection_press,"patrolInspection"),
+            new Type("发现异常", R.drawable.event_found,R.drawable.event_found_press,"eventFound"),
+            new Type("异常事件列表", R.drawable.event_list,R.drawable.event_list_press,"eventList"),
+            new Type("公告", R.drawable.notice,R.drawable.notice_press,"notice"),
+            new Type("数据更新", R.drawable.data_updating,R.drawable.data_updating_press,"dataUpdating"),
+            new Type("系统参数", R.drawable.system_parameter,R.drawable.system_parameter_press,"systemParameter"),
+            new Type("签到/签退", R.drawable.sign,R.drawable.sign_press,"sign"),
+            new Type("保安/信息点注册",R.drawable.information_register,R.drawable.information_register_press,"informationRegister"),
+            new Type("护校事件",R.drawable.school_event,R.drawable.school_event_press,"schoolEvent")
+            };
     private List<Type> typeList = new ArrayList<>();
     private TypeAdapter adapter;
     private static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 1101;
@@ -49,8 +57,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        LogUtil.e("Notice main",timestamp.toString());
         initTypes();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
@@ -86,18 +92,20 @@ public class MainActivity extends AppCompatActivity
     {
         typeList.clear();
         //DataSupport.deleteAll(Type.class);
-        for (int i = 0; i < types.length; i++)
+        for (int i = 0; i < 6; i++)
         {
             typeList.add(types[i]);
-//            Type newtype = DataSupport.where("TypeName = ?",types[i].getTypeName()).findFirst(Type.class);
-//            if(newtype == null)
-//            {
-//                types[i].save();
-//                LogUtil.e("MainActivity","=========save==========");
-//            }else
-//            {
-//                LogUtil.e("MainActivity","Not save!!!!!!!!!!!");
-//            }
+        }
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!pref.getString("equipmentType",null).equals("phone") || pref.getBoolean("isAppAttendance",false)){
+            typeList.add(types[6]);
+        }
+        if(!pref.getString("equipmentType",null).equals("phone")){
+            typeList.add(types[7]);
+        }
+        //TODO 护校登录参数
+        if(pref.getBoolean("isSchoolLoign",false)){
+            typeList.add(types[8]);
         }
     }
 
@@ -115,6 +123,19 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("record",patrolRecord.getInternetID());
             startActivityForResult(intent,0);
         }
+    }
+
+    public void refresh()
+    {
+        initTypes();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
