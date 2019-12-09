@@ -309,6 +309,19 @@ public class PatrolingActivity extends AppCompatActivity
                 if(informationPoint.getNum().equals(icid)){
                     flag = false;
                     if(patrolPointRecord.getState().equals("未巡检")){
+                        if(!patrolLine.isIscanJump()){
+                            if(tempPointRecord == null && !patrolPointRecord.getOrderNo().equals("1")){
+                                Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                return;
+                            }else if(tempPointRecord != null){
+                                int tempOrderNo = Integer.parseInt(tempPointRecord.getOrderNo());
+                                int thisOrderNo = Integer.parseInt(patrolPointRecord.getOrderNo());
+                                if(thisOrderNo - tempOrderNo != 1){
+                                    Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                            }
+                        }
                         Calendar calendar = Calendar.getInstance();
                         patrolPointRecord.setTime(calendar.getTimeInMillis());
                         patrolPointRecord.setState("巡检中");
@@ -323,7 +336,15 @@ public class PatrolingActivity extends AppCompatActivity
                         eventHandle.setEnabled(true);
                         adapter.notifyDataSetChanged();
                         if(patrolLine.getPictureType().equals("must")){
-                            takePhoto();
+                            if (ContextCompat.checkSelfPermission(PatrolingActivity.this, Manifest
+                                    .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                            {
+                                ActivityCompat.requestPermissions(PatrolingActivity.this, new
+                                        String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                            } else
+                            {
+                                takePhoto();
+                            }
                             patrolPhoto.setEnabled(true);
                         }else if(patrolLine.getPictureType().equals("optional")){
                             patrolPhoto.setEnabled(true);
