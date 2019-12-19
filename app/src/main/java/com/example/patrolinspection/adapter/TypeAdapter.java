@@ -21,6 +21,7 @@ import com.example.patrolinspection.NfcActivity;
 import com.example.patrolinspection.NoticeActivity;
 import com.example.patrolinspection.PatrolLineActivity;
 import com.example.patrolinspection.R;
+import com.example.patrolinspection.SchoolEventActivity;
 import com.example.patrolinspection.SignActivity;
 import com.example.patrolinspection.SwipeCardActivity;
 import com.example.patrolinspection.SwipeNfcActivity;
@@ -152,7 +153,6 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                     }
                     case "informationPoint":{
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-                        //TODO 取消注释
                         if(pref.getString("equipmentType",null).equals("phone")){
                             Toast.makeText(mContext,"手机无法注册信息点，请使用巡更棒注册！",Toast.LENGTH_LONG).show();
                         }else{
@@ -169,8 +169,17 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.ViewHolder>
                         break;
                     }
                     case "schoolEvent":{
-//                        Intent intent = new Intent(mContext, TestActivity.class);
-//                        mContext.startActivity(intent);
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+                        if(pref.getString("schoolPolice","null").equals("null")){
+                            Intent intent = new Intent(mContext, SwipeNfcActivity.class);
+                            intent.putExtra("type",typeName);
+                            intent.putExtra("title","护校登录");
+                            mContext.startActivity(intent);
+                        }else{
+                            Intent intent = new Intent(mContext, SchoolEventActivity.class);
+                            mContext.startActivity(intent);
+                        }
+
                         break;
                     }
                     case "informationRegister":{

@@ -17,6 +17,17 @@ public class Police extends LitePalSupport
     private boolean officialPolice;//true表示保安卡 false表示自建（IC卡）
     private boolean inService;
     private boolean onDuty;
+    private String schoolAttendanceSchoolId;
+
+    public String getSchoolAttendanceSchoolId()
+    {
+        return schoolAttendanceSchoolId;
+    }
+
+    public void setSchoolAttendanceSchoolId(String schoolAttendanceSchoolId)
+    {
+        this.schoolAttendanceSchoolId = schoolAttendanceSchoolId;
+    }
 
     public boolean isInService()
     {

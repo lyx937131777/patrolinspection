@@ -1,6 +1,10 @@
 package com.example.patrolinspection.service;
 
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.app.usage.UsageStats;
@@ -15,11 +19,16 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.patrolinspection.MainActivity;
+import com.example.patrolinspection.NoticeActivity;
+import com.example.patrolinspection.R;
+import com.example.patrolinspection.SchoolEventActivity;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
@@ -32,6 +41,7 @@ import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.MyApplication;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -231,6 +241,72 @@ public class HeartbeatService extends Service
                 }
                 if(updateList.contains("event")){
                     updateEvent();
+                }
+                if(updateList.contains("announce")){
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("newNotice",true);
+                    editor.apply();
+                    String CHANNEL_ID = "channel_id_1";
+                    String CHANNEL_NAME = "channel_notice";
+                    Intent intent = new Intent(HeartbeatService.this, NoticeActivity.class);
+                    PendingIntent pi = PendingIntent.getActivity(HeartbeatService.this, 0, intent, 0);
+                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        //只在Android O之上需要渠道
+                        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                                CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                        //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，
+                        //通知才能正常弹出
+                        manager.createNotificationChannel(notificationChannel);
+                    }
+                    Notification notification = new NotificationCompat.Builder(HeartbeatService.this, CHANNEL_ID)
+                            .setContentTitle("新公告提醒")
+                            .setContentText("有新的公告，请及时查看")
+                            .setWhen(System.currentTimeMillis())
+                            .setSmallIcon(R.mipmap.logo)
+                            .setContentIntent(pi)
+                            .setAutoCancel(true)
+                            .build();
+                    manager.notify(1,notification);
+                    if(getApplicationContext() instanceof MainActivity){
+                        ((MainActivity)getApplicationContext()).refresh();
+                    }
+                }
+                if(Utility.checkHeartbeatBoolean(responsData,"schoolEvent")){
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean("newSchoolEvent",true);
+                    editor.apply();
+                    String CHANNEL_ID = "channel_id_2";
+                    String CHANNEL_NAME = "channel_school_event";
+                    Intent intent = new Intent(HeartbeatService.this, SchoolEventActivity.class);
+                    PendingIntent pi = PendingIntent.getActivity(HeartbeatService.this, 0, intent, 0);
+                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        //只在Android O之上需要渠道
+                        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                                CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                        //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，
+                        //通知才能正常弹出
+                        manager.createNotificationChannel(notificationChannel);
+                    }
+                    Notification notification = new NotificationCompat.Builder(HeartbeatService.this, CHANNEL_ID)
+                            .setContentTitle("新护校事件提醒")
+                            .setContentText("有新的护校事件，请及时查看")
+                            .setWhen(System.currentTimeMillis())
+                            .setSmallIcon(R.mipmap.logo)
+                            .setContentIntent(pi)
+                            .setAutoCancel(true)
+                            .build();
+                    manager.notify(2,notification);
+                    if(getApplicationContext() instanceof MainActivity){
+                        ((MainActivity)getApplicationContext()).refresh();
+                    }
+                }
+
+                if(!Utility.checkHeartbeatBoolean(responsData, "schoolLogin")){
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("schoolPolice","null");
+                    editor.apply();
                 }
             }
         });

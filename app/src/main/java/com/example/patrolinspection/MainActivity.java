@@ -41,11 +41,14 @@ public class MainActivity extends AppCompatActivity
             new Type("系统参数", R.drawable.system_parameter,R.drawable.system_parameter_press,"systemParameter"),
             new Type("签到/签退", R.drawable.sign,R.drawable.sign_press,"sign"),
             new Type("保安/信息点注册",R.drawable.information_register,R.drawable.information_register_press,"informationRegister"),
-            new Type("护校事件",R.drawable.school_event,R.drawable.school_event_press,"schoolEvent")
+            new Type("护校事件",R.drawable.school_event,R.drawable.school_event_press,"schoolEvent"),
+            new Type("护校事件",R.drawable.school_event_new,R.drawable.school_event_press,"schoolEvent"),
+            new Type("公告", R.drawable.notice_new,R.drawable.notice_press,"notice"),
             };
     private List<Type> typeList = new ArrayList<>();
     private TypeAdapter adapter;
     private static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 1101;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -92,20 +95,34 @@ public class MainActivity extends AppCompatActivity
     {
         typeList.clear();
         //DataSupport.deleteAll(Type.class);
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 3; i++)
         {
             typeList.add(types[i]);
         }
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref.getBoolean("newNotice",false)){
+            typeList.add(types[10]);
+        }else{
+            typeList.add(types[3]);
+        }
+        for (int i = 4; i < 6; i++)
+        {
+            typeList.add(types[i]);
+        }
         if(!pref.getString("equipmentType",null).equals("phone") || pref.getBoolean("isAppAttendance",false)){
             typeList.add(types[6]);
         }
         if(!pref.getString("equipmentType",null).equals("phone")){
             typeList.add(types[7]);
         }
-        //TODO 护校登录参数
-        if(pref.getBoolean("isSchoolLoign",false)){
-            typeList.add(types[8]);
+
+        LogUtil.e("MainActivity","schoolLogin: " + pref.getBoolean("isSchoolLogin",false));
+        if(pref.getBoolean("isSchoolLogin",false)){
+            if(pref.getBoolean("newSchoolEvent",false)){
+                typeList.add(types[9]);
+            }else {
+                typeList.add(types[8]);
+            }
         }
     }
 
@@ -113,6 +130,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart()
     {
         super.onStart();
+        refresh();
         if(!HeartbeatService.isRun){
             Intent intent = new Intent(this,HeartbeatService.class);
             startService(intent);

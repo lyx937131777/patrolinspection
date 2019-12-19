@@ -17,6 +17,7 @@ import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
+import com.example.patrolinspection.db.SchoolEventRecord;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
@@ -161,6 +162,24 @@ public class Utility
         return null;
     }
 
+    //心跳获得相应布尔值
+    public static boolean checkHeartbeatBoolean(String response, String s)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                return dataObject.getBoolean(s);
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
     //获得Police
     public static Police handlePolice(String response){
         if (!TextUtils.isEmpty(response))
@@ -339,6 +358,25 @@ public class Utility
                 JSONArray jsonArray = dataObject.getJSONArray("content");
                 String eventRecordJson = jsonArray.toString();
                 return new Gson().fromJson(eventRecordJson, new TypeToken<List<EventRecord>>() {}.getType());
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    //更新护校事件记录列表
+    public static List<SchoolEventRecord> handleSchoolEventRecordList(String response)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                String schoolEventRecordJson = dataArray.toString();
+                return new Gson().fromJson(schoolEventRecordJson, new TypeToken<List<SchoolEventRecord>>() {}.getType());
             } catch (JSONException e)
             {
                 e.printStackTrace();

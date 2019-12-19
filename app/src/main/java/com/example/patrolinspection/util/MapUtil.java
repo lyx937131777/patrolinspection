@@ -16,6 +16,8 @@ public class MapUtil
     private static Map<String,String> dutyMap = new HashMap<>();
     private static Map<String,String> photoTypeMap = new HashMap<>();
     private static Map<String,String> handleTypeMap = new HashMap<>();
+    private static Map<String,String> schoolEventTypeMap = new HashMap<>();
+    private static Map<String,String> schoolEventRecordTypeMap = new HashMap<>();
 
     static {
         //patrol schedule
@@ -97,6 +99,20 @@ public class MapUtil
         handleTypeMap.put("处置","disposal");
         handleTypeMap.put("上报","report");
         handleTypeMap.put("结束","end");
+
+        schoolEventTypeMap.put("wander","异常徘徊");
+        schoolEventTypeMap.put("wanders","多次异常徘徊");
+        schoolEventTypeMap.put("retention","异常滞留");
+        schoolEventTypeMap.put("retentions","多次异常滞留");
+        schoolEventTypeMap.put("retentionMultipoint","多点滞留");
+        schoolEventTypeMap.put("blacklist","重点人员黑名单");
+
+        schoolEventRecordTypeMap.put("unoperate","未操作");
+        schoolEventRecordTypeMap.put("receive","收到");
+        schoolEventRecordTypeMap.put("concern","关注");
+        schoolEventRecordTypeMap.put("unfound","未发现");
+        schoolEventRecordTypeMap.put("danger","侵害");
+        schoolEventRecordTypeMap.put("undanger","未发生");
     }
 
     public static int getState(String s){
@@ -129,5 +145,13 @@ public class MapUtil
 
     public static String getHandleType(String s){
         return handleTypeMap.get(s);
+    }
+
+    public static String getSchoolEventType(String s){
+        return schoolEventTypeMap.get(s);
+    }
+
+    public static String getSchoolEventRecordType(String s){
+        return schoolEventRecordTypeMap.get(s);
     }
 }

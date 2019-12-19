@@ -14,6 +14,8 @@ import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.presenter.NoticePresenter;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.presenter.PoliceRegisterPresenter;
+import com.example.patrolinspection.presenter.SchoolEventHandlePresenter;
+import com.example.patrolinspection.presenter.SchoolEventPresenter;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
 
 import dagger.Component;
@@ -44,4 +46,8 @@ public interface MyComponent
     HandleRecordPresenter handleRecordPresenter();
 
     EventHandlePresenter eventHandlePresenter();
+
+    SchoolEventPresenter schoolEventPresenter();
+
+    SchoolEventHandlePresenter schoolEventHandlePresenter();
 }

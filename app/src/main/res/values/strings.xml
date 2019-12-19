@@ -19,6 +19,9 @@
     <string name="confirm_pwd">确认密码</string>
     <string name="nickname">昵称</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="tab_text_1">已完成事件</string>
-    <string name="tab_text_2">未完成事件</string>
+    <string name="tab_text_event_record_1">已完成事件</string>
+    <string name="tab_text_event_record_2">未完成事件</string>
+    <string name="tab_text_school_event_1">今日事件</string>
+    <string name="tab_text_school_event_2">处置中事件</string>
+    <string name="tab_text_school_event_3">已完成事件</string>
 </resources>

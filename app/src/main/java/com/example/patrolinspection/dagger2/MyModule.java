@@ -16,6 +16,8 @@ import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.presenter.NoticePresenter;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.presenter.PoliceRegisterPresenter;
+import com.example.patrolinspection.presenter.SchoolEventHandlePresenter;
+import com.example.patrolinspection.presenter.SchoolEventPresenter;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
 import com.example.patrolinspection.util.CheckUtil;
 
@@ -109,5 +111,15 @@ public class MyModule
     @Provides
     public EventHandlePresenter provideEventHandlePresenter(Context context, SharedPreferences pref){
         return new EventHandlePresenter(context,pref);
+    }
+
+    @Provides
+    public SchoolEventPresenter provideSchoolEventPresenter(Context context, SharedPreferences pref){
+        return new SchoolEventPresenter(context,pref);
+    }
+
+    @Provides
+    public SchoolEventHandlePresenter provideSchoolEventHandlePresenter(Context context, SharedPreferences pref){
+        return new SchoolEventHandlePresenter(context,pref);
     }
 }

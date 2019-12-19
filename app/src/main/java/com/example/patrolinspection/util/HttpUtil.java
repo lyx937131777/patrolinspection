@@ -284,4 +284,46 @@ public class HttpUtil
         client.newCall(request).enqueue(callback);
     }
 
+    //护校登录
+    public static void schoolLoginRequest(String address, String userID, String policeID, Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("equipmentId", userID.split("-")[1])
+                .add("policeId",policeID)
+                .build();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    //护校登出
+    public static void schoolLogoutRequest(String address, String userID, Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("equipmentId", userID.split("-")[1])
+                .build();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    //获取护校事件列表
+    public static void schoolEventRecordListRequest(String address, String userID, String schoolEventStatus, okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address + "?equipmentId=" + userID.split("-")[1] + "&schoolEventStatus=" + schoolEventStatus).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    //处置护校事件
+    public static void updateSchoolEventRecordRequest(String address, String userID, String policeID, String schoolEventRecordType, Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("schoolEventRecordType", schoolEventRecordType)
+                .add("policeId",policeID)
+                .build();
+        String credential = Credentials.basic(userID, "123456");
+        Request request = new Request.Builder().url(address).put(requestBody).addHeader("Authorization",credential).build();
+        client.newCall(request).enqueue(callback);
+    }
 }

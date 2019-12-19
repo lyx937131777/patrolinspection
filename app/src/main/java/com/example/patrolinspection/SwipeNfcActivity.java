@@ -212,7 +212,7 @@ public class SwipeNfcActivity extends AppCompatActivity
         }.start();
     }
 
-    private void processPolice(Police police){
+    private void processPolice(final Police police){
         LogUtil.e("SwipeNfcActivity","id: "+police.getInternetID());
         LogUtil.e("SwipeNfcActivity","name: "+police.getRealName());
         LogUtil.e("SwipeNfcActivity","companyId: "+police.getCompanyId());
@@ -274,6 +274,8 @@ public class SwipeNfcActivity extends AppCompatActivity
                         });
                     }
                 }
+                mProgressDialog.dismiss();
+                isCardReading = false;
                 break;
             }
             case "signIn":
@@ -285,6 +287,8 @@ public class SwipeNfcActivity extends AppCompatActivity
                 intent.putExtra("police",police.getInternetID());
                 startActivity(intent);
                 finish();
+                mProgressDialog.dismiss();
+                isCardReading = false;
                 break;
             }
             case "eventFound":{
@@ -304,6 +308,8 @@ public class SwipeNfcActivity extends AppCompatActivity
                     startActivity(intent);
                     finish();
                 }
+                mProgressDialog.dismiss();
+                isCardReading = false;
                 break;
             }
             case "eventHandle":{
@@ -322,12 +328,72 @@ public class SwipeNfcActivity extends AppCompatActivity
                     intent.putExtra("police",police.getInternetID());
                     startActivityForResult(intent,0);
                 }
+                mProgressDialog.dismiss();
+                isCardReading = false;
                 break;
             }
-        }
+            case "schoolEvent":{
+                if(police.getSchoolAttendanceSchoolId() == null){
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"请先进行护校签到！",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    mProgressDialog.dismiss();
+                    isCardReading = false;
+                }else{
+                    final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                    String userID = preferences.getString("userID",null);
+                    String address = HttpUtil.LocalAddress + "/api/equipment/school_login";
+                    HttpUtil.schoolLoginRequest(address, userID, police.getInternetID(), new Callback()
+                    {
+                        @Override
+                        public void onFailure(Call call, IOException e)
+                        {
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, "服务器连接错误", Toast
+                                            .LENGTH_LONG).show();
+                                }
+                            });
+                            mProgressDialog.dismiss();
+                            isCardReading = false;
+                        }
 
-        mProgressDialog.dismiss();
-        isCardReading = false;
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException
+                        {
+                            final String responsData = response.body().string();
+                            LogUtil.e("SwipeNfcActivity",responsData);
+                            if(Utility.checkString(responsData,"code").equals("500")){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(mContext, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                mProgressDialog.dismiss();
+                                isCardReading = false;
+                            }else{
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("schoolPolice",police.getInternetID());
+                                editor.apply();
+                                Intent intent = new Intent(mContext,SchoolEventActivity.class);
+                                startActivity(intent);
+                                finish();
+                                mProgressDialog.dismiss();
+                                isCardReading = false;
+                            }
+                        }
+                    });
+                }
+            }
+        }
     }
 
     @Override
