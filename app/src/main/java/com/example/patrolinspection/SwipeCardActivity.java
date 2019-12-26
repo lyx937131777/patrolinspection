@@ -128,6 +128,20 @@ public class SwipeCardActivity extends AppCompatActivity
                 Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
                 if (mPsamUtil != null) mPsamUtil.close();
             }
+        }else if(model.equals("SUNMI")){
+            try {
+                mPsamUtil = new PsamUtil(mContext);
+            } catch (Exception e) {
+                e.printStackTrace();
+                mPsamUtil = null;
+            } catch (Error e) {
+                e.printStackTrace();
+                mPsamUtil = null;
+            }
+            if(mPsamUtil == null || mPsamUtil.open() < 0){
+                Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                if (mPsamUtil != null) mPsamUtil.close();
+            }
         }
     }
 
@@ -179,7 +193,13 @@ public class SwipeCardActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
                 }
-            }else{//TODO 可添加其他型号的PSAM处理方法
+            }else if(model.equals("SUNMI")){
+                if(mPsamUtil != null){
+                    processIntent(intent);
+                } else {
+                    Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                }
+            } else{//TODO 可添加其他型号的PSAM处理方法
                 Toast.makeText(mContext,"本机无PSAM卡，无法注册保安卡",Toast.LENGTH_LONG).show();
             }
 
