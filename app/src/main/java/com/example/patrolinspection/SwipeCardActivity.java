@@ -128,7 +128,8 @@ public class SwipeCardActivity extends AppCompatActivity
                 Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
                 if (mPsamUtil != null) mPsamUtil.close();
             }
-        }else if(model.equals("SUNMI")){
+        }else if(model.equals("L2-H")){
+            //TODO 新PSAM卡
             try {
                 mPsamUtil = new PsamUtil(mContext);
             } catch (Exception e) {
@@ -193,7 +194,7 @@ public class SwipeCardActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
                 }
-            }else if(model.equals("SUNMI")){
+            }else if(model.equals("L2-H")){
                 if(mPsamUtil != null){
                     processIntent(intent);
                 } else {
