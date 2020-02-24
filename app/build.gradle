@@ -14,7 +14,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 11
-        versionName "1.8.1"
+        versionName "1.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a"
@@ -53,7 +53,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.0.2'
     implementation 'javax.annotation:jsr250-api:1.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
-
     implementation files('libs/odm.jar')
     implementation project(path: ':imageDecoderService')
+    implementation files('libs/L2_Sunmi_PSAM_SDK_0.1.jar')
 }

@@ -196,6 +196,16 @@ public class CommonUtil {
         Matcher matcher = pattern.matcher(str);
         return matcher.matches();
     }
+
+    public static void delayms(int ms) {
+        if (ms > 0) {
+            try {
+                Thread.sleep((long)ms);
+            } catch (InterruptedException var2) {
+            }
+        }
+
+    }
     
 //    public static String readDSN(Context context){
 //        try {

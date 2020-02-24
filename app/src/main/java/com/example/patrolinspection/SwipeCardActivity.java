@@ -23,8 +23,10 @@ import android.widget.Toast;
 import com.example.patrolinspection.psam.BaoAnBasicInfo;
 import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.psam.DBHelper;
+import com.example.patrolinspection.psam.PsamL2HUtil;
 import com.example.patrolinspection.psam.PsamUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.sunmi.psam.PSAMReaderManager;
 
 import java.io.IOException;
 
@@ -57,6 +59,9 @@ public class SwipeCardActivity extends AppCompatActivity
     public static final int CARD_TYPE_IC = 2;
 
     private String model;
+
+    //L2-H
+    private PsamL2HUtil psamL2HUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -125,35 +130,38 @@ public class SwipeCardActivity extends AppCompatActivity
                 mPsamUtil = null;
             }
             if(mPsamUtil == null || mPsamUtil.open() < 0){
-                Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "A2000L : Psam初始化失败", Toast.LENGTH_SHORT).show();
                 if (mPsamUtil != null) mPsamUtil.close();
             }
         }else if(model.equals("L2-H")){
             //TODO 新PSAM卡
-            try {
-                mPsamUtil = new PsamUtil(mContext);
-            } catch (Exception e) {
+            try
+            {
+                psamL2HUtil = new PsamL2HUtil(mContext);
+            }catch (Exception e){
                 e.printStackTrace();
-                mPsamUtil = null;
-            } catch (Error e) {
+                psamL2HUtil = null;
+            } catch (Error e){
                 e.printStackTrace();
-                mPsamUtil = null;
+                psamL2HUtil = null;
             }
-            if(mPsamUtil == null || mPsamUtil.open() < 0){
-                Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
-                if (mPsamUtil != null) mPsamUtil.close();
+            if(psamL2HUtil == null || !psamL2HUtil.open()){
+                Toast.makeText(mContext, "L2-H : Psam初始化失败", Toast.LENGTH_SHORT).show();
+                if(psamL2HUtil != null) psamL2HUtil.close();
+            }else{
+                Toast.makeText(mContext, "L2-H : 上电成功", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private boolean ifNFCUse() {
         if (nfcAdapter == null) {
-            Log.e(TAG, "设备不支持NFC！");
+            LogUtil.e(TAG, "设备不支持NFC！");
             Toast.makeText(mContext, "此设备没有NFC功能", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (nfcAdapter != null && !nfcAdapter.isEnabled()) {
-            Log.e(TAG,"请在系统设置中先启用NFC功能！");
+            LogUtil.e(TAG,"请在系统设置中先启用NFC功能！");
             Toast.makeText(mContext, "请打开NFC", Toast.LENGTH_SHORT).show();
             startActivity(new Intent("android.settings.NFC_SETTINGS"));
             return false;
@@ -180,7 +188,15 @@ public class SwipeCardActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        if(mPsamUtil != null) mPsamUtil.close();
+        //下电
+        if(mPsamUtil != null) {
+            mPsamUtil.close();
+            LogUtil.e(TAG,"A2000L : 下电成功");
+        }
+        if(psamL2HUtil != null) {
+            psamL2HUtil.close();
+            LogUtil.e(TAG,"L2-H : 下电成功");
+        }
     }
 
     @Override
@@ -190,15 +206,16 @@ public class SwipeCardActivity extends AppCompatActivity
                 NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             if(model.equals("A2000L")){
                 if(mPsamUtil != null){
-                    processIntent(intent);
+                    processIntentByA2000L(intent);
                 } else {
-                    Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "A2000L : Psam初始化失败", Toast.LENGTH_SHORT).show();
                 }
             }else if(model.equals("L2-H")){
-                if(mPsamUtil != null){
-                    processIntent(intent);
+                if(psamL2HUtil != null){
+//                    Toast.makeText(mContext, "L2-H : 上电成功", Toast.LENGTH_SHORT).show();
+                    processIntentByL2H(intent);
                 } else {
-                    Toast.makeText(mContext, "Psam初始化失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "L2-H : Psam初始化失败", Toast.LENGTH_SHORT).show();
                 }
             } else{//TODO 可添加其他型号的PSAM处理方法
                 Toast.makeText(mContext,"本机无PSAM卡，无法注册保安卡",Toast.LENGTH_LONG).show();
@@ -207,7 +224,116 @@ public class SwipeCardActivity extends AppCompatActivity
         }
     }
 
-    private void processIntent(Intent intent) {
+    private void processIntentByL2H(Intent intent){
+        if (isCardReading) {
+            return;
+        }
+        isCardReading = true;
+
+        mProgressDialog = ProgressDialog.show(mContext, "", "读卡中,请稍后...");
+        final Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+        new Thread(){
+            public void run() {
+                //get TAG from intent
+                String icid = CommonUtil.bytesToHexString(tagFromIntent.getId());
+                LogUtil.e("SwipeCardActivity","icid: " + icid);
+                for (String tech : tagFromIntent.getTechList()) {
+                    LogUtil.d(TAG,"tech = " + tech);
+                    if(tech.contains("IsoDep")){
+                        authType = CARD_TYPE_SECURITY;
+                        break;
+                    } else {
+                        authType = CARD_TYPE_IC;
+                    }
+                }
+
+                IsoDep isodep = IsoDep.get(tagFromIntent);
+                int st = -3;
+                String ret = "";
+                try {
+                    isodep.connect();
+                    st = psamL2HUtil.sercurityAuth(isodep);
+//                    st = 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (st==1){
+                    byte[] basicInfoBytes = null;
+
+                    byte[] expendInfoBytes = null;
+                    byte[] trackInfoBytes = null;
+                    photoInfoBytes = null;
+                    basicInfoBytes = psamL2HUtil.getBasicInfo(isodep);
+                    photoInfoBytes = psamL2HUtil.getPhotoInfo(isodep);
+                    //读照片
+                    LogUtil.e(TAG, "photoInfoBytes.length = "+photoInfoBytes.length);
+
+                    //读基础数据
+                    if (basicInfoBytes != null){
+                        try {
+                            info = psamL2HUtil.resolveBasicInfo(basicInfoBytes);
+                            LogUtil.e(TAG,info.toString());
+                            //expendInfoBytes = mPsamUtil.getJGInfo(isodep);
+                            //trackInfoBytes = mPsamUtil.getTrackInfo(isodep);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            ret = "卡数据解析错误";
+                        }
+                    }else{
+                        LogUtil.e(TAG,"basicInfoBytes  null!!!!");
+                    }
+                } else if(st==-1) {
+                    ret = "无PSAM卡";
+                    //Toast.makeText(mContext, "无PSAM卡", Toast.LENGTH_SHORT).show();
+                } else if(st==-2){
+                    ret = "无效卡";
+                    //Toast.makeText(mContext, "无效卡", Toast.LENGTH_SHORT).show();
+                } else if(st==-3){
+                    ret = "未读到保安卡id，请重新读卡";
+                    //Toast.makeText(mContext, "未读到保安卡id，请重新读卡", Toast.LENGTH_SHORT).show();
+                } else {
+                    ret = "读卡失败";
+                    //Toast.makeText(mContext, "读卡失败", Toast.LENGTH_SHORT).show();
+                }
+                Log.e(TAG, ret);
+
+                if(authType == CARD_TYPE_IC){
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(mContext,"未读到保安卡id，请重新读卡",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }else{
+                    Intent intent = new Intent(mContext, PoliceRegisterActivity.class);
+                    String name = info.getBaoAnName().replace(" ", "");
+                    String identityCard = info.getId();
+                    String securityCard = info.getBaoAnID();
+                    String sex = info.getSex();
+                    String nation = info.getNation();
+                    String birth = info.getBarth();
+                    intent.putExtra("name",name);
+                    intent.putExtra("identityCard",identityCard);
+                    intent.putExtra("securityCard",securityCard);
+                    intent.putExtra("sex",sex);
+                    intent.putExtra("nation",nation);
+                    intent.putExtra("birth",birth);
+                    intent.putExtra("photo",photoInfoBytes);
+                    intent.putExtra("icCard",icid);
+                    mContext.startActivity(intent);
+//                          ((SwipeCardActivity)mContext).finish();
+                }
+
+                mProgressDialog.dismiss();
+                isCardReading = false;
+            };
+        }.start();
+    }
+
+    private void processIntentByA2000L(Intent intent) {
         if (isCardReading) {
             return;
         }
