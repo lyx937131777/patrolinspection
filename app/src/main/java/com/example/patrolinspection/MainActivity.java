@@ -1,14 +1,18 @@
 package com.example.patrolinspection;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -181,6 +185,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
 
     //检测用户是否对本app开启了“Apps with usage access”权限
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

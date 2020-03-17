@@ -261,6 +261,21 @@
                 android:layout_gravity="center_vertical|right"/>
         </android.support.v7.widget.CardView>
 
+        <Button
+            android:id="@+id/update_system"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="系统更新"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

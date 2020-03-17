@@ -1,5 +1,6 @@
 package com.example.patrolinspection.service;
 
+import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,25 +11,37 @@ import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.patrolinspection.MainActivity;
 import com.example.patrolinspection.NoticeActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SchoolEventActivity;
+import com.example.patrolinspection.SystemParameterActivity;
 import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.InformationPoint;
@@ -70,8 +83,46 @@ public class HeartbeatService extends Service
     private int countTime;
     private boolean isScreenOff;
     private SharedPreferences pref;
+    private boolean download;
 
     private int photoCount;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what){
+                case 1:
+                {
+                    AlertDialog.Builder builder =new AlertDialog.Builder(getApplicationContext()).setTitle
+                            ("提示").setMessage("上海巡检APP发现有新版本，是否立刻更新？")
+                            .setNeutralButton("否", new DialogInterface
+                                    .OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            }).setNegativeButton("是", new DialogInterface
+                            .OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intent = new Intent(HeartbeatService.this, SystemParameterActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                    final AlertDialog dialog = builder.create();
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    dialog.show();
+                    break;
+                }
+            }
+        }
+    };
 
     //广播
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -165,6 +216,7 @@ public class HeartbeatService extends Service
         isRun = false;
         LogUtil.e("HeartbeatService","onDestroy");
     }
+
     private void getTopApp()
     {
         if(isScreenOff){
@@ -307,6 +359,27 @@ public class HeartbeatService extends Service
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("schoolPolice","null");
                     editor.apply();
+                }
+                PackageManager manager = getPackageManager();
+                String version = "未知";
+                try {
+                    PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
+                    version = info.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
+                LogUtil.e(TAG,version);
+                LogUtil.e(TAG,latestVersion);
+                if(!latestVersion.equals(version)){
+                    LogUtil.e(TAG,"有新版需要更新");
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("latestVersion",latestVersion);
+                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
+                    editor.apply();
+                    Message message = new Message();
+                    message.what = 1;
+                    handler.sendMessage(message);
                 }
             }
         });
@@ -596,4 +669,6 @@ public class HeartbeatService extends Service
                     }
                 });
     }
+
+
 }

@@ -105,6 +105,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             phoneID = Build.getSerial().toUpperCase();
         }
+        if(phoneID.equals("UNKNOWN")){
+            phoneID = Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase();
+        }
 
 //        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         loginPresenter.login(phoneID);

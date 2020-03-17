@@ -180,6 +180,25 @@ public class Utility
         }
         return false;
     }
+
+    //心跳获得相应string字段
+    public static String checkHeartbeatString(String response, String s)
+    {
+        if (!TextUtils.isEmpty(response))
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray dataArray = jsonObject.getJSONArray("datas");
+                JSONObject dataObject = dataArray.getJSONObject(0);
+                return dataObject.getString(s);
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
     //获得Police
     public static Police handlePolice(String response){
         if (!TextUtils.isEmpty(response))
