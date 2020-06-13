@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.patrolinspection.db.PatrolLine;
+import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.psam.CommonUtil;
@@ -30,6 +31,8 @@ import com.example.patrolinspection.util.Utility;
 import org.litepal.LitePal;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -245,6 +248,33 @@ public class SwipeNfcActivity extends AppCompatActivity
                 }else{
                     String scheduleID = getIntent().getStringExtra("schedule");
                     PatrolSchedule patrolSchedule = LitePal.where("internetID = ?",scheduleID).findFirst(PatrolSchedule.class);
+                    PatrolPlan patrolPlan = LitePal.where("internetID = ?",patrolSchedule.getPatrolPlanId()).findFirst(PatrolPlan.class);
+                    if(patrolPlan.getPatrolPlanType().equals("specialDate")){
+                        Date now = new Date(System.currentTimeMillis());
+                        Date endDate = Utility.stringToDate(patrolPlan.getEndDate());
+                        if(now.after(endDate)){
+                            Toast.makeText(mContext,"已过24：00点，请先返回主界面再开始巡检。",Toast.LENGTH_LONG).show();
+                            mProgressDialog.dismiss();
+                            isCardReading = false;
+                            break;
+                        }
+                    }
+                    int week = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+                    LogUtil.e("PatrolLineActivity","week: "+week);
+                    PatrolPlan patrolPlan2 = LitePal.where("patrolPlanType = ?", MapUtil.getPlanType(String.valueOf(week))).findFirst(PatrolPlan.class);
+                    if(patrolPlan2 == null){
+                        Toast.makeText(mContext,"已过24：00点，请先返回主界面再开始巡检。",Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
+                        isCardReading = false;
+                        break;
+                    }
+                    String planID = patrolPlan2.getInternetID();
+                    if(!planID.equals(patrolSchedule.getPatrolPlanId())){
+                        Toast.makeText(mContext,"已过24：00点，请先返回主界面再开始巡检。",Toast.LENGTH_LONG).show();
+                        mProgressDialog.dismiss();
+                        isCardReading = false;
+                        break;
+                    }
                     String lineID = patrolSchedule.getPatrolLineId();
                     PatrolLine patrolLine = LitePal.where("internetID = ?",lineID).findFirst(PatrolLine.class);
                     if(patrolLine.getPoliceIds() != null && patrolLine.getPoliceIds().contains(police.getInternetID())){

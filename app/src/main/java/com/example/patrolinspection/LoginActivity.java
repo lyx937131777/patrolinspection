@@ -3,6 +3,7 @@ package com.example.patrolinspection;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -28,6 +29,9 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.util.LogUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -63,7 +67,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            finish();
 //        }
         textView = findViewById(R.id.text);
-        checkAllPermissions();
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 10);
+            }else{
+                checkAllPermissions();
+            }
+        }else {
+            checkAllPermissions();
+        }
 
 
         Button login = findViewById(R.id.login);
@@ -77,25 +91,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void checkAllPermissions()
     {
+        List<String> permissionList = new ArrayList<>();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
         {
+            permissionList.add(Manifest.permission.INTERNET);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
-        } else
-        {
-            checkReadPhoneStatePermission();
         }
-    }
-
-    private void checkReadPhoneStatePermission()
-    {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
         {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 2);
-        } else
-        {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW) != PackageManager.PERMISSION_GRANTED)
+//        {
+//            permissionList.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
+//        }
+        if(!permissionList.isEmpty()){
+            String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(this, permissions, 1);
+        }else{
             readSerial();
         }
-
     }
 
     private void readSerial()
@@ -153,6 +169,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 10) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (!Settings.canDrawOverlays(this)) {
+                    Toast.makeText(this, "请打开弹窗（悬浮窗）权限！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 10);
+                }else {
+                    checkAllPermissions();
+                }
+            }else {
+                checkAllPermissions();
+            }
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults)
     {
@@ -160,17 +194,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkReadPhoneStatePermission();
-                } else {
-                    Toast.makeText(this, "你拒绝了网络权限请求！", Toast.LENGTH_LONG).show();
-                }
-                break;
-            case 2:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     readSerial();
                 } else {
-                    Toast.makeText(this, "你拒绝了读序列号权限请求！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "请通过所有权限！", Toast.LENGTH_LONG).show();
+                    checkAllPermissions();
                 }
+                break;
         }
     }
 }

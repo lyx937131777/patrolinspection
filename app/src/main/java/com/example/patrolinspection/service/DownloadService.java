@@ -1,6 +1,7 @@
 package com.example.patrolinspection.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -44,7 +45,6 @@ public class DownloadService extends Service
             downloadTask = null;
             // 下载成功时将前台服务通知关闭，并创建一个下载成功的通知
             stopForeground(true);
-            getNotificationManager().notify(1, getNotification("下载成功", -1));
             Toast.makeText(DownloadService.this, "下载成功", Toast.LENGTH_SHORT).show();
             String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
             String directory = Environment.getExternalStoragePublicDirectory(Environment
@@ -148,9 +148,11 @@ public class DownloadService extends Service
 
     private Notification getNotification(String title, int progress)
     {
+        String CHANNEL_ID = "channel_id_3";
+        String CHANNEL_NAME = "channel_download";
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"default");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID);
         builder.setSmallIcon(R.mipmap.logo);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.logo));
         builder.setContentIntent(pi);
@@ -160,6 +162,15 @@ public class DownloadService extends Service
             // 当progress大于或等于0时才需显示下载进度
             builder.setContentText(progress + "%");
             builder.setProgress(100, progress, false);
+        }
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //只在Android O之上需要渠道
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，
+            //通知才能正常弹出
+            manager.createNotificationChannel(notificationChannel);
         }
         return builder.build();
     }
@@ -173,17 +184,42 @@ public class DownloadService extends Service
         // 判断版本大于等于7.0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // "net.csdn.blog.ruancoder.fileprovider"即是在清单文件中配置的authorities
-            String authority = getApplicationContext().getPackageName() + ".fileProvider";
-            data = FileProvider.getUriForFile(this, authority, savedFile);
+//            String authority = getApplicationContext().getPackageName() + ".fileprovider";
+//            LogUtil.e("DownloadService","authority: " + authority);
+            data = FileProvider.getUriForFile(this, "com.example.patrolinspection.fileprovider", savedFile);
             // 给目标应用一个临时授权
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            LogUtil.e("AutoUpdate","7.0data="+data);
+            LogUtil.e("DownloadService","7.0data="+data);
         } else {
             data = Uri.fromFile(savedFile);
-            LogUtil.e("AutoUpdate","111data="+data);
+            LogUtil.e("DownloadService","111data="+data);
         }
         intent.setDataAndType(data, "application/vnd.android.package-archive");
+
+        String CHANNEL_ID = "channel_id_3";
+        String CHANNEL_NAME = "channel_download";
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //只在Android O之上需要渠道
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，
+            //通知才能正常弹出
+            manager.createNotificationChannel(notificationChannel);
+        }
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("下载成功")
+                .setContentText("安装包下载成功，点击安装")
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.logo)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+        manager.notify(1,notification);
+        LogUtil.e("DownloadService","notification created");
         startActivity(intent);
+        LogUtil.e("DownloadService","Activity started");
         //弹出安装窗口把原程序关闭。
         //避免安装完毕点击打开时没反应
 //        android.os.Process.killProcess(android.os.Process.myPid());

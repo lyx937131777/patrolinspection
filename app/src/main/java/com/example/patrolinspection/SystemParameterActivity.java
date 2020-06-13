@@ -33,6 +33,14 @@ import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.service.DownloadService;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.Utility;
+
+import java.io.IOException;
+
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class SystemParameterActivity extends AppCompatActivity
 {
@@ -45,6 +53,8 @@ public class SystemParameterActivity extends AppCompatActivity
     private TextView heartbeatWorkText;
     private TextView icidText;
     private Button updateSystem;
+
+    private SharedPreferences pref;
 
     //NFC读卡
     private String TAG = "SystemParameterActivity";
@@ -90,6 +100,7 @@ public class SystemParameterActivity extends AppCompatActivity
         }
 
         mContext = this;
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
         initReadBak();
 
         nameText = findViewById(R.id.sp_phone_name);
@@ -159,6 +170,7 @@ public class SystemParameterActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission
                     .WRITE_EXTERNAL_STORAGE}, 1);
         }
+        heartBeat();
     }
 
     private void initReadBak(){
@@ -181,7 +193,45 @@ public class SystemParameterActivity extends AppCompatActivity
         };// 允许扫描的标签类型
     }
 
+    private void heartBeat(){
+        String userID = pref.getString("userID",null);
+        String address = HttpUtil.LocalAddress + "/api/equipment/heartbeat";
+        HttpUtil.heartbeatRequest(address, userID, new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                e.printStackTrace();
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                final String responsData = response.body().string();
+                LogUtil.e("HeartbeatService",responsData);
+                if(Utility.checkString(responsData,"code").equals("500")){
+                    //TODO 关闭应用
+
+                }
+                PackageManager manager = getPackageManager();
+                String version = "未知";
+                try {
+                    PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
+                    version = info.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
+                if(!latestVersion.equals(version)){
+                    LogUtil.e(TAG,"有新版需要更新");
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("latestVersion",latestVersion);
+                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
+                    editor.apply();
+                }
+            }
+        });
+    }
     private boolean ifNFCUse() {
         if (nfcAdapter == null) {
             Log.e(TAG, "设备不支持NFC！");

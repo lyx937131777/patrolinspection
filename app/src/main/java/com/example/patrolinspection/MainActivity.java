@@ -1,6 +1,7 @@
 package com.example.patrolinspection;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.example.patrolinspection.adapter.TypeAdapter;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.Type;
+import com.example.patrolinspection.service.CheckService;
 import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
@@ -84,6 +86,9 @@ public class MainActivity extends AppCompatActivity
         Date date4 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
         LogUtil.e("MainActivity","date4: " + Utility.dateToString(date4,"yyyy-MM-dd HH:mm:ss") + "   long: "+date4.getTime());
 
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.setTime(date4.getTime());
+//        SystemClock.setCurrentTimeMillis(date4.getTime());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             if (!hasPermission())
@@ -139,6 +144,10 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this,HeartbeatService.class);
             startService(intent);
         }
+        if(!CheckService.isRun){
+            Intent intent = new Intent(this,CheckService.class);
+            startService(intent);
+        }
         PatrolRecord patrolRecord = LitePal.where("state = ?","进行中").findFirst(PatrolRecord.class);
         if(patrolRecord != null){
             Intent intent = new Intent(this, PatrolingActivity.class);
@@ -167,6 +176,8 @@ public class MainActivity extends AppCompatActivity
         LogUtil.e("MainActivity","onDestroy");
         Intent intent = new Intent(this, HeartbeatService.class);
         stopService(intent);
+        Intent intent2 = new Intent(this, CheckService.class);
+        stopService(intent2);
         LogUtil.e("MainActivity","onDestroy22222");
     }
 
@@ -179,6 +190,7 @@ public class MainActivity extends AppCompatActivity
             if (!hasPermission())
             {
                 //若用户未开启权限，则引导用户开启“Apps with usage access”权限
+                Toast.makeText(this, "请打开权限！", Toast.LENGTH_SHORT).show();
                 startActivityForResult(
                         new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS),
                         MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS);
@@ -200,5 +212,11 @@ public class MainActivity extends AppCompatActivity
                     android.os.Process.myUid(), getPackageName());
         }
         return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+
     }
 }

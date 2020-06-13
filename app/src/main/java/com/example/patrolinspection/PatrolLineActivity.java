@@ -64,7 +64,9 @@ public class PatrolLineActivity extends AppCompatActivity
             if(now.after(startDate) && now.before(endDate)){
                 flag = false;
                 planID = patrolPlan.getInternetID();
-                setTitle(patrolPlan.getName());
+                android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+                actionBar.setTitle(patrolPlan.getName());
+//                setTitle(patrolPlan.getName());
                 break;
             }
         }
@@ -78,7 +80,9 @@ public class PatrolLineActivity extends AppCompatActivity
                 return;
             }
             planID = patrolPlan.getInternetID();
-            this.setTitle(patrolPlan.getName());
+            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            actionBar.setTitle(patrolPlan.getName());
+//            this.setTitle(patrolPlan.getName());
             LogUtil.e("PatrolLineActivity","planID: "+planID +"          name: "+patrolPlan.getName());
         }
 

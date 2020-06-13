@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
@@ -61,6 +62,8 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,7 +119,13 @@ public class HeartbeatService extends Service
                         }
                     });
                     final AlertDialog dialog = builder.create();
-                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    int LAYOUT_FLAG;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                    } else {
+                        LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+                    }
+                    dialog.getWindow().setType(LAYOUT_FLAG);
                     dialog.show();
                     break;
                 }
@@ -277,7 +286,20 @@ public class HeartbeatService extends Service
             {
                 final String responsData = response.body().string();
                 LogUtil.e("HeartbeatService",responsData);
-                //TODO 处理心跳 line schedule point plan event
+                if(Utility.checkString(responsData,"code").equals("500")){
+                    //TODO 关闭应用
+
+                }
+                String serverTime = Utility.checkHeartbeatString(responsData,"time");
+                Date serverDate = Utility.stringToDate(serverTime,"yyyy-MM-dd HH:mm:ss");
+                Calendar serverCalendar = Calendar.getInstance();
+                serverCalendar.setTime(serverDate);
+                Calendar calendar = Calendar.getInstance();
+                if(calendar.get(Calendar.YEAR) != serverCalendar.get(Calendar.YEAR) || calendar.get(Calendar.MONTH) != serverCalendar.get(Calendar.MONTH)
+                || calendar.get(Calendar.DAY_OF_MONTH) != serverCalendar.get(Calendar.DAY_OF_MONTH) || calendar.get(Calendar.HOUR_OF_DAY) != serverCalendar.get(Calendar.HOUR_OF_DAY)
+                || calendar.get(Calendar.MINUTE) != serverCalendar.get(Calendar.MINUTE)){
+//                    SystemClock.setCurrentTimeMillis(serverCalendar.getTimeInMillis()); //TODO 需要权限？
+                }
                 List<String> updateList = Utility.handleUpdateList(responsData);
                 if(updateList.contains("plan")){
                     updatePatrolPlan();
@@ -360,6 +382,8 @@ public class HeartbeatService extends Service
                     editor.putString("schoolPolice","null");
                     editor.apply();
                 }
+                //自动更新
+                //TODO 测试版注释此段
                 PackageManager manager = getPackageManager();
                 String version = "未知";
                 try {
@@ -381,6 +405,7 @@ public class HeartbeatService extends Service
                     message.what = 1;
                     handler.sendMessage(message);
                 }
+                //TODO 自动更新END
             }
         });
         uploadPatrolRecordPhoto();
