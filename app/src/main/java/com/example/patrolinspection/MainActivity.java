@@ -3,10 +3,13 @@ package com.example.patrolinspection;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.AppOpsManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -18,6 +21,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthCdma;
+import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.patrolinspection.adapter.TypeAdapter;
@@ -26,6 +46,7 @@ import com.example.patrolinspection.db.Type;
 import com.example.patrolinspection.service.CheckService;
 import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.NetworkUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -55,6 +76,21 @@ public class MainActivity extends AppCompatActivity
     private TypeAdapter adapter;
     private static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS = 1101;
 
+    private BroadcastReceiver batteryLevelRcvr;
+    private IntentFilter batteryLevelFilter;
+    private TextView battery;
+    private TextView batteryState;
+    private BroadcastReceiver timeRcvr;
+    private IntentFilter timeFilter;
+    private TextView time;
+    private BroadcastReceiver networkRcvr;
+    private IntentFilter networkFilter;
+    private TextView networkType;
+    private ImageView signal;
+    public TelephonyManager mTelephonyManager;
+    public PhoneStateListener mPhoneStateListener;
+
+    private String model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,6 +108,18 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TypeAdapter(typeList);
         recyclerView.setAdapter(adapter);
+
+        model = Build.MODEL;
+        if(model.equals("L2-H")){
+            monitorBatteryState();
+            monitorTimeTick();
+            monitorNetwork();
+            monitorSignal();
+        }else{
+            LinearLayout linearLayout = findViewById(R.id.topline);
+            linearLayout.setVisibility(View.GONE);
+        }
+
 
         //TODO 测试时间
         Date date1 = new Date();
@@ -213,6 +261,142 @@ public class MainActivity extends AppCompatActivity
         }
         return mode == AppOpsManager.MODE_ALLOWED;
     }
+
+    //L2 监听时间 电量 网络 信号
+    private void monitorTimeTick(){
+        time = findViewById(R.id.time);
+        time.setText(Utility.dateToString(new Date(),"HH:mm"));
+        timeRcvr = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                String action = intent.getAction();
+                if(action != null && action.equals(Intent.ACTION_TIME_TICK)){
+                    time.setText(Utility.dateToString(new Date(),"HH:mm"));
+                }
+            }
+        };
+        timeFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
+        registerReceiver(timeRcvr,timeFilter);
+    }
+
+    private void monitorBatteryState() {
+        battery = findViewById(R.id.battery);
+        batteryState = findViewById(R.id.battery_state);
+        batteryLevelRcvr = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // TODO Auto-generated method stub
+                int rawlevel = intent.getIntExtra("level", -1);
+                int scale = intent.getIntExtra("scale", -1);
+                int status = intent.getIntExtra("status", -1);
+                int level = -1;
+                if (rawlevel >= 0 && scale > 0) {
+                    level = (rawlevel * 100) / scale;
+                }
+                battery.setText(""+level);
+                String batteryStatus = "";
+                switch (status) {
+                    case BatteryManager.BATTERY_STATUS_UNKNOWN:
+                        batteryStatus = "[无电池]";
+                        break;
+                    case BatteryManager.BATTERY_STATUS_CHARGING:
+                        batteryStatus = "[充电中]";
+                        break;
+                    case BatteryManager.BATTERY_STATUS_FULL:
+                        batteryStatus = "[已充满]";
+                        break;
+                    case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                        batteryStatus = "[放电中]";
+                        break;
+                    case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                        batteryStatus = "[未充电]";
+                        break;
+                    default:
+                        break;
+
+                }
+                batteryState.setText(batteryStatus);
+            }
+
+        };
+        batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(batteryLevelRcvr, batteryLevelFilter);
+    }
+
+    private void monitorNetwork(){
+        networkType = findViewById(R.id.network_type);
+        networkRcvr = new BroadcastReceiver()
+        {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                networkType.setText(NetworkUtil.getNetworkStateString(MainActivity.this));
+            }
+        };
+        networkFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(networkRcvr,networkFilter);
+    }
+
+    private void monitorSignal(){
+        signal = findViewById(R.id.signal);
+
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mPhoneStateListener = new PhoneStateListener(){
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onSignalStrengthChanged(int asu) {
+                super.onSignalStrengthChanged(asu);
+            }
+
+            @Override
+            public void onDataConnectionStateChanged(int state) {
+                networkType.setText(NetworkUtil.getNetworkStateString(MainActivity.this));
+                switch (state) {
+                    case TelephonyManager.DATA_DISCONNECTED://网络断开
+                        LogUtil.e("SignalListener", "DATA_DISCONNECTED");
+                        break;
+                    case TelephonyManager.DATA_CONNECTED://网络连接上
+                        LogUtil.e("SignalListener", " DATA_CONNECTED ");
+                        break;
+                    case TelephonyManager.DATA_CONNECTING://网络正在连接
+                        LogUtil.e("SignalListener", " DATA_CONNECTING ");
+                        break;
+
+                }
+            }
+
+            public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+                super.onSignalStrengthsChanged(signalStrength);
+
+                networkType.setText(NetworkUtil.getNetworkStateString(MainActivity.this));
+                int gsmSignalStrength = signalStrength.getGsmSignalStrength();
+                int currentSignalStrength = -113 + 2 * gsmSignalStrength;
+                int signalLevel = NetworkUtil.getMobileSignalLevel(currentSignalStrength);
+                if (signalLevel == 4) {
+                    signal.setImageResource(R.drawable.stat_sys_bd_signal_4);
+
+                } else if (signalLevel == 3) {
+                    signal.setImageResource(R.drawable.stat_sys_bd_signal_3);
+
+                } else if (signalLevel == 2) {
+                    signal.setImageResource(R.drawable.stat_sys_bd_signal_2);
+
+                } else if (signalLevel == 1) {
+                    signal.setImageResource(R.drawable.stat_sys_bd_signal_1);
+
+                } else {
+                    signal.setImageResource(R.drawable.stat_sys_bd_signal_0);
+                }
+            }
+        };
+        mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
+                | PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+
+    }
+
 
     @Override
     public void onBackPressed()

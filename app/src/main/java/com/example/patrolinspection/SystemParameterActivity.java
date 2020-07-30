@@ -120,7 +120,7 @@ public class SystemParameterActivity extends AppCompatActivity
         nameText.setText(Build.BRAND);
         modelText.setText(Build.MODEL);
         if(Build.SERIAL.equals("unknown")){
-            if(Build.getSerial().toUpperCase().equals("UNKNOWN")){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || Build.getSerial().toUpperCase().equals("UNKNOWN")){
                 idText.setText(Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase());
             }else{
                 idText.setText(Build.getSerial().toUpperCase());

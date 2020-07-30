@@ -116,7 +116,7 @@ public class DataUpdatingPresenter
             public void onResponse(Call call, Response response) throws IOException
             {
                 final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingSchedule",responsData);
+                LogUtil.e("DataUpdatingPolice",responsData);
                 List<Police> policeList = Utility.handlePoliceList(responsData);
                 LitePal.deleteAll(Police.class);
                 LitePal.saveAll(policeList);
@@ -214,7 +214,7 @@ public class DataUpdatingPresenter
 
     public void updateInformationPoint(){
         addCount();
-        String address = HttpUtil.LocalAddress + "/api/point/all";
+        String address = HttpUtil.LocalAddress + "/api/point/list";
         String companyID = pref.getString("companyID",null);
         String userID = pref.getString("userID",null);
         HttpUtil.updatingRequest(address, userID, companyID, new Callback()
@@ -230,7 +230,7 @@ public class DataUpdatingPresenter
                                 .LENGTH_LONG).show();
                     }
                 });
-                LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
+                LogUtil.e("DataUpdatingPresenterInformation","count: "+count+ "   --");
                 count--;
                 if(count == 0){
                     progressDialog.dismiss();
@@ -243,6 +243,12 @@ public class DataUpdatingPresenter
                 final String responsData = response.body().string();
                 LogUtil.e("DataUpdatingInformationPoint",responsData);
                 List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responsData);
+                if(informationPointList != null){
+                    LogUtil.e("DataUpdatingInformationPoint","信息点数量："+informationPointList.size());
+                    for(InformationPoint informationPoint : informationPointList){
+                        LogUtil.e("DataUpdatingInformationPoint","internetId: "+informationPoint.getInternetID()+"  name: "+informationPoint.getName());
+                    }
+                }
                 LitePal.deleteAll(InformationPoint.class);
                 LitePal.saveAll(informationPointList);
                 reduceCount();

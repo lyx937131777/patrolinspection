@@ -194,7 +194,7 @@ public class HeartbeatService extends Service
                     {
                         getTopApp();
                         TimeUnit.MINUTES.sleep(SLEEP_TIME);
-                        //TODO 心跳
+                        //心跳
                         countTime += SLEEP_TIME;
                         if(countTime >= time){
                             countTime = 0;

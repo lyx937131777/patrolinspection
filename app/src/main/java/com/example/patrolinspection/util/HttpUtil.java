@@ -31,7 +31,11 @@ import okhttp3.internal.http2.Header;
 
 public class HttpUtil
 {
+    //正式
     public static final String LocalAddress = "http://106.14.135.102:8887";
+
+    //测试
+//    public static final String LocalAddress = "http://47.101.68.214:8883";
 
     public static String getPhotoURL(String url){
         return LocalAddress + "/resources/" + url;

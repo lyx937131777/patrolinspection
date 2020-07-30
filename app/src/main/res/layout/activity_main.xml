@@ -10,6 +10,59 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/topline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right|top">
+            <TextView
+                android:id="@+id/network_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white" />
+            <ImageView
+                android:id="@+id/signal"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/stat_sys_bd_signal_0"/>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/battery"/>
+                <TextView
+                    android:id="@+id/battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginLeft="7dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+            </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/battery_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_marginLeft="2dp"/>
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -17,10 +70,10 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_scrollFlags="scroll">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout

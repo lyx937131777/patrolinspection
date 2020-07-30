@@ -1,1 +1,20 @@
-[{"outputType":{"type":"APK"},"apkData":{"type":"MAIN","splits":[],"versionCode":17,"versionName":"1.11.1","enabled":true,"outputFile":"app-release.apk","fullName":"release","baseName":"release"},"path":"app-release.apk","properties":{}}]
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.example.patrolinspection",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 19,
+      "versionName": "19",
+      "enabled": true,
+      "outputFile": "app-release.apk"
+    }
+  ]
+}

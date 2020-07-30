@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageDecoderService/imageDecoderService.iml" filepath="$PROJECT_DIR$/imageDecoderService/imageDecoderService.iml" />
-      <module fileurl="file://$PROJECT_DIR$/patrolinspection.iml" filepath="$PROJECT_DIR$/patrolinspection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="patrolinspection/app" />
+      <module fileurl="file://$PROJECT_DIR$/imageDecoderService/imageDecoderService.iml" filepath="$PROJECT_DIR$/imageDecoderService/imageDecoderService.iml" group="patrolinspection/imageDecoderService" />
+      <module fileurl="file://$PROJECT_DIR$/patrolinspection.iml" filepath="$PROJECT_DIR$/patrolinspection.iml" group="patrolinspection" />
     </modules>
   </component>
 </project>

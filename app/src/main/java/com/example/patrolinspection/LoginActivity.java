@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -96,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED)
         {
             permissionList.add(Manifest.permission.INTERNET);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
         }
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
         {
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void readSerial()
     {
         phoneID = Build.SERIAL.toUpperCase();
-        if (phoneID.equals("UNKNOWN"))
+        if (phoneID.equals("UNKNOWN") && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q )
         {
             phoneID = Build.getSerial().toUpperCase();
         }
