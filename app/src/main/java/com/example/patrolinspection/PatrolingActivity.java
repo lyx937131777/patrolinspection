@@ -3,6 +3,7 @@ package com.example.patrolinspection;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -100,11 +101,14 @@ public class PatrolingActivity extends AppCompatActivity
     //presenter
     private PatrolingPresenter patrolingPresenter;
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patroling);
+        LogUtil.e("PatrolingActivity","onCreate"+Utility.dateToString(new Date(),"HH:mm:ss"));
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -227,16 +231,24 @@ public class PatrolingActivity extends AppCompatActivity
 
         //recycleView
         ipCount = findViewById(R.id.ip_count);
-        initIP();
+        mProgressDialog = ProgressDialog.show(mContext, "", "信息点初始化中...");
+        new Thread(){
+            public void run(){
+                initIP();
+                mProgressDialog.dismiss();
+            }
+        }.start();
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new InformationPointAdapter(patrolPointRecordList);
         recyclerView.setAdapter(adapter);
-
+        LogUtil.e("patrolingActivity","adapter配置完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
     }
 
     private void endPatrol(){
+        LogUtil.e("PatrolingActivity","点击结束巡检"+Utility.dateToString(new Date(),"HH:mm:ss"));
         if(tempPointRecord != null){
             tempPointRecord.setState("已巡检");
             tempPointRecord.save();
@@ -296,8 +308,18 @@ public class PatrolingActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(final Intent intent) {
         super.onNewIntent(intent);
+        mProgressDialog = ProgressDialog.show(mContext, "", "读卡中...");
+        LogUtil.e("PatrolingPresenter","触发NFC"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        new Thread(){
+            public void run(){
+                readNFC(intent);
+            }
+        }.start();
+    }
+
+    private void readNFC(Intent intent){
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())||
                 NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
             final Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -311,13 +333,27 @@ public class PatrolingActivity extends AppCompatActivity
                     if(patrolPointRecord.getState().equals("未巡检")){
                         if(!patrolLine.isIscanJump()){
                             if(tempPointRecord == null && !patrolPointRecord.getOrderNo().equals("1")){
-                                Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                runOnUiThread(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                    }
+                                });
                                 return;
                             }else if(tempPointRecord != null){
                                 int tempOrderNo = Integer.parseInt(tempPointRecord.getOrderNo());
                                 int thisOrderNo = Integer.parseInt(patrolPointRecord.getOrderNo());
                                 if(thisOrderNo - tempOrderNo != 1){
-                                    Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                    runOnUiThread(new Runnable()
+                                    {
+                                        @Override
+                                        public void run()
+                                        {
+                                            Toast.makeText(mContext,"该路线不可跳检，请按顺序巡检！",Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                                     return;
                                 }
                             }
@@ -331,64 +367,97 @@ public class PatrolingActivity extends AppCompatActivity
                             tempPointRecord.save();
                         }
                         tempPointRecord = patrolPointRecord;
-                        addCount();
-                        eventFound.setEnabled(true);
-                        eventHandle.setEnabled(true);
-                        adapter.notifyDataSetChanged();
-                        if(patrolLine.getPictureType().equals("must")){
-                            if (ContextCompat.checkSelfPermission(PatrolingActivity.this, Manifest
-                                    .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
                             {
-                                ActivityCompat.requestPermissions(PatrolingActivity.this, new
-                                        String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                            } else
-                            {
-                                takePhoto();
+                                addCount();
+                                eventFound.setEnabled(true);
+                                eventHandle.setEnabled(true);
+                                adapter.notifyDataSetChanged();
+                                if(patrolLine.getPictureType().equals("must")){
+                                    if (ContextCompat.checkSelfPermission(PatrolingActivity.this, Manifest
+                                            .permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                                    {
+                                        ActivityCompat.requestPermissions(PatrolingActivity.this, new
+                                                String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                    } else
+                                    {
+                                        takePhoto();
+                                    }
+                                    patrolPhoto.setEnabled(true);
+                                }else if(patrolLine.getPictureType().equals("optional")){
+                                    patrolPhoto.setEnabled(true);
+                                    patrolingPresenter.updatePatrol(recordID,false);
+                                }else{
+                                    patrolingPresenter.updatePatrol(recordID,false);
+                                }
                             }
-                            patrolPhoto.setEnabled(true);
-                        }else if(patrolLine.getPictureType().equals("optional")){
-                            patrolPhoto.setEnabled(true);
-                            patrolingPresenter.updatePatrol(recordID,false);
-                        }else{
-                            patrolingPresenter.updatePatrol(recordID,false);
-                        }
+                        });
                     }else{
-                        Toast.makeText(mContext,"请勿重复巡检",Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                Toast.makeText(mContext,"请勿重复巡检",Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                     break;
                 }
             }
             if(flag){
-                Toast.makeText(mContext,"该信息点不属于此线路",Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(mContext,"该信息点不属于此线路",Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
+        mProgressDialog.dismiss();
     }
 
 
     private void initIP()
     {
+        LogUtil.e("PatrolingActivity","初始化信息点"+Utility.dateToString(new Date(),"HH:mm:ss"));
         patrolPointRecordList.clear();
         List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
+        LogUtil.e("PatrolingActivity","从本地获取信息点列表1"+Utility.dateToString(new Date(),"HH:mm:ss"));
         if(tempList.size() > 0){
             for(PatrolPointRecord patrolPointRecord : tempList){
                 patrolPointRecordList.add(patrolPointRecord);
                 if(patrolPointRecord.getState().equals("巡检中")){
                     tempPointRecord = patrolPointRecord;
-                    eventFound.setEnabled(true);
-                    eventHandle.setEnabled(true);
-                    if(!patrolLine.getPictureType().equals("forbid")){
-                        patrolPhoto.setEnabled(true);
-                    }
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            eventFound.setEnabled(true);
+                            eventHandle.setEnabled(true);
+                            if(!patrolLine.getPictureType().equals("forbid")){
+                                patrolPhoto.setEnabled(true);
+                            }
+                        }
+                    });
                 }
             }
         }else{
             List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
+            LogUtil.e("PatrolingActivity","从本地获取信息点列表2"+Utility.dateToString(new Date(),"HH:mm:ss"));
             for(PatrolIP patrolIP : patrolIPList){
                 PatrolPointRecord patrolPointRecord = new PatrolPointRecord(recordID,patrolIP);
                 patrolPointRecordList.add(patrolPointRecord);
                 patrolPointRecord.save();
             }
         }
+        LogUtil.e("PatrolingActivity","信息点初始化完毕，开始统计数量"+Utility.dateToString(new Date(),"HH:mm:ss"));
         countAll = patrolPointRecordList.size();
         countPatrolled = 0;
         for(PatrolPointRecord patrolPointRecord : patrolPointRecordList){
@@ -396,7 +465,16 @@ public class PatrolingActivity extends AppCompatActivity
                 countPatrolled++;
             }
         }
-        ipCount.setText(countPatrolled + "/" + countAll);
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ipCount.setText(countPatrolled + "/" + countAll);
+            }
+        });
+
+        LogUtil.e("PatrolingActivity","数量统计完毕"+Utility.dateToString(new Date(),"HH:mm:ss"));
     }
 
 

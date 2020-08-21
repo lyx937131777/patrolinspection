@@ -60,12 +60,12 @@ public class PatrolIP extends LitePalSupport
     }
 
     public String getPointName(){
-        LogUtil.e("PatrolIP","11111111111111");
-        LogUtil.e("PatrolIP","11111111111111 : " + pointId);
+//        LogUtil.e("PatrolIP","11111111111111");
+//        LogUtil.e("PatrolIP","11111111111111 : " + pointId);
         InformationPoint informationPoint = LitePal.where("internetID = ?",pointId).findFirst(InformationPoint.class);
-        LogUtil.e("PatrolIP","22222222222222 : " + pointId);
+//        LogUtil.e("PatrolIP","22222222222222 : " + pointId);
         if(informationPoint != null){
-            LogUtil.e("PatrolIP",informationPoint.getName());
+//            LogUtil.e("PatrolIP",informationPoint.getName());
             return informationPoint.getName();
         }
         return "该信息点已被删除";

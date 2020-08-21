@@ -69,7 +69,7 @@ public class DataUpdatingPresenter
         new Thread(){
             public void run(){
                 try{
-                    TimeUnit.SECONDS.sleep(20);
+                    TimeUnit.SECONDS.sleep(30);
                     if(progressDialog != null && progressDialog.isShowing()){
                         ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                             @Override

@@ -1,6 +1,7 @@
 package com.example.patrolinspection;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -46,6 +47,7 @@ import org.litepal.LitePal;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EventFoundActivity extends AppCompatActivity
@@ -80,6 +82,8 @@ public class EventFoundActivity extends AppCompatActivity
     private ArrayAdapter<String> arrayTypeAdapter;
 
     private EventFoundPresenter eventFoundPresenter;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -158,8 +162,17 @@ public class EventFoundActivity extends AppCompatActivity
                 if(photoType.equals("forbid")){
                     eventFoundPresenter.postEventRecord(policeID,typeString,recordID,pointID,detailText.getText().toString());
                 }else if(imagePath != null){
-                    imagePath = Utility.compressImagePathToImagePath(imagePath);
-                    eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
+                    progressDialog = ProgressDialog.show(EventFoundActivity.this,"","照片保存中...");
+                    new Thread(){
+                        public void run(){
+                            LogUtil.e("EventFoundActivity","开始压缩照片"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                            imagePath = Utility.compressImagePathToImagePath(imagePath);
+                            LogUtil.e("EventFoundActivity","压缩照片完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                            progressDialog.dismiss();
+                            eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
+                            LogUtil.e("EventFoundActivity","上传完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                        }
+                    }.start();
                 }else{
                     Toast.makeText(EventFoundActivity.this, "请先拍照！",Toast.LENGTH_LONG).show();
                 }

@@ -1,6 +1,7 @@
 package com.example.patrolinspection;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -74,6 +75,8 @@ public class EventHandleActivity extends AppCompatActivity
 
     private EventHandlePresenter eventHandlePresenter;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -139,8 +142,15 @@ public class EventHandleActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 if(imagePath != null){
-                    imagePath = Utility.compressImagePathToImagePath(imagePath);
-                    eventHandlePresenter.postHandleRecord(policeID,imagePath,eventRecordID,type,report,detailText.getText().toString());
+                    progressDialog = ProgressDialog.show(EventHandleActivity.this,"","照片保存中...");
+                    new Thread(){
+                        public void run(){
+                            imagePath = Utility.compressImagePathToImagePath(imagePath);
+                            progressDialog.dismiss();
+                            eventHandlePresenter.postHandleRecord(policeID,imagePath,eventRecordID,type,report,detailText.getText().toString());
+                        }
+                    }.start();
+
                 }else{
                     Toast.makeText(EventHandleActivity.this, "请先拍照！",Toast.LENGTH_LONG).show();
                 }

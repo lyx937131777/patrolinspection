@@ -33,9 +33,13 @@ public class EventHandlePresenter
         this.pref = pref;
     }
 
-    public void postHandleRecord(final String policeID, String imagePath,final String eventRecordID,
-                                 final String type,final String report,final String detail){
-        progressDialog = ProgressDialog.show(context,"","上传中...");
+    public void postHandleRecord(final String policeID, String imagePath,final String eventRecordID, final String type,final String report,final String detail){
+        ((EventHandleActivity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = ProgressDialog.show(context,"","上传中...");
+            }
+        });
         String address = HttpUtil.LocalAddress + "/api/file";
         final String userID = pref.getString("userID",null);
         HttpUtil.fileRequest(address, userID, new File(imagePath), new Callback()

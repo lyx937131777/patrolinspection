@@ -20,6 +20,7 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.transform.Result;
@@ -42,8 +43,18 @@ public class PatrolingPresenter
         count = 0;
     }
 
-    public void updatePatrol(final String patrolRecordID, final boolean isEnd){
+    public void updatePatrol(final String patrolRecordID, final boolean isEnd)
+    {
         progressDialog = ProgressDialog.show(context,"","上传中...");
+        LogUtil.e("PatrolingPresenter","开始上传"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        new Thread(){
+            public void run(){
+                updatePatrolInThread(patrolRecordID,isEnd);
+            }
+        }.start();
+    }
+
+    public void updatePatrolInThread(final String patrolRecordID, final boolean isEnd){
 
         PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class,true);
         List<PatrolPointRecord> patrolPointRecordList = LitePal.where("patrolRecordId = ?",patrolRecordID).order("time").find(PatrolPointRecord.class);
@@ -189,6 +200,7 @@ public class PatrolingPresenter
 
                 }
                 progressDialog.dismiss();
+                LogUtil.e("PatrolingPresenter","上传完毕"+Utility.dateToString(new Date(),"HH:mm:ss"));
             }
         });
     }

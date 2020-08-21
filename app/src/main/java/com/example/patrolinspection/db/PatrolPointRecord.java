@@ -29,7 +29,7 @@ public class PatrolPointRecord extends LitePalSupport
         this.patrolRecordId = patrolRecordId;
         pointId = patrolIP.getPointId();
         orderNo = patrolIP.getOrderNo();
-        LogUtil.e("PatrolPointRecord",  patrolRecordId + " kkkk "+patrolIP.getPointId() + " hhhh " + patrolIP.getOrderNo() + " jjj " + patrolIP.getPatrolLineID());
+//        LogUtil.e("PatrolPointRecord",  patrolRecordId + " kkkk "+patrolIP.getPointId() + " hhhh " + patrolIP.getOrderNo() + " jjj " + patrolIP.getPatrolLineID());
         pointName = patrolIP.getPointName();
         pointNo = patrolIP.getPointNo();
         state = "未巡检";

@@ -36,7 +36,12 @@ public class EventFoundPresenter
     }
 
     public void postEventRecord(final String policeID, final String imagePath, final String eventName, final String patrolRecordID, final String pointID, final String detail){
-        progressDialog = ProgressDialog.show(context,"","上传中...");
+        ((EventFoundActivity)context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = ProgressDialog.show(context,"","上传中...");
+            }
+        });
 
         if(patrolRecordID != ""){
             PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
