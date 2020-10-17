@@ -90,7 +90,7 @@ public class HttpUtil
         map.put("companyId",companyID);
         map.put("pointNo",id);
         map.put("pointName",name);
-        map.put("longitude",latitude);
+        map.put("longitude",longitude);
         map.put("latitude",latitude);
         map.put("height",height);
         map.put("floor",floor);
