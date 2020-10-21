@@ -1,6 +1,7 @@
 package com.example.patrolinspection.util;
 
 import android.content.SharedPreferences;
+import android.util.JsonReader;
 import android.util.Log;
 
 import com.example.patrolinspection.R;
@@ -52,7 +53,7 @@ public class HttpUtil
 //                .build();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");//数据类型为json格式，
         String jsonStr = "{\"physicalNo\":\"" + physicalNo + "\"}";//json数据.
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         Request request = new Request.Builder().url(address).post(requestBody).build();
 //        Request request = new Request.Builder().url("http://wwww.baidu.com").build();
         client.newCall(request).enqueue(callback);
@@ -96,7 +97,7 @@ public class HttpUtil
         map.put("floor",floor);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -132,7 +133,7 @@ public class HttpUtil
         map.put("startTime",""+startTime);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr,JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -147,7 +148,7 @@ public class HttpUtil
         patrolRecord.setPointPatrolRecords(patrolPointRecordList);
         String jsonStr = patrolRecord.toString();
         LogUtil.e("HttpUtil",jsonStr);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr,JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -158,7 +159,7 @@ public class HttpUtil
     {
         OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象。
         MediaType fileType = MediaType.parse("image/jpeg");//数据类型为File格式，
-        RequestBody fileBody = RequestBody.create(fileType , file );
+        RequestBody fileBody = RequestBody.create(file, fileType);
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), fileBody)
@@ -189,7 +190,7 @@ public class HttpUtil
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
         jsonStr = "["+jsonStr+"]";
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr,JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -212,7 +213,7 @@ public class HttpUtil
         map.put("operateime",""+operateTime);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -225,7 +226,7 @@ public class HttpUtil
                 .readTimeout(20, TimeUnit.SECONDS)
                 .build();//创建OkHttpClient对象。
         MediaType fileType = MediaType.parse("image/jpeg");//数据类型为File格式，
-        RequestBody fileBody = RequestBody.create(fileType , file );
+        RequestBody fileBody = RequestBody.create(file, fileType);
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", file.getName(), fileBody)
@@ -249,7 +250,7 @@ public class HttpUtil
         map.put("signType",signType);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);
@@ -282,7 +283,7 @@ public class HttpUtil
         map.put("mainDutyId",duty);
         Gson gson = new Gson();
         String jsonStr = gson.toJson(map);
-        RequestBody requestBody = RequestBody.create(JSON, jsonStr);
+        RequestBody requestBody = RequestBody.create(jsonStr, JSON);
         String credential = Credentials.basic(userID, "123456");
         Request request = new Request.Builder().url(address).post(requestBody).addHeader("Authorization",credential).build();
         client.newCall(request).enqueue(callback);

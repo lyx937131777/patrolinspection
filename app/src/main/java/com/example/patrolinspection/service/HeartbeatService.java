@@ -383,29 +383,31 @@ public class HeartbeatService extends Service
                     editor.apply();
                 }
                 //自动更新
-                //TODO 测试版注释此段
-//                PackageManager manager = getPackageManager();
-//                String version = "未知";
-//                try {
-//                    PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
-//                    version = info.versionName;
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
-//                LogUtil.e(TAG,version);
-//                LogUtil.e(TAG,latestVersion);
-//                if(!latestVersion.equals(version)){
-//                    LogUtil.e(TAG,"有新版需要更新");
-//                    SharedPreferences.Editor editor = pref.edit();
-//                    editor.putString("latestVersion",latestVersion);
-//                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
-//                    editor.apply();
-//                    Message message = new Message();
-//                    message.what = 1;
-//                    handler.sendMessage(message);
-//                }
-                //TODO 自动更新END
+                PackageManager manager = getPackageManager();
+                String version = "未知";
+                try {
+                    PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
+                    version = info.versionName;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
+                LogUtil.e(TAG,version);
+                LogUtil.e(TAG,latestVersion);
+                //TODO 若服务器上的还是上个版本则不更新
+                if(latestVersion.equals("1.11.3")){
+                    return;
+                }
+                if(!latestVersion.equals(version)){
+                    LogUtil.e(TAG,"有新版需要更新");
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("latestVersion",latestVersion);
+                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
+                    editor.apply();
+                    Message message = new Message();
+                    message.what = 1;
+                    handler.sendMessage(message);
+                }
             }
         });
         uploadPatrolRecordPhoto();

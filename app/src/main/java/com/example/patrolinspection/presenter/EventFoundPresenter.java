@@ -60,8 +60,7 @@ public class EventFoundPresenter
                 ((EventFoundActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, "服务器连接错误", Toast
-                                .LENGTH_LONG).show();
+                        Toast.makeText(context, "服务器连接错误", Toast.LENGTH_LONG).show();
                     }
                 });
                 String companyID = pref.getString("companyID",null);

@@ -149,7 +149,7 @@ public class SwipeCardActivity extends AppCompatActivity
                 Toast.makeText(mContext, "L2-H : Psam初始化失败", Toast.LENGTH_SHORT).show();
                 if(psamL2HUtil != null) psamL2HUtil.close();
             }else{
-                Toast.makeText(mContext, "L2-H : 上电成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "L2-H : 上电成功", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -404,7 +404,7 @@ public class SwipeCardActivity extends AppCompatActivity
                 }
                 Log.e(TAG, ret);
 
-                if(authType == CARD_TYPE_IC){
+                if(authType == CARD_TYPE_IC || info == null){
                     runOnUiThread(new Runnable()
                     {
                         @Override

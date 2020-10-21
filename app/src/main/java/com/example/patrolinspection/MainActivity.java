@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                         batteryStatus = "[已充满]";
                         break;
                     case BatteryManager.BATTERY_STATUS_DISCHARGING:
-                        batteryStatus = "[放电中]";
+                        batteryStatus = "";//放电中
                         break;
                     case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
                         batteryStatus = "[未充电]";
