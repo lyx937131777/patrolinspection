@@ -54,11 +54,11 @@ public class NoticePresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("Notice",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("Notice",responseData);
                 LitePal.deleteAll(Notice.class);
                 noticeList.clear();
-                noticeList.addAll(Utility.handleNoticeList(responsData));
+                noticeList.addAll(Utility.handleNoticeList(responseData));
                 LitePal.saveAll(noticeList);
                 ((NoticeActivity)context).runOnUiThread(new Runnable()
                 {

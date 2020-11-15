@@ -56,6 +56,7 @@ import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MyApplication;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -75,6 +76,9 @@ import okhttp3.Response;
 
 public class HeartbeatService extends Service
 {
+    //TODO 上一个发布的版本号 若服务器上还是此版本则不更新
+    public static final String LAST_VERSION = "1.11.3";
+
     private static final String TAG = "HeartbeatService";
     public static boolean isRun = false;
     public static final String  MY_APP = "com.example.patrolinspection";
@@ -284,14 +288,14 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("HeartbeatService",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("HeartbeatService",responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     //TODO 关闭应用
 
                 }
-                String serverTime = Utility.checkHeartbeatString(responsData,"time");
-                Date serverDate = Utility.stringToDate(serverTime,"yyyy-MM-dd HH:mm:ss");
+                String serverTime = Utility.checkHeartbeatString(responseData,"time");
+                Date serverDate = TimeUtil.stringToDate(serverTime,"yyyy-MM-dd HH:mm:ss");
                 Calendar serverCalendar = Calendar.getInstance();
                 serverCalendar.setTime(serverDate);
                 Calendar calendar = Calendar.getInstance();
@@ -300,7 +304,7 @@ public class HeartbeatService extends Service
                 || calendar.get(Calendar.MINUTE) != serverCalendar.get(Calendar.MINUTE)){
 //                    SystemClock.setCurrentTimeMillis(serverCalendar.getTimeInMillis()); //TODO 需要权限？
                 }
-                List<String> updateList = Utility.handleUpdateList(responsData);
+                List<String> updateList = Utility.handleUpdateList(responseData);
                 if(updateList.contains("plan")){
                     updatePatrolPlan();
                 }
@@ -346,7 +350,7 @@ public class HeartbeatService extends Service
                         ((MainActivity)getApplicationContext()).refresh();
                     }
                 }
-                if(Utility.checkHeartbeatBoolean(responsData,"schoolEvent")){
+                if(Utility.checkHeartbeatBoolean(responseData,"schoolEvent")){
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean("newSchoolEvent",true);
                     editor.apply();
@@ -377,7 +381,7 @@ public class HeartbeatService extends Service
                     }
                 }
 
-                if(!Utility.checkHeartbeatBoolean(responsData, "schoolLogin")){
+                if(!Utility.checkHeartbeatBoolean(responseData, "schoolLogin")){
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("schoolPolice","null");
                     editor.apply();
@@ -391,18 +395,18 @@ public class HeartbeatService extends Service
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
+                String latestVersion = Utility.checkHeartbeatString(responseData,"versionNo");
                 LogUtil.e(TAG,version);
                 LogUtil.e(TAG,latestVersion);
-                //TODO 若服务器上的还是上个版本则不更新
-                if(latestVersion.equals("1.11.3")){
+                //若服务器上的还是上个版本则不更新
+                if(latestVersion.equals(LAST_VERSION)){
                     return;
                 }
                 if(!latestVersion.equals(version)){
                     LogUtil.e(TAG,"有新版需要更新");
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("latestVersion",latestVersion);
-                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
+                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responseData,"versionPath"));
                     editor.apply();
                     Message message = new Message();
                     message.what = 1;
@@ -430,9 +434,9 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingSchedule",responsData);
-                List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingSchedule",responseData);
+                List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responseData);
                 LitePal.deleteAll(PatrolSchedule.class);
                 if(patrolScheduleList != null && patrolScheduleList.size() > 0){
                     for(PatrolSchedule patrolSchedule : patrolScheduleList){
@@ -463,9 +467,9 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingPlan",responsData);
-                List<PatrolPlan> patrolPlanList = Utility.handlePatrolPlanList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingPlan",responseData);
+                List<PatrolPlan> patrolPlanList = Utility.handlePatrolPlanList(responseData);
                 LitePal.deleteAll(PatrolPlan.class);
                 LitePal.saveAll(patrolPlanList);
             }
@@ -487,9 +491,9 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingInformationPoint",responsData);
-                List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingInformationPoint",responseData);
+                List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responseData);
                 LitePal.deleteAll(InformationPoint.class);
                 LitePal.saveAll(informationPointList);
             }
@@ -511,9 +515,9 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingPatrolLine",responsData);
-                List<PatrolLine> patrolLineList = Utility.handlePatrolLineList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingPatrolLine",responseData);
+                List<PatrolLine> patrolLineList = Utility.handlePatrolLineList(responseData);
                 LitePal.deleteAll(PatrolLine.class);
                 LitePal.deleteAll(PatrolIP.class);
 //                LitePal.saveAll(patrolLineList);
@@ -547,9 +551,9 @@ public class HeartbeatService extends Service
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e(TAG,responsData);
-                List<Event> eventList = Utility.handleEventList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e(TAG,responseData);
+                List<Event> eventList = Utility.handleEventList(responseData);
                 LitePal.deleteAll(Event.class);
                 LitePal.saveAll(eventList);
             }
@@ -581,9 +585,9 @@ public class HeartbeatService extends Service
                             @Override
                             public void onResponse(Call call, Response response) throws IOException
                             {
-                                final String responsData = response.body().string();
-                                LogUtil.e("DataUpdatingPresenter",responsData);
-                                String photo = Utility.checkString(responsData,"msg");
+                                final String responseData = response.body().string();
+                                LogUtil.e("DataUpdatingPresenter",responseData);
+                                String photo = Utility.checkString(responseData,"msg");
                                 pointPhotoRecord.setPhotoURL(photo);
                                 pointPhotoRecord.save();
                                 patrolPointRecord.save();
@@ -621,8 +625,8 @@ public class HeartbeatService extends Service
                 @Override
                 public void onResponse(Call call, Response response) throws IOException
                 {
-                    final String responsData = response.body().string();
-                    LogUtil.e("DataUpdatingPresenter",responsData);
+                    final String responseData = response.body().string();
+                    LogUtil.e("DataUpdatingPresenter",responseData);
                     PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
                     patrolRecord.setUpload(true);
                     patrolRecord.save();
@@ -648,9 +652,9 @@ public class HeartbeatService extends Service
                     @Override
                     public void onResponse(Call call, Response response) throws IOException
                     {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        String photo = Utility.checkString(responsData,"msg");
+                        final String responseData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responseData);
+                        String photo = Utility.checkString(responseData,"msg");
                         eventRecord.setPhotoURL(photo);
                         eventRecord.save();
                         postEventRecord(eventRecord);
@@ -687,9 +691,9 @@ public class HeartbeatService extends Service
                     @Override
                     public void onResponse(Call call, Response response) throws IOException
                     {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        if(Utility.checkString(responsData,"code").equals("000")){
+                        final String responseData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responseData);
+                        if(Utility.checkString(responseData,"code").equals("000")){
                             eventRecord.setUpload(true);
                             eventRecord.save();
                         }

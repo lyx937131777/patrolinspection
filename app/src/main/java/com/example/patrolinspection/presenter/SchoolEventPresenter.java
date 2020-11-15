@@ -54,13 +54,13 @@ public class SchoolEventPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SchoolEventPresenter",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("SchoolEventPresenter",responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((SchoolEventActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });
@@ -96,10 +96,10 @@ public class SchoolEventPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SchoolEventPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("SchoolEventPresenter",responseData);
                 schoolEventRecordList.clear();
-                schoolEventRecordList.addAll(Utility.handleSchoolEventRecordList(responsData));
+                schoolEventRecordList.addAll(Utility.handleSchoolEventRecordList(responseData));
                 //TODO 排序
                 ((SchoolEventActivity)context).runOnUiThread(new Runnable() {
                     @Override

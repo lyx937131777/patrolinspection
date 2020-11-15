@@ -29,6 +29,7 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.SignInOutPresenter;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
 
@@ -94,7 +95,7 @@ public class SignInOutActivity extends AppCompatActivity
                     signInOutPresenter.signInOut(policeID,type,attendanceType);
                 } else if(imagePath != null){
                     //压缩图片
-                    imagePath = Utility.compressImagePathToImagePath(imagePath);
+                    imagePath = FileUtil.compressImagePathToImagePath(imagePath);
                     signInOutPresenter.signInOut(policeID,imagePath,type,attendanceType);
                 }else {
                     Toast.makeText(SignInOutActivity.this,"请先拍照！",Toast.LENGTH_LONG).show();

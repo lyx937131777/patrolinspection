@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.patrolinspection.HandleRecordActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.SchoolEventHandleActivity;
-import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.SchoolEventRecord;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
@@ -79,7 +78,7 @@ public class SchoolEventRecordAdapter extends RecyclerView.Adapter<SchoolEventRe
         SchoolEventRecord schoolEventRecord = mList.get(position);
         holder.typeText.setText(MapUtil.getSchoolEventType(schoolEventRecord.getSchoolEventType()));
         holder.stateText.setText(schoolEventRecord.getState());
-        holder.timeText.setText(Utility.dateStringToString(schoolEventRecord.getOccurrenceTime(),"yyyy-MM-dd HH:mm"));
+        holder.timeText.setText(TimeUtil.timeStampToString(schoolEventRecord.getOccurrenceTime(),"yyyy-MM-dd HH:mm"));
     }
 
     @Override

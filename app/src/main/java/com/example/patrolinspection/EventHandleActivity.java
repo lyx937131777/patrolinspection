@@ -32,6 +32,7 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventHandlePresenter;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.Utility;
@@ -145,7 +146,7 @@ public class EventHandleActivity extends AppCompatActivity
                     progressDialog = ProgressDialog.show(EventHandleActivity.this,"","照片保存中...");
                     new Thread(){
                         public void run(){
-                            imagePath = Utility.compressImagePathToImagePath(imagePath);
+                            imagePath = FileUtil.compressImagePathToImagePath(imagePath);
                             progressDialog.dismiss();
                             eventHandlePresenter.postHandleRecord(policeID,imagePath,eventRecordID,type,report,detailText.getText().toString());
                         }

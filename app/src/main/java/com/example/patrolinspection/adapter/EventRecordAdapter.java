@@ -9,14 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.patrolinspection.EventListActivity;
 import com.example.patrolinspection.HandleRecordActivity;
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.db.Event;
 import com.example.patrolinspection.db.EventRecord;
-import com.example.patrolinspection.ui.main.EventRecordFragment;
-import com.example.patrolinspection.util.LogUtil;
-import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
@@ -82,7 +78,7 @@ public class EventRecordAdapter extends RecyclerView.Adapter<EventRecordAdapter.
         EventRecord eventRecord = mList.get(position);
         holder.nameText.setText(eventRecord.getPoliceName());
         holder.detailText.setText(eventRecord.getEventName());
-        holder.timeText.setText(Utility.dateStringToString(eventRecord.getLastTime(),"yyyy-MM-dd HH:mm"));
+        holder.timeText.setText(TimeUtil.timeStampToString(eventRecord.getLastTime(),"yyyy-MM-dd HH:mm"));
 //        if(type.equals("ended")){
 //
 //        }else{

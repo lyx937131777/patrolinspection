@@ -14,6 +14,7 @@ import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PointPhotoRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -46,7 +47,7 @@ public class PatrolingPresenter
     public void updatePatrol(final String patrolRecordID, final boolean isEnd)
     {
         progressDialog = ProgressDialog.show(context,"","上传中...");
-        LogUtil.e("PatrolingPresenter","开始上传"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingPresenter","开始上传"+ TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         new Thread(){
             public void run(){
                 updatePatrolInThread(patrolRecordID,isEnd);
@@ -88,9 +89,9 @@ public class PatrolingPresenter
                         @Override
                         public void onResponse(Call call, Response response) throws IOException
                         {
-                            final String responsData = response.body().string();
-                            LogUtil.e("PatrolingPresenter",responsData);
-                            String photo = Utility.checkString(responsData,"msg");
+                            final String responseData = response.body().string();
+                            LogUtil.e("PatrolingPresenter",responseData);
+                            String photo = Utility.checkString(responseData,"msg");
                             pointPhotoRecord.setPhotoURL(photo);
                             pointPhotoRecord.save();
                             patrolPointRecord.save();
@@ -181,8 +182,8 @@ public class PatrolingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("PatrolingPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("PatrolingPresenter",responseData);
                 if(isEnd){
                     PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
                     patrolRecord.setUpload(true);
@@ -200,7 +201,7 @@ public class PatrolingPresenter
 
                 }
                 progressDialog.dismiss();
-                LogUtil.e("PatrolingPresenter","上传完毕"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                LogUtil.e("PatrolingPresenter","上传完毕"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
             }
         });
     }

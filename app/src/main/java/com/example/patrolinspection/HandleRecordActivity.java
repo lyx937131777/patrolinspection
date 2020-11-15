@@ -120,7 +120,7 @@ public class HandleRecordActivity extends AppCompatActivity
     }
 
     public void showDialog(String photoURL){
-        Glide.with(this).load(HttpUtil.getPhotoURL(photoURL)).into(image);
+        Glide.with(this).load(HttpUtil.getResourceURL(photoURL)).into(image);
         dialog.show();
     }
 

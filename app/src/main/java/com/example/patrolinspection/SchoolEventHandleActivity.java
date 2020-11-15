@@ -12,12 +12,11 @@ import com.bumptech.glide.Glide;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
-import com.example.patrolinspection.db.SchoolEvent;
 import com.example.patrolinspection.db.SchoolEventRecord;
 import com.example.patrolinspection.presenter.SchoolEventHandlePresenter;
-import com.example.patrolinspection.presenter.SchoolEventPresenter;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 public class SchoolEventHandleActivity extends AppCompatActivity
@@ -62,12 +61,12 @@ public class SchoolEventHandleActivity extends AppCompatActivity
         typeText = findViewById(R.id.se_type);
         stateText = findViewById(R.id.se_state);
 
-        timeText.setText(Utility.dateStringToString(schoolEventRecord.getOccurrenceTime(),"yyyy-MM-dd HH:mm"));
+        timeText.setText(TimeUtil.timeStampToString(schoolEventRecord.getOccurrenceTime(),"yyyy-MM-dd HH:mm"));
         typeText.setText(MapUtil.getSchoolEventType(schoolEventRecord.getSchoolEventType()));
         stateText.setText(schoolEventRecord.getState());
 
         photo = findViewById(R.id.photo);
-        Glide.with(this).load(HttpUtil.getPhotoURL(schoolEventRecord.getPhoto())).into(photo);
+        Glide.with(this).load(HttpUtil.getResourceURL(schoolEventRecord.getPhoto())).into(photo);
 
         receiveButton = findViewById(R.id.receive);
         concernButton = findViewById(R.id.concern);

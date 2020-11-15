@@ -49,10 +49,10 @@ public class HandleRecordPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("HandleRecordPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("HandleRecordPresenter",responseData);
                 handleRecordList.clear();
-                handleRecordList.addAll(Utility.handleHandleRecordList(responsData));
+                handleRecordList.addAll(Utility.handleHandleRecordList(responseData));
                 ((HandleRecordActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

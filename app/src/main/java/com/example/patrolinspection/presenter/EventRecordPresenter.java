@@ -50,10 +50,10 @@ public class EventRecordPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("EventRecordPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("EventRecordPresenter",responseData);
                 eventRecordList.clear();
-                List<EventRecord> tempList = Utility.handleEventRecordList(responsData);
+                List<EventRecord> tempList = Utility.handleEventRecordList(responseData);
                 for(EventRecord eventRecord : tempList){
                     if(type.equals("ended")){
                         if(eventRecord.getDisposalOperateType().equals("end")){

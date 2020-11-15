@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.service.DownloadService;
+import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.Utility;
@@ -141,9 +142,9 @@ public class SystemParameterActivity extends AppCompatActivity
         }
         appVersionText.setText(version);
 
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        heartbeatText.setText(preferences.getInt("heartbeat",0)+"分钟");
-        heartbeatWorkText.setText(preferences.getInt("heartbeatWork",0)+"分钟");
+//        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        heartbeatText.setText(pref.getInt("heartbeat",0)+"分钟");
+        heartbeatWorkText.setText(pref.getInt("heartbeatWork",0)+"分钟");
 
         final String finalVersion = version;
         updateSystem.setOnClickListener(new View.OnClickListener()
@@ -151,7 +152,7 @@ public class SystemParameterActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                String latestVersion = preferences.getString("latestVersion","");
+                String latestVersion = pref.getString("latestVersion","");
                 if(latestVersion.equals(finalVersion) || latestVersion.equals("")){
                     Toast.makeText(mContext,"目前已是最新版本",Toast.LENGTH_LONG).show();
                 }else{
@@ -160,7 +161,7 @@ public class SystemParameterActivity extends AppCompatActivity
                         Toast.makeText(mContext,"downloadBinder为空",Toast.LENGTH_LONG).show();
                         return;
                     }
-                    downloadBinder.startDownload(HttpUtil.getPhotoURL(preferences.getString("latestVersionDownloadUrl","")));
+                    downloadBinder.startDownload(HttpUtil.getResourceURL(pref.getString("latestVersionDownloadUrl","")));
                 }
             }
         });
@@ -207,9 +208,9 @@ public class SystemParameterActivity extends AppCompatActivity
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("HeartbeatService",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e(TAG,responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     //TODO 关闭应用
 
                 }
@@ -221,12 +222,18 @@ public class SystemParameterActivity extends AppCompatActivity
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                String latestVersion = Utility.checkHeartbeatString(responsData,"versionNo");
+                String latestVersion = Utility.checkHeartbeatString(responseData,"versionNo");
+                LogUtil.e(TAG,"latestVersion: " + latestVersion + " version: " + version);
+                //若服务器上的还是上个版本则不更新
+                if(latestVersion.equals(HeartbeatService.LAST_VERSION)){
+                    return;
+                }
+
                 if(!latestVersion.equals(version)){
                     LogUtil.e(TAG,"有新版需要更新");
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("latestVersion",latestVersion);
-                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responsData,"versionPath"));
+                    editor.putString("latestVersionDownloadUrl",Utility.checkHeartbeatString(responseData,"versionPath"));
                     editor.apply();
                 }
             }

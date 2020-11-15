@@ -69,9 +69,9 @@ public class PoliceRegisterPresenter
                 @Override
                 public void onResponse(Call call, Response response) throws IOException
                 {
-                    final String responsData = response.body().string();
-                    LogUtil.e("PoliceRegisterPresenter",responsData);
-                    String photoPath = Utility.checkString(responsData,"msg");
+                    final String responseData = response.body().string();
+                    LogUtil.e("PoliceRegisterPresenter",responseData);
+                    String photoPath = Utility.checkString(responseData,"msg");
                     register(name,securityCard,icCard,identityCard,birth,sex,nation,tel,duty,photoPath);
                 }
             });
@@ -105,19 +105,19 @@ public class PoliceRegisterPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("PoliceRegisterPresenter",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("PoliceRegisterPresenter",responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((PoliceRegisterActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
 //                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 }else{
-                    Police police = Utility.handlePolice(responsData);
+                    Police police = Utility.handlePolice(responseData);
                     police.save();
                     ((PoliceRegisterActivity)context).runOnUiThread(new Runnable() {
                         @Override

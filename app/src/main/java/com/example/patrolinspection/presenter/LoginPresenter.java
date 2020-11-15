@@ -65,13 +65,13 @@ public class LoginPresenter
             public void onResponse(Call call, Response response) throws IOException
             {
                 int state = response.code();
-                final String responsData = response.body().string();
-                LogUtil.e("Login",state +" " + responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("Login",state +" " + responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((LoginActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });
@@ -79,9 +79,9 @@ public class LoginPresenter
                     return;
                 }
                 SharedPreferences.Editor editor = pref.edit();
-                String userID = Utility.getUserID(responsData);
+                String userID = Utility.getUserID(responseData);
                 editor.putString("userID", userID);
-                editor.putString("equipmentType",Utility.getEquipmentType(responsData));
+                editor.putString("equipmentType",Utility.getEquipmentType(responseData));
                 editor.putString("latest", String.valueOf(System.currentTimeMillis()));
                 editor.apply();
                 LogUtil.e("Login","userID:"+pref.getString("userID",null));
@@ -98,13 +98,13 @@ public class LoginPresenter
                         @Override
                         public void onResponse(Call call, Response response) throws IOException
                         {
-                            final String responsData = response.body().string();
-                            LogUtil.e("Login",responsData);
-                            if(Utility.checkString(responsData,"code").equals("500")){
+                            final String responseData = response.body().string();
+                            LogUtil.e("Login",responseData);
+                            if(Utility.checkString(responseData,"code").equals("500")){
                                 ((LoginActivity)context).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                                        Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                                 .LENGTH_LONG).show();
                                     }
                                 });
@@ -112,8 +112,8 @@ public class LoginPresenter
                                 return;
                             }
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("companyID", Utility.getCompanyID(responsData));
-                            Company company = Utility.getCompany(responsData);
+                            editor.putString("companyID", Utility.getCompanyID(responseData));
+                            Company company = Utility.getCompany(responseData);
                             editor.putBoolean("isSchool",company.isIsschool());
                             editor.putBoolean("isSchoolLogin",company.isIsschoolLogin());
                             editor.putBoolean("isFace",company.isIsface());

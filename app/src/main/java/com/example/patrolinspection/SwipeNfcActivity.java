@@ -26,6 +26,7 @@ import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -190,9 +191,9 @@ public class SwipeNfcActivity extends AppCompatActivity
                         @Override
                         public void onResponse(Call call, Response response) throws IOException
                         {
-                            final String responsData = response.body().string();
-                            LogUtil.e("SwipeNfcActivity",responsData);
-                            if(Utility.checkString(responsData,"code").equals("500")){
+                            final String responseData = response.body().string();
+                            LogUtil.e("SwipeNfcActivity",responseData);
+                            if(Utility.checkString(responseData,"code").equals("500")){
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -204,7 +205,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                                 isCardReading = false;
                             }else{
                                 LitePal.deleteAll(Police.class,"icCardNo = ?",icid);
-                                Police internetPolice = Utility.handlePolice(responsData);
+                                Police internetPolice = Utility.handlePolice(responseData);
                                 internetPolice.save();
                                 processPolice(internetPolice);
                             }
@@ -251,7 +252,7 @@ public class SwipeNfcActivity extends AppCompatActivity
                     PatrolPlan patrolPlan = LitePal.where("internetID = ?",patrolSchedule.getPatrolPlanId()).findFirst(PatrolPlan.class);
                     if(patrolPlan.getPatrolPlanType().equals("specialDate")){
                         Date now = new Date(System.currentTimeMillis());
-                        Date endDate = Utility.stringToDate(patrolPlan.getEndDate());
+                        Date endDate = TimeUtil.stringToDate(patrolPlan.getEndDate());
                         if(now.after(endDate)){
                             runOnUiThread(new Runnable()
                             {
@@ -421,13 +422,13 @@ public class SwipeNfcActivity extends AppCompatActivity
                         @Override
                         public void onResponse(Call call, Response response) throws IOException
                         {
-                            final String responsData = response.body().string();
-                            LogUtil.e("SwipeNfcActivity",responsData);
-                            if(Utility.checkString(responsData,"code").equals("500")){
+                            final String responseData = response.body().string();
+                            LogUtil.e("SwipeNfcActivity",responseData);
+                            if(Utility.checkString(responseData,"code").equals("500")){
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(mContext, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, Utility.checkString(responseData,"msg"), Toast.LENGTH_LONG).show();
                                     }
                                 });
                                 mProgressDialog.dismiss();

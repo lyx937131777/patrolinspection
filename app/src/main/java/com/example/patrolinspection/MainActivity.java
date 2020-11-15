@@ -47,6 +47,7 @@ import com.example.patrolinspection.service.CheckService;
 import com.example.patrolinspection.service.HeartbeatService;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.NetworkUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -126,13 +127,13 @@ public class MainActivity extends AppCompatActivity
         Date date2 = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
         Date date3 = new Date(calendar.getTimeInMillis());
-        LogUtil.e("MainActivity","date1: " + Utility.dateToString(date1,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date1.getTime());
-        LogUtil.e("MainActivity","date2: " + Utility.dateToString(date2,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date2.getTime());
-        LogUtil.e("MainActivity","date3: " + Utility.dateToString(date3,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date3.getTime());
+        LogUtil.e("MainActivity","date1: " + TimeUtil.dateToString(date1,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date1.getTime());
+        LogUtil.e("MainActivity","date2: " + TimeUtil.dateToString(date2,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date2.getTime());
+        LogUtil.e("MainActivity","date3: " + TimeUtil.dateToString(date3,"yyyy-MM-dd HH:mm:ss")+ "   long: "+date3.getTime());
 
-        String time = Utility.dateToString(date1,"yyyy-MM-dd")+" 10:00";
-        Date date4 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
-        LogUtil.e("MainActivity","date4: " + Utility.dateToString(date4,"yyyy-MM-dd HH:mm:ss") + "   long: "+date4.getTime());
+        String time = TimeUtil.dateToString(date1,"yyyy-MM-dd")+" 10:00";
+        Date date4 = TimeUtil.stringToDate(time,"yyyy-MM-dd HH:mm");
+        LogUtil.e("MainActivity","date4: " + TimeUtil.dateToString(date4,"yyyy-MM-dd HH:mm:ss") + "   long: "+date4.getTime());
 
 //        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.setTime(date4.getTime());
@@ -265,7 +266,7 @@ public class MainActivity extends AppCompatActivity
     //L2 监听时间 电量 网络 信号
     private void monitorTimeTick(){
         time = findViewById(R.id.time);
-        time.setText(Utility.dateToString(new Date(),"HH:mm"));
+        time.setText(TimeUtil.dateToString(new Date(),"HH:mm"));
         timeRcvr = new BroadcastReceiver()
         {
             @Override
@@ -273,7 +274,7 @@ public class MainActivity extends AppCompatActivity
             {
                 String action = intent.getAction();
                 if(action != null && action.equals(Intent.ACTION_TIME_TICK)){
-                    time.setText(Utility.dateToString(new Date(),"HH:mm"));
+                    time.setText(TimeUtil.dateToString(new Date(),"HH:mm"));
                 }
             }
         };

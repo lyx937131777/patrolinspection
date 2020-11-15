@@ -29,6 +29,7 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.FaceRecognitionPresenter;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.Utility;
@@ -111,7 +112,7 @@ public class FaceRecognitionActivity extends AppCompatActivity
                 if(!isFace){
                     faceRecognitionPresenter.startPatrol(policeID, getIntent().getStringExtra("schedule"));
                 }else if(imagePath != null){
-                    imagePath = Utility.compressImagePathToImagePath(imagePath);
+                    imagePath = FileUtil.compressImagePathToImagePath(imagePath);
                     faceRecognitionPresenter.startPatrol(policeID, imagePath,getIntent().getStringExtra("schedule"));
                 }else{
                     Toast.makeText(FaceRecognitionActivity.this,"请先拍照！",Toast.LENGTH_LONG).show();

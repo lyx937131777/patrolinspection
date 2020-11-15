@@ -44,8 +44,10 @@ import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.psam.CommonUtil;
 import com.example.patrolinspection.ui.main.EventRecordFragment;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -108,7 +110,7 @@ public class PatrolingActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patroling);
-        LogUtil.e("PatrolingActivity","onCreate"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","onCreate"+ TimeUtil.dateToString(new Date(),"HH:mm:ss"));
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -244,11 +246,11 @@ public class PatrolingActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
         adapter = new InformationPointAdapter(patrolPointRecordList);
         recyclerView.setAdapter(adapter);
-        LogUtil.e("patrolingActivity","adapter配置完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("patrolingActivity","adapter配置完成"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
     }
 
     private void endPatrol(){
-        LogUtil.e("PatrolingActivity","点击结束巡检"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","点击结束巡检"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         if(tempPointRecord != null){
             tempPointRecord.setState("已巡检");
             tempPointRecord.save();
@@ -311,7 +313,7 @@ public class PatrolingActivity extends AppCompatActivity
     protected void onNewIntent(final Intent intent) {
         super.onNewIntent(intent);
         mProgressDialog = ProgressDialog.show(mContext, "", "读卡中...");
-        LogUtil.e("PatrolingPresenter","触发NFC"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingPresenter","触发NFC"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         new Thread(){
             public void run(){
                 readNFC(intent);
@@ -425,10 +427,10 @@ public class PatrolingActivity extends AppCompatActivity
 
     private void initIP()
     {
-        LogUtil.e("PatrolingActivity","初始化信息点"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","初始化信息点"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         patrolPointRecordList.clear();
         List<PatrolPointRecord> tempList = LitePal.where("patrolRecordId = ?",recordID).find(PatrolPointRecord.class);
-        LogUtil.e("PatrolingActivity","从本地获取信息点列表1"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","从本地获取信息点列表1"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         if(tempList.size() > 0){
             for(PatrolPointRecord patrolPointRecord : tempList){
                 patrolPointRecordList.add(patrolPointRecord);
@@ -450,14 +452,14 @@ public class PatrolingActivity extends AppCompatActivity
             }
         }else{
             List<PatrolIP> patrolIPList = LitePal.where("patrolLineID = ?",lineID).find(PatrolIP.class);
-            LogUtil.e("PatrolingActivity","从本地获取信息点列表2"+Utility.dateToString(new Date(),"HH:mm:ss"));
+            LogUtil.e("PatrolingActivity","从本地获取信息点列表2"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
             for(PatrolIP patrolIP : patrolIPList){
                 PatrolPointRecord patrolPointRecord = new PatrolPointRecord(recordID,patrolIP);
                 patrolPointRecordList.add(patrolPointRecord);
                 patrolPointRecord.save();
             }
         }
-        LogUtil.e("PatrolingActivity","信息点初始化完毕，开始统计数量"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","信息点初始化完毕，开始统计数量"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
         countAll = patrolPointRecordList.size();
         countPatrolled = 0;
         for(PatrolPointRecord patrolPointRecord : patrolPointRecordList){
@@ -474,7 +476,7 @@ public class PatrolingActivity extends AppCompatActivity
             }
         });
 
-        LogUtil.e("PatrolingActivity","数量统计完毕"+Utility.dateToString(new Date(),"HH:mm:ss"));
+        LogUtil.e("PatrolingActivity","数量统计完毕"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
     }
 
 
@@ -539,7 +541,7 @@ public class PatrolingActivity extends AppCompatActivity
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK)
                 {
-                    imagePath = Utility.compressImagePathToImagePath(imagePath);
+                    imagePath = FileUtil.compressImagePathToImagePath(imagePath);
                     Calendar calendar = Calendar.getInstance();
                     tempPointRecord.addPhoto(imagePath,calendar.getTimeInMillis());
                     tempPointRecord.save();

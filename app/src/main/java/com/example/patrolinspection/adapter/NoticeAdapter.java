@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.Notice;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.text.SimpleDateFormat;
@@ -68,7 +69,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder
     {
         Notice notice = mList.get(position);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String value = simpleDateFormat.format(Utility.stringToDate(notice.getDate()));
+        String value = simpleDateFormat.format(TimeUtil.stringToDate(notice.getDate()));
         holder.noticeDate.setText(value);
         holder.noticeTitle.setText(notice.getTitle());
         holder.noticeContent.setText(notice.getContent());

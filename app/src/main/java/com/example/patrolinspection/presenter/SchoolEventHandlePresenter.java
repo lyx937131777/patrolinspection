@@ -52,13 +52,13 @@ public class SchoolEventHandlePresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SchoolEventHandlePresenter",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("SchoolEventHandlePresenter",responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((SchoolEventHandleActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });

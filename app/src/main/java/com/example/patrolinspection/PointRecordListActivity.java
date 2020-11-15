@@ -13,6 +13,7 @@ import com.example.patrolinspection.db.PatrolIP;
 import com.example.patrolinspection.db.PatrolPointRecord;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -66,8 +67,8 @@ public class PointRecordListActivity extends AppCompatActivity
         StringBuilder stringBuilder = new StringBuilder();
         Date startTime = new Date(patrolRecord.getStartTimeLong());
         Date endTime = new Date(patrolRecord.getEndTime());
-        stringBuilder.append("开始时间： " + Utility.dateToString(startTime,"yyyy-MM-dd HH:mm") + "\n");
-        stringBuilder.append("结束时间： " + Utility.dateToString(endTime,"yyyy-MM-dd HH:mm") + "\n");
+        stringBuilder.append("开始时间： " + TimeUtil.dateToString(startTime,"yyyy-MM-dd HH:mm") + "\n");
+        stringBuilder.append("结束时间： " + TimeUtil.dateToString(endTime,"yyyy-MM-dd HH:mm") + "\n");
         stringBuilder.append("线路名称： " + patrolRecord.getLineName());
         lineInformation.setText(stringBuilder.toString());
 

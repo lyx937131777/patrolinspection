@@ -38,7 +38,7 @@ public class HttpUtil
     //测试
 //    public static final String LocalAddress = "http://47.101.68.214:8883";
 
-    public static String getPhotoURL(String url){
+    public static String getResourceURL(String url){
         return LocalAddress + "/resources/" + url;
     }
 

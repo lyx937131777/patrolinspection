@@ -61,9 +61,9 @@ public class EventHandlePresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("EventHandlePresenter",responsData);
-                String photo = Utility.checkString(responsData,"msg");
+                final String responseData = response.body().string();
+                LogUtil.e("EventHandlePresenter",responseData);
+                String photo = Utility.checkString(responseData,"msg");
                 String address = HttpUtil.LocalAddress + "/api/eventRecord/disposal";
                 long time = System.currentTimeMillis();
                 HttpUtil.postHandleRecordRequest(address, userID, eventRecordID, policeID, report, detail, type,photo, time, new Callback()
@@ -85,9 +85,9 @@ public class EventHandlePresenter
                             @Override
                             public void onResponse(Call call, Response response) throws IOException
                             {
-                                final String responsData = response.body().string();
-                                LogUtil.e("EventHandlePresenter",responsData);
-                                if(Utility.checkString(responsData,"code").equals("000")){
+                                final String responseData = response.body().string();
+                                LogUtil.e("EventHandlePresenter",responseData);
+                                if(Utility.checkString(responseData,"code").equals("000")){
                                     ((EventHandleActivity)context).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -100,7 +100,7 @@ public class EventHandlePresenter
                                     ((EventHandleActivity)context).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 }

@@ -1,5 +1,6 @@
 package com.example.patrolinspection.db;
 
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 import com.google.gson.annotations.SerializedName;
 
@@ -133,8 +134,8 @@ public class PatrolSchedule extends LitePalSupport
 
     public long getStartTimeHead(){
         Date date = new Date();
-        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+startTime;
-        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        String time =  TimeUtil.dateToString(date,"yyyy-MM-dd")+ " "+startTime;
+        Date date2 = TimeUtil.stringToDate(time,"yyyy-MM-dd HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date2);
         calendar.add(Calendar.MINUTE, -Integer.parseInt(errorRange));
@@ -149,8 +150,8 @@ public class PatrolSchedule extends LitePalSupport
             c.add(Calendar.DATE,1);
             date = c.getTime();
         }
-        String time =  Utility.dateToString(date,"yyyy-MM-dd")+ " "+endTime;
-        Date date2 = Utility.stringToDate(time,"yyyy-MM-dd HH:mm");
+        String time =  TimeUtil.dateToString(date,"yyyy-MM-dd")+ " "+endTime;
+        Date date2 = TimeUtil.stringToDate(time,"yyyy-MM-dd HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date2);
         calendar.add(Calendar.MINUTE, Integer.parseInt(errorRange));

@@ -19,6 +19,7 @@ import com.example.patrolinspection.SwipeNfcActivity;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.Date;
@@ -86,8 +87,8 @@ public class UploadListAdapter extends RecyclerView.Adapter<UploadListAdapter.Vi
         PatrolRecord patrolRecord = mList.get(position);
         Date startTime = new Date(patrolRecord.getStartTimeLong());
         Date endTime = new Date(patrolRecord.getEndTime());
-        holder.startTime.setText(Utility.dateToString(startTime,"yyyy-MM-dd HH:mm"));
-        holder.endTime.setText(Utility.dateToString(endTime,"yyyy-MM-dd HH:mm"));
+        holder.startTime.setText(TimeUtil.dateToString(startTime,"yyyy-MM-dd HH:mm"));
+        holder.endTime.setText(TimeUtil.dateToString(endTime,"yyyy-MM-dd HH:mm"));
         String state = "未上传";
         if(patrolRecord.isUpload()){
             state = "已上传";

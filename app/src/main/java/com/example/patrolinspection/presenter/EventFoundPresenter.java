@@ -78,9 +78,9 @@ public class EventFoundPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("EventFoundPresenter",responsData);
-                final String photo = Utility.checkString(responsData,"msg");
+                final String responseData = response.body().string();
+                LogUtil.e("EventFoundPresenter",responseData);
+                final String photo = Utility.checkString(responseData,"msg");
                 String address = HttpUtil.LocalAddress + "/api/eventRecord";
                 String companyID = pref.getString("companyID",null);
                 final String reportUnit = "保安";//TODO 上报单位到底是什么
@@ -111,9 +111,9 @@ public class EventFoundPresenter
                             @Override
                             public void onResponse(Call call, Response response) throws IOException
                             {
-                                final String responsData = response.body().string();
-                                LogUtil.e("EventFoundPresenter",responsData);
-                                if(Utility.checkString(responsData,"code").equals("000")){
+                                final String responseData = response.body().string();
+                                LogUtil.e("EventFoundPresenter",responseData);
+                                if(Utility.checkString(responseData,"code").equals("000")){
                                     ((EventFoundActivity)context).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -127,7 +127,7 @@ public class EventFoundPresenter
                                     ((EventFoundActivity)context).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast.LENGTH_LONG).show();
                                         }
                                     });
                                     EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,imagePath,photo,false);
@@ -182,9 +182,9 @@ public class EventFoundPresenter
                     @Override
                     public void onResponse(Call call, Response response) throws IOException
                     {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        if(Utility.checkString(responsData,"code").equals("000")){
+                        final String responseData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responseData);
+                        if(Utility.checkString(responseData,"code").equals("000")){
                             ((EventFoundActivity)context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -198,7 +198,7 @@ public class EventFoundPresenter
                             ((EventFoundActivity)context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast.LENGTH_LONG).show();
                                 }
                             });
                             EventRecord eventRecord = new EventRecord(eventID,policeID,disposalOperateType,patrolRecordID,pointID,time,reportUnit,detail,photo,photo,false);

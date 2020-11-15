@@ -12,11 +12,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.patrolinspection.HandleRecordActivity;
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.HandleRecord;
 import com.example.patrolinspection.util.HttpUtil;
-import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
@@ -82,8 +81,8 @@ public class HandleRecordAdapter extends RecyclerView.Adapter<HandleRecordAdapte
         holder.nameText.setText(handleRecord.getPoliceName());
         holder.detailText.setText("备注："+handleRecord.getDetail());
         holder.typeText.setText(MapUtil.getHandleType(handleRecord.getDisposalOperateType()));
-        holder.timeText.setText(Utility.dateStringToString(handleRecord.getOperateTime(),"yyyy-MM-dd HH:mm"));
-        Glide.with(mContext).load(HttpUtil.getPhotoURL(handleRecord.getPhoto())).into(holder.photo);
+        holder.timeText.setText(TimeUtil.timeStampToString(handleRecord.getOperateTime(),"yyyy-MM-dd HH:mm"));
+        Glide.with(mContext).load(HttpUtil.getResourceURL(handleRecord.getPhoto())).into(holder.photo);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -59,8 +60,8 @@ public class PatrolLineActivity extends AppCompatActivity
         List<PatrolPlan> patrolPlanList = LitePal.where("patrolPlanType = ?","specialDate").find(PatrolPlan.class);
         boolean flag = true;
         for(PatrolPlan patrolPlan: patrolPlanList){
-            Date startDate = Utility.stringToDate(patrolPlan.getStartDate());
-            Date endDate = Utility.stringToDate(patrolPlan.getEndDate());
+            Date startDate = TimeUtil.stringToDate(patrolPlan.getStartDate());
+            Date endDate = TimeUtil.stringToDate(patrolPlan.getEndDate());
             if(now.after(startDate) && now.before(endDate)){
                 flag = false;
                 planID = patrolPlan.getInternetID();

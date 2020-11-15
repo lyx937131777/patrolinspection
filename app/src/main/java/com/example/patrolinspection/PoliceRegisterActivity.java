@@ -26,6 +26,7 @@ import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.presenter.PoliceRegisterPresenter;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.Utility;
@@ -151,7 +152,7 @@ public class PoliceRegisterActivity extends AppCompatActivity
         long time = System.currentTimeMillis();
         File temp =  null;
         try{
-            temp = Utility.saveFile(resizeBmp,time+".jpeg");
+            temp = FileUtil.saveFile(resizeBmp,time+".jpeg");
             LogUtil.e("PoliceRegister","abosolutePath: " + temp.getAbsolutePath());
             LogUtil.e("PoliceRegister","canonicalPath: " + temp.getCanonicalPath());
             LogUtil.e("PoliceRegister","Path: " + temp.getPath());

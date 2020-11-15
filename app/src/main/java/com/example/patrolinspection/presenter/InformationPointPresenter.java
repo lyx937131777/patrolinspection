@@ -53,13 +53,13 @@ public class InformationPointPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("IP",responsData);
-                if(Utility.checkString(responsData,"code").equals("500")){
+                final String responseData = response.body().string();
+                LogUtil.e("IP",responseData);
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((InformationPointActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });

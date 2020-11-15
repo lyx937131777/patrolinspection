@@ -16,6 +16,7 @@ import com.example.patrolinspection.R;
 import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.Date;
@@ -79,7 +80,7 @@ public class EventRecordListAdapter extends RecyclerView.Adapter<EventRecordList
     {
         EventRecord eventRecord = mList.get(position);
         Date time = new Date(eventRecord.getTime());
-        holder.time.setText(Utility.dateToString(time,"yyyy-MM-dd HH:mm"));
+        holder.time.setText(TimeUtil.dateToString(time,"yyyy-MM-dd HH:mm"));
         String state = "未上传";
         if(eventRecord.isUpload()){
             state = "已上传";

@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.patrolinspection.PointListActivity;
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.ScheduleListActivity;
-import com.example.patrolinspection.db.PatrolLine;
 import com.example.patrolinspection.db.PatrolPlan;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
@@ -82,12 +81,12 @@ public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.ViewHo
         holder.name.setText(patrolPlan.getName());
         holder.type.setText(MapUtil.getPlanType(patrolPlan.getPatrolPlanType()));
         if(patrolPlan.getStartDate() != null){
-            holder.startDate.setText(Utility.dateStringToString(patrolPlan.getStartDate(),"yyyy-MM-dd"));
+            holder.startDate.setText(TimeUtil.timeStampToString(patrolPlan.getStartDate(),"yyyy-MM-dd"));
         }else {
             holder.startDate.setText("");
         }
         if(patrolPlan.getEndDate() != null){
-            holder.endDate.setText(Utility.dateStringToString(patrolPlan.getEndDate(),"yyyy-MM-dd"));
+            holder.endDate.setText(TimeUtil.timeStampToString(patrolPlan.getEndDate(),"yyyy-MM-dd"));
         }else {
             holder.endDate.setText("");
         }

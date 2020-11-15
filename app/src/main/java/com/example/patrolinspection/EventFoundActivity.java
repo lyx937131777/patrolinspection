@@ -37,9 +37,11 @@ import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.EventFoundPresenter;
+import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.SortUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -165,12 +167,12 @@ public class EventFoundActivity extends AppCompatActivity
                     progressDialog = ProgressDialog.show(EventFoundActivity.this,"","照片保存中...");
                     new Thread(){
                         public void run(){
-                            LogUtil.e("EventFoundActivity","开始压缩照片"+Utility.dateToString(new Date(),"HH:mm:ss"));
-                            imagePath = Utility.compressImagePathToImagePath(imagePath);
-                            LogUtil.e("EventFoundActivity","压缩照片完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                            LogUtil.e("EventFoundActivity","开始压缩照片"+ TimeUtil.dateToString(new Date(),"HH:mm:ss"));
+                            imagePath = FileUtil.compressImagePathToImagePath(imagePath);
+                            LogUtil.e("EventFoundActivity","压缩照片完成"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
                             progressDialog.dismiss();
                             eventFoundPresenter.postEventRecord(policeID,imagePath,typeString,recordID,pointID,detailText.getText().toString());
-                            LogUtil.e("EventFoundActivity","上传完成"+Utility.dateToString(new Date(),"HH:mm:ss"));
+                            LogUtil.e("EventFoundActivity","上传完成"+TimeUtil.dateToString(new Date(),"HH:mm:ss"));
                         }
                     }.start();
                 }else{

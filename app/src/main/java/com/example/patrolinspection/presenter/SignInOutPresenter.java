@@ -54,14 +54,14 @@ public class SignInOutPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SignInOutPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("SignInOutPresenter",responseData);
                 //TODO Utility code 000？
-                if(Utility.checkString(responsData,"code").equals("500")){
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((SignInOutActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });
@@ -100,8 +100,8 @@ public class SignInOutPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SignInOutPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("SignInOutPresenter",responseData);
                 ((SignInOutActivity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

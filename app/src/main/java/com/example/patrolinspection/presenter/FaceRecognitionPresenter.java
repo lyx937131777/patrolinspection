@@ -12,6 +12,7 @@ import com.example.patrolinspection.SignInOutActivity;
 import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.util.HttpUtil;
 import com.example.patrolinspection.util.LogUtil;
+import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
@@ -60,14 +61,14 @@ public class FaceRecognitionPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("SignInOutPresenter",responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("SignInOutPresenter",responseData);
                 //TODO Utility code 000？
-                if(Utility.checkString(responsData,"code").equals("500")){
+                if(Utility.checkString(responseData,"code").equals("500")){
                     ((FaceRecognitionActivity)context).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast
+                            Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast
                                     .LENGTH_LONG).show();
                         }
                     });
@@ -108,11 +109,11 @@ public class FaceRecognitionPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("FaceRecognitionPresenter",responsData);
-                PatrolRecord patrolRecord = Utility.handlePatrolRecord(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("FaceRecognitionPresenter",responseData);
+                PatrolRecord patrolRecord = Utility.handlePatrolRecord(responseData);
                 LogUtil.e("FaceRecognitionPresenter","id:"+patrolRecord.getInternetID() + "  "+patrolRecord.getPatrolScheduleId()+" "+patrolRecord.getStartTime());
-                Date date = Utility.stringToDate(patrolRecord.getStartTime());
+                Date date = TimeUtil.stringToDate(patrolRecord.getStartTime());
                 SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd  HH:mm:ss");
                 LogUtil.e("FaceRecognitionPresenter","startTime:" + ft.format(date));
                 patrolRecord.setStartTimeLong(date.getTime());

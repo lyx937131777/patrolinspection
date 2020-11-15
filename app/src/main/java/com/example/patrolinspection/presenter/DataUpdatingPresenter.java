@@ -115,9 +115,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingPolice",responsData);
-                List<Police> policeList = Utility.handlePoliceList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingPolice",responseData);
+                List<Police> policeList = Utility.handlePoliceList(responseData);
                 LitePal.deleteAll(Police.class);
                 LitePal.saveAll(policeList);
                 reduceCount();
@@ -155,9 +155,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingSchedule",responsData);
-                List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingSchedule",responseData);
+                List<PatrolSchedule> patrolScheduleList = Utility.handlePatrolScheduleList(responseData);
                 LitePal.deleteAll(PatrolSchedule.class);
                 if(patrolScheduleList != null && patrolScheduleList.size() > 0){
                     for(PatrolSchedule patrolSchedule : patrolScheduleList){
@@ -202,9 +202,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingPlan",responsData);
-                List<PatrolPlan> patrolPlanList = Utility.handlePatrolPlanList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingPlan",responseData);
+                List<PatrolPlan> patrolPlanList = Utility.handlePatrolPlanList(responseData);
                 LitePal.deleteAll(PatrolPlan.class);
                 LitePal.saveAll(patrolPlanList);
                 reduceCount();
@@ -240,9 +240,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingInformationPoint",responsData);
-                List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingInformationPoint",responseData);
+                List<InformationPoint> informationPointList  = Utility.handleInformationPointList(responseData);
                 if(informationPointList != null){
                     LogUtil.e("DataUpdatingInformationPoint","信息点数量："+informationPointList.size());
                     for(InformationPoint informationPoint : informationPointList){
@@ -292,9 +292,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingPatrolLine",responsData);
-                List<PatrolLine> patrolLineList = Utility.handlePatrolLineList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingPatrolLine",responseData);
+                List<PatrolLine> patrolLineList = Utility.handlePatrolLineList(responseData);
                 LitePal.deleteAll(PatrolLine.class);
                 LitePal.deleteAll(PatrolIP.class);
 //                LitePal.saveAll(patrolLineList);
@@ -371,9 +371,9 @@ public class DataUpdatingPresenter
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
-                final String responsData = response.body().string();
-                LogUtil.e("DataUpdatingEvent",responsData);
-                List<Event> eventList = Utility.handleEventList(responsData);
+                final String responseData = response.body().string();
+                LogUtil.e("DataUpdatingEvent",responseData);
+                List<Event> eventList = Utility.handleEventList(responseData);
                 LitePal.deleteAll(Event.class);
                 LitePal.saveAll(eventList);
                 reduceCount();
@@ -419,9 +419,9 @@ public class DataUpdatingPresenter
                             @Override
                             public void onResponse(Call call, Response response) throws IOException
                             {
-                                final String responsData = response.body().string();
-                                LogUtil.e("DataUpdatingPresenter",responsData);
-                                String photo = Utility.checkString(responsData,"msg");
+                                final String responseData = response.body().string();
+                                LogUtil.e("DataUpdatingPresenter",responseData);
+                                String photo = Utility.checkString(responseData,"msg");
                                 pointPhotoRecord.setPhotoURL(photo);
                                 pointPhotoRecord.save();
                                 patrolPointRecord.save();
@@ -475,8 +475,8 @@ public class DataUpdatingPresenter
                 @Override
                 public void onResponse(Call call, Response response) throws IOException
                 {
-                    final String responsData = response.body().string();
-                    LogUtil.e("DataUpdatingPresenter",responsData);
+                    final String responseData = response.body().string();
+                    LogUtil.e("DataUpdatingPresenter",responseData);
                     PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class);
                     patrolRecord.setUpload(true);
                     patrolRecord.save();
@@ -525,9 +525,9 @@ public class DataUpdatingPresenter
                     @Override
                     public void onResponse(Call call, Response response) throws IOException
                     {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        String photo = Utility.checkString(responsData,"msg");
+                        final String responseData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responseData);
+                        String photo = Utility.checkString(responseData,"msg");
                         eventRecord.setPhotoURL(photo);
                         eventRecord.save();
                         postEventRecord(eventRecord);
@@ -579,9 +579,9 @@ public class DataUpdatingPresenter
                     @Override
                     public void onResponse(Call call, Response response) throws IOException
                     {
-                        final String responsData = response.body().string();
-                        LogUtil.e("EventFoundPresenter",responsData);
-                        if(Utility.checkString(responsData,"code").equals("000")){
+                        final String responseData = response.body().string();
+                        LogUtil.e("EventFoundPresenter",responseData);
+                        if(Utility.checkString(responseData,"code").equals("000")){
                             eventRecord.setUpload(true);
                             eventRecord.save();
                             reduceCount();
@@ -589,7 +589,7 @@ public class DataUpdatingPresenter
                             ((AppCompatActivity)context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(context, Utility.checkString(responsData,"msg"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, Utility.checkString(responseData,"msg"), Toast.LENGTH_LONG).show();
                                 }
                             });
                             LogUtil.e("DataUpdatingPresenter","count: "+count+ "   --");
