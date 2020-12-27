@@ -18,6 +18,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//签到签退
 public class SignInOutPresenter
 {
     private Context context;
@@ -30,6 +31,7 @@ public class SignInOutPresenter
         this.pref = pref;
     }
 
+    //签到or签退（带图片）
     public void signInOut(final String policeID, String imagePath, final String type, final String attendanceType){
         progressDialog = ProgressDialog.show(context,"","识别中...");
 
@@ -74,6 +76,7 @@ public class SignInOutPresenter
         });
     }
 
+    //签到or签退
     public void signInOut(final String policeID, final String type, final String attendanceType) {
         if(progressDialog == null || !progressDialog.isShowing()){
             progressDialog = ProgressDialog.show(context,"","识别中...");

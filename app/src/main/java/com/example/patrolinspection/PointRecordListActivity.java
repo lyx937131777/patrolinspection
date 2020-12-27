@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//信息点记录界面
 public class PointRecordListActivity extends AppCompatActivity
 {
 

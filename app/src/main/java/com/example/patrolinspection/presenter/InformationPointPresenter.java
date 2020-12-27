@@ -17,6 +17,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//信息点
 public class InformationPointPresenter
 {
     private Context context;
@@ -28,6 +29,7 @@ public class InformationPointPresenter
         this.pref = pref;
     }
 
+    //注册信息点
     public void register(String id, String name, String longitude, String latitude, String height, String floor){
         progressDialog = ProgressDialog.show(context,"","上传中...");
 

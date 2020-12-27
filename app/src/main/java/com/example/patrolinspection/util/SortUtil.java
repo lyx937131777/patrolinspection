@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+//排序工具 用于正确显示事件种类的顺序
 public class SortUtil
 {
     public static final String[] EVENT_SORT_STRINGS = {"material","fireProtection",

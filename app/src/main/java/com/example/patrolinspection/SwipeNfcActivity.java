@@ -39,6 +39,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//只刷NFC的界面
 public class SwipeNfcActivity extends AppCompatActivity
 {
     private String type;

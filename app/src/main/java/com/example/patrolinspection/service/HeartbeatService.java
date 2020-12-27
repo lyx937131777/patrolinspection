@@ -74,6 +74,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//心跳服务 含有自动更新版本 自动更新数据等功能
 public class HeartbeatService extends Service
 {
     //TODO 上一个发布的版本号 若服务器上还是此版本则不更新

@@ -43,12 +43,10 @@ import com.example.patrolinspection.db.PatrolRecord;
 import com.example.patrolinspection.db.PatrolSchedule;
 import com.example.patrolinspection.presenter.PatrolingPresenter;
 import com.example.patrolinspection.psam.CommonUtil;
-import com.example.patrolinspection.ui.main.EventRecordFragment;
 import com.example.patrolinspection.util.FileUtil;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.TimeUtil;
-import com.example.patrolinspection.util.Utility;
 
 import org.litepal.LitePal;
 

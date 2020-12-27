@@ -43,6 +43,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//系统参数界面
 public class SystemParameterActivity extends AppCompatActivity
 {
     private TextView nameText;

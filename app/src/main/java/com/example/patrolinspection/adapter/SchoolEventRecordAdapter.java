@@ -18,6 +18,7 @@ import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
+//显示护校事件的适配器
 public class SchoolEventRecordAdapter extends RecyclerView.Adapter<SchoolEventRecordAdapter.ViewHolder>
 {
     private Context mContext;

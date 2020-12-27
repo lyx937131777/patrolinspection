@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//数据更新界面的事件记录列表界面
 public class EventRecordListActivity extends AppCompatActivity
 {
     private List<EventRecord> eventRecordList = new ArrayList<>();

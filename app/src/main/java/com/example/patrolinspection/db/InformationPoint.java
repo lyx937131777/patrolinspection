@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.litepal.crud.LitePalSupport;
 
+//信息点
 public class InformationPoint extends LitePalSupport
 {
     private String companyId;

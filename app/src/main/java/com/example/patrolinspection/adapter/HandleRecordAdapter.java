@@ -20,6 +20,7 @@ import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
+//显示处置记录（可处理）的适配器
 public class HandleRecordAdapter extends RecyclerView.Adapter<HandleRecordAdapter.ViewHolder>
 {
     private Context mContext;

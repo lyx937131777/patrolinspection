@@ -20,6 +20,7 @@ import com.example.patrolinspection.util.MapUtil;
 
 import java.util.List;
 
+//显示巡检的适配器
 public class PatrolInspectionAdapter extends RecyclerView.Adapter<PatrolInspectionAdapter.ViewHolder>
 {
     private Context mContext;

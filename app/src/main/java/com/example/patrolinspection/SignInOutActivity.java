@@ -38,6 +38,7 @@ import org.litepal.LitePal;
 import java.io.File;
 import java.io.IOException;
 
+//签到or签退界面
 public class SignInOutActivity extends AppCompatActivity
 {
     //photo

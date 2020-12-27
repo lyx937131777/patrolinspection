@@ -30,6 +30,7 @@ import okhttp3.Response;
 import okhttp3.Route;
 import okhttp3.internal.http2.Header;
 
+//用于向后端发送数据
 public class HttpUtil
 {
     //正式

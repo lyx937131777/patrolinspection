@@ -24,6 +24,7 @@ import com.example.patrolinspection.util.LogUtil;
 
 import java.io.File;
 
+//下载服务 目前用于版本更新下载安装包
 public class DownloadService extends Service
 {
 

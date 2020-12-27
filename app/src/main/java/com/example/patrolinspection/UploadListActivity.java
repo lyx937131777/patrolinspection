@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//上传列表界面
 public class UploadListActivity extends AppCompatActivity
 {
     private List<PatrolRecord> patrolrecordlist = new ArrayList<>();

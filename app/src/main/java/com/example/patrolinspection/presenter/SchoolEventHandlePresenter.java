@@ -16,6 +16,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//护校事件处置
 public class SchoolEventHandlePresenter
 {
     private Context context;
@@ -27,6 +28,7 @@ public class SchoolEventHandlePresenter
         this.pref = pref;
     }
 
+    //发布护校事件的处置
     public void handleSchoolEvent(String id, String type){
         progressDialog = ProgressDialog.show(context,"","上传中...");
 

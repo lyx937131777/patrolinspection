@@ -24,6 +24,7 @@ import com.example.patrolinspection.util.CheckUtil;
 import dagger.Module;
 import dagger.Provides;
 
+//dagger2框架 用于自动生成presenter
 @Module
 public class MyModule
 {

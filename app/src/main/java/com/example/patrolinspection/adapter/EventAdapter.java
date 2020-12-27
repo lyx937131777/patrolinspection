@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+//显示事件的适配器
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder>
 {
     private Context mContext;

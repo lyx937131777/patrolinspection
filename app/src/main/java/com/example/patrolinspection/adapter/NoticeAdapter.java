@@ -16,6 +16,7 @@ import com.example.patrolinspection.util.Utility;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+//显示公告的适配器
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.ViewHolder>
 {
     private Context mContext;

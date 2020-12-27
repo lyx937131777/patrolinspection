@@ -30,6 +30,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//巡检执行中
 public class PatrolingPresenter
 {
     private Context context;
@@ -44,6 +45,7 @@ public class PatrolingPresenter
         count = 0;
     }
 
+    //上传数据 并屏蔽其他操作防止误触
     public void updatePatrol(final String patrolRecordID, final boolean isEnd)
     {
         progressDialog = ProgressDialog.show(context,"","上传中...");
@@ -55,6 +57,7 @@ public class PatrolingPresenter
         }.start();
     }
 
+    //上传巡检数据（先上传图片）
     public void updatePatrolInThread(final String patrolRecordID, final boolean isEnd){
 
         PatrolRecord patrolRecord = LitePal.where("internetID = ?",patrolRecordID).findFirst(PatrolRecord.class,true);
@@ -145,6 +148,7 @@ public class PatrolingPresenter
         }
     }
 
+    //上传巡检数据
     public void update(final String patrolRecordID, final boolean isEnd){
         String address = HttpUtil.LocalAddress + "/api/patrolRecord/put";
         String companyID = pref.getString("companyID",null);

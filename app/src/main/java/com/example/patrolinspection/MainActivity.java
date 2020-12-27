@@ -59,6 +59,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//主界面 含多个菜单
 public class MainActivity extends AppCompatActivity
 {
     private Type[] types = {new Type("巡检", R.drawable.patrol_inspection,R.drawable.patrol_inspection_press,"patrolInspection"),

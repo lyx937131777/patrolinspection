@@ -25,6 +25,7 @@ import com.example.patrolinspection.util.Utility;
 import java.util.Date;
 import java.util.List;
 
+//显示上传列表的适配器
 public class UploadListAdapter extends RecyclerView.Adapter<UploadListAdapter.ViewHolder>
 {
     private Context mContext;

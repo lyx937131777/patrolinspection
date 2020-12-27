@@ -31,6 +31,7 @@ import com.example.patrolinspection.util.NfcUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+//信信息点注册界面（含有百度地图功能 读取经纬度）
 public class InformationPointActivity extends AppCompatActivity
 {
     private LocationClient mLocationClient;

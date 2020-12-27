@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//显示信息点（数据更新界面）的适配器
 public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.ViewHolder>
 {
     private Context mContext;

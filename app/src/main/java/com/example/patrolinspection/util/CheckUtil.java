@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Patterns;
 import android.widget.Toast;
 
+//未用到
 public class CheckUtil
 {
     private Context context;

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//数据更新的信息点列表界面
 public class PointListActivity extends AppCompatActivity
 {
     private String lineID;

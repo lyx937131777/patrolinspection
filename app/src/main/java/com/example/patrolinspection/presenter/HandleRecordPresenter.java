@@ -19,6 +19,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//处置记录
 public class HandleRecordPresenter
 {
     private Context context;
@@ -29,6 +30,7 @@ public class HandleRecordPresenter
         this.pref = pref;
     }
 
+    //获取处置记录的列表
     public void updateRecord(final List<HandleRecord> handleRecordList, final HandleRecordAdapter adapter, String eventRecordID){
         String address = HttpUtil.LocalAddress + "/api/eventRecord/"+eventRecordID;
         String userID = pref.getString("userID",null);

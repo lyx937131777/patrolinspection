@@ -8,6 +8,7 @@ import android.os.Handler;
 
 import com.example.patrolinspection.util.LogUtil;
 
+//开机自己启动的广播接收器
 public class BootCompleteReceiver extends BroadcastReceiver
 {
     public static final String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";

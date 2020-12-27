@@ -1,4 +1,4 @@
-package com.example.patrolinspection.ui.main;
+package com.example.patrolinspection.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.arch.lifecycle.ViewModelProviders;
 
 import com.example.patrolinspection.R;
 import com.example.patrolinspection.adapter.EventRecordAdapter;
@@ -25,6 +24,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
+//事件记录页面中的两个子叶
 public class EventRecordFragment extends Fragment
 {
 

@@ -22,6 +22,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//处置事件
 public class EventHandlePresenter
 {
     private Context context;
@@ -33,6 +34,7 @@ public class EventHandlePresenter
         this.pref = pref;
     }
 
+    //发布处置记录
     public void postHandleRecord(final String policeID, String imagePath,final String eventRecordID, final String type,final String report,final String detail){
         ((EventHandleActivity)context).runOnUiThread(new Runnable() {
             @Override

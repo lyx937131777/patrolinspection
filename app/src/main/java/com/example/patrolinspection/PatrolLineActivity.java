@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//巡检线路界面（主界面->巡检）
 public class PatrolLineActivity extends AppCompatActivity
 {
     private List<PatrolSchedule> patrolScheduleList = new ArrayList<>();

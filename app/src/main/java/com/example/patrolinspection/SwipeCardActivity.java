@@ -30,6 +30,7 @@ import com.sunmi.psam.PSAMReaderManager;
 
 import java.io.IOException;
 
+//刷NFC或保安卡的界面
 public class SwipeCardActivity extends AppCompatActivity
 {
     private String type;

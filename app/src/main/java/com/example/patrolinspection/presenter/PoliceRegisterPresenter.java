@@ -21,6 +21,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//保安注册
 public class PoliceRegisterPresenter
 {
     private Context context;
@@ -33,6 +34,7 @@ public class PoliceRegisterPresenter
         this.pref = pref;
     }
 
+    //保安注册（上传图片）
     public void register(final String name, final String securityCard, final String icCard, final String identityCard, final String birth,
                          final String sex, final String nation, final String tel, final String duty, File photo){
         if(tel == null || tel.length() == 0){
@@ -80,6 +82,7 @@ public class PoliceRegisterPresenter
         }
     }
 
+    //注册保安
     private void register(String name, String securityCard, String icCard, String identityCard, String birth,
                           String sex, String nation, String tel, String duty, final String photo){
         String address = HttpUtil.LocalAddress + "/api/police/app";

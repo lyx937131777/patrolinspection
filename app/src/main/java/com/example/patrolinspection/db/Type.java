@@ -1,5 +1,6 @@
 package com.example.patrolinspection.db;
 
+//主页菜单及图标
 public class Type
 {
     private String name;

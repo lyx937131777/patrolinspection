@@ -22,6 +22,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//数据更新的巡检人员界面
 public class PoliceListActivity extends AppCompatActivity
 {
     private List<Police> policeList = new ArrayList<>();

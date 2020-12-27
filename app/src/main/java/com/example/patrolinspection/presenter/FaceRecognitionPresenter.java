@@ -26,6 +26,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//人脸识别
 public class FaceRecognitionPresenter
 {
     private Context context;
@@ -37,6 +38,7 @@ public class FaceRecognitionPresenter
         this.pref = pref;
     }
 
+    //开始巡检（带图片 并进行人脸识别）
     public void startPatrol(final String policeID, String imagePath, final String scheduleId){
         progressDialog = ProgressDialog.show(context,"","识别中...");
 
@@ -81,6 +83,7 @@ public class FaceRecognitionPresenter
         });
     }
 
+    //开始巡检
     public void startPatrol(String policeID, String scheduleId){
         if(progressDialog == null || !progressDialog.isShowing()){
             progressDialog = ProgressDialog.show(context,"","识别中...");

@@ -16,6 +16,7 @@ import com.example.patrolinspection.util.MapUtil;
 
 import java.util.List;
 
+//显示巡检线路（数据更新界面）的适配器
 public class LineListAdapter extends RecyclerView.Adapter<LineListAdapter.ViewHolder>
 {
     private Context mContext;

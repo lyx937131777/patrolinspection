@@ -1,4 +1,4 @@
-package com.example.patrolinspection.ui.main;
+package com.example.patrolinspection.fragment.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -8,19 +8,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.patrolinspection.R;
+import com.example.patrolinspection.fragment.SchoolEventFragment;
 
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
-public class SectionsPagerAdapter extends FragmentPagerAdapter
+//护校事件分页用的适配器
+public class SchoolPagerAdapter extends FragmentPagerAdapter
 {
-
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_event_record_1, R.string.tab_text_event_record_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_school_event_1, R.string.tab_text_school_event_2, R.string.tab_text_school_event_3};
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm)
+    public SchoolPagerAdapter(Context context, FragmentManager fm)
     {
         super(fm);
         mContext = context;
@@ -31,7 +28,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter
     {
         // getItem is called to instantiate the fragment for the given page.
         // Return a EventRecordFragment (defined as a static inner class below).
-        return EventRecordFragment.newInstance(position + 1);
+        return SchoolEventFragment.newInstance(position + 1);
     }
 
     @Nullable
@@ -44,7 +41,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter
     @Override
     public int getCount()
     {
-        // Show 2 total pages.
-        return 2;
+        // Show 3 total pages.
+        return 3;
     }
 }

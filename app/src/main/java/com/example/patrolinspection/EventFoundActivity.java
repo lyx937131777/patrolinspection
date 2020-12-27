@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+//发现异常界面
 public class EventFoundActivity extends AppCompatActivity
 {
     //photo

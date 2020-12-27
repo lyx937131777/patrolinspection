@@ -18,6 +18,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//事件记录
 public class EventRecordPresenter
 {
     private Context context;
@@ -28,6 +29,7 @@ public class EventRecordPresenter
         this.pref = pref;
     }
 
+    //获取事件记录列表
     public void updateRecord(final List<EventRecord> eventRecordList, final EventRecordAdapter adapter, final String type){
         String address = HttpUtil.LocalAddress + "/api/eventRecord/list";
         String companyID = pref.getString("companyID",null);

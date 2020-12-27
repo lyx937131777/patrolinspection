@@ -1,4 +1,4 @@
-package com.example.patrolinspection.ui.main;
+package com.example.patrolinspection.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,20 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.patrolinspection.R;
-import com.example.patrolinspection.adapter.EventRecordAdapter;
 import com.example.patrolinspection.adapter.SchoolEventRecordAdapter;
 import com.example.patrolinspection.dagger2.DaggerMyComponent;
 import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
-import com.example.patrolinspection.db.EventRecord;
 import com.example.patrolinspection.db.SchoolEventRecord;
-import com.example.patrolinspection.presenter.EventRecordPresenter;
 import com.example.patrolinspection.presenter.SchoolEventPresenter;
 import com.example.patrolinspection.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//护校事件页面的两个子页
 public class SchoolEventFragment extends Fragment
 {
     private static final String ARG_SECTION_NUMBER = "section_number";

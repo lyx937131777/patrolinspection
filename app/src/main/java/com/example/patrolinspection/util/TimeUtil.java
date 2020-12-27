@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//时间处理工具
 public class TimeUtil
 {
     //后台给的日期格式 转化为日期Date

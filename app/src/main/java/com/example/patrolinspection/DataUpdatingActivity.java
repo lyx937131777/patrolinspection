@@ -14,6 +14,7 @@ import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.presenter.DataUpdatingPresenter;
 import com.example.patrolinspection.util.LogUtil;
 
+//数据更新界面
 public class DataUpdatingActivity extends AppCompatActivity
 {
     private Button updating;

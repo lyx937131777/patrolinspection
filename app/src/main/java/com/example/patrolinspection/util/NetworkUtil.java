@@ -12,6 +12,7 @@ import static android.telephony.CellSignalStrength.SIGNAL_STRENGTH_MODERATE;
 import static android.telephony.CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
 import static android.telephony.CellSignalStrength.SIGNAL_STRENGTH_POOR;
 
+//用于处理网络类型
 public  class NetworkUtil
 {
     public static final int NETWORK_NONE = 0;

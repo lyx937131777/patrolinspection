@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+//下载服务的固有工具
 public class DownloadTask extends AsyncTask<String, Integer, Integer>
 {
 

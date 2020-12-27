@@ -19,6 +19,7 @@ import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
+//显示保安列表的适配器
 public class PoliceListAdapter extends RecyclerView.Adapter<PoliceListAdapter.ViewHolder>
 {
     private Context mContext;

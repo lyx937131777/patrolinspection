@@ -24,6 +24,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//发现异常
 public class EventFoundPresenter
 {
     private Context context;
@@ -35,6 +36,7 @@ public class EventFoundPresenter
         this.pref = pref;
     }
 
+    //发布异常（带图片）
     public void postEventRecord(final String policeID, final String imagePath, final String eventName, final String patrolRecordID, final String pointID, final String detail){
         ((EventFoundActivity)context).runOnUiThread(new Runnable() {
             @Override
@@ -141,6 +143,7 @@ public class EventFoundPresenter
         });
     }
 
+    //发布异常（无图片）
     public void postEventRecord(final String policeID,final String eventName,final String patrolRecordID,final String pointID,final String detail){
         progressDialog = ProgressDialog.show(context,"","上传中...");
 

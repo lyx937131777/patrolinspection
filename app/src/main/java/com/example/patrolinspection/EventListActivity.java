@@ -25,6 +25,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//数据更新界面中的事件分类列表界面
 public class EventListActivity extends AppCompatActivity
 {
     private List<Event> eventList = new ArrayList<>();

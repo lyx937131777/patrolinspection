@@ -38,6 +38,7 @@ import java.util.List;
 
 import at.mroland.android.apps.imagedecoder.BitmapImageFactory;
 
+//保安注册界面
 public class PoliceRegisterActivity extends AppCompatActivity
 {
     private TextView nameText;

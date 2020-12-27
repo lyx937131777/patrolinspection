@@ -22,6 +22,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//数据更新的巡检计划列表界面
 public class PlanListActivity extends AppCompatActivity
 {
     private List<PatrolPlan> patrolPlanList = new ArrayList<>();

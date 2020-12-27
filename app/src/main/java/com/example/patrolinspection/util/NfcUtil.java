@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 
+//用于处理NFC读取到的数据
 public class NfcUtil
 {
     public static String getID(Intent intent){

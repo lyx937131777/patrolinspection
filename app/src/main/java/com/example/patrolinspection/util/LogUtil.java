@@ -2,6 +2,7 @@ package com.example.patrolinspection.util;
 
 import android.util.Log;
 
+//打印日志工具
 public class LogUtil
 {
     public static final int VERBOSE = 1;

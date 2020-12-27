@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.litepal.crud.LitePalSupport;
 
+//事件
 public class Event extends LitePalSupport
 {
     @SerializedName("id")

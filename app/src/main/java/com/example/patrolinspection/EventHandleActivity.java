@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+//异常处置界面
 public class EventHandleActivity extends AppCompatActivity
 {
     //photo

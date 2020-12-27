@@ -20,6 +20,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//数据更新的巡检线路列表界面
 public class LineListActivity extends AppCompatActivity
 {
 

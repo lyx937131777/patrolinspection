@@ -19,6 +19,7 @@ import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
+//显示巡检计划（周一计划 节假日计划 自由排班）的适配器
 public class PlanListAdapter extends RecyclerView.Adapter<PlanListAdapter.ViewHolder>
 {
     private Context mContext;

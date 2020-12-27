@@ -34,6 +34,7 @@ import com.example.patrolinspection.util.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+//登录界面
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private String phoneID;

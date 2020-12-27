@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+//处置记录界面
 public class HandleRecordActivity extends AppCompatActivity
 {
     private Dialog dialog;

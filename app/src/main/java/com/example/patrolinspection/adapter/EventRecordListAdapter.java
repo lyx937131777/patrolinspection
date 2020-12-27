@@ -22,6 +22,7 @@ import com.example.patrolinspection.util.Utility;
 import java.util.Date;
 import java.util.List;
 
+//显示事件记录（数据更新界面）的适配器
 public class EventRecordListAdapter extends RecyclerView.Adapter<EventRecordListAdapter.ViewHolder>
 {
     private Context mContext;

@@ -12,6 +12,7 @@ import com.example.patrolinspection.db.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+//保安or信息点注册界面（两个菜单）
 public class InformationRegisterActivity extends AppCompatActivity
 {
     private Type[] types = {new Type("保安注册", R.drawable.security_staff,R.drawable.security_staff_press, "securityStaff"),

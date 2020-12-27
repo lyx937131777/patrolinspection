@@ -19,6 +19,7 @@ import com.example.patrolinspection.util.MapUtil;
 import com.example.patrolinspection.util.TimeUtil;
 import com.example.patrolinspection.util.Utility;
 
+//护校事件处理界面
 public class SchoolEventHandleActivity extends AppCompatActivity
 {
     private SchoolEventRecord schoolEventRecord;

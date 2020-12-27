@@ -7,6 +7,7 @@ import org.litepal.crud.LitePalSupport;
 
 import java.util.List;
 
+//事件记录
 public class EventRecord extends LitePalSupport
 {
     @SerializedName("id")

@@ -23,6 +23,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//登录页面
 public class LoginPresenter
 {
     private Context context;
@@ -38,6 +39,7 @@ public class LoginPresenter
         this.checkUtil = checkUtil;
     }
 
+    //登录
     public void login(String phoneID)
     {
 //        if(!checkUtil.checkLogin(username,password))

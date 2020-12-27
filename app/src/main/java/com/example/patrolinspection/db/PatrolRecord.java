@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//巡检记录
 public class PatrolRecord extends LitePalSupport
 {
     @SerializedName("id")

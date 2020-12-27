@@ -1,5 +1,6 @@
 package com.example.patrolinspection.service;
 
+//下载接口
 public interface DownloadListener
 {
 

@@ -23,6 +23,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//数据更新的巡检排班列表界面
 public class ScheduleListActivity extends AppCompatActivity
 {
     private String planID;

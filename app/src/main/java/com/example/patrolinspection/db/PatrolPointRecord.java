@@ -9,6 +9,7 @@ import org.litepal.crud.LitePalSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+//信息点巡检记录
 public class PatrolPointRecord extends LitePalSupport
 {
     private String patrolRecordId;

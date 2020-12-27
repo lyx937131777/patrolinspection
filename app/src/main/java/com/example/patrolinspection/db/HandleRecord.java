@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
+//处置记录
 public class HandleRecord extends LitePalSupport
 {
     @SerializedName("id")

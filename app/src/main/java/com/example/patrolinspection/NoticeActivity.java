@@ -21,6 +21,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//公告界面
 public class NoticeActivity extends AppCompatActivity
 {
     private List<Notice> noticeList = new ArrayList<>();

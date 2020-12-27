@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+//用于解析后端返回的数据
 public class Utility
 {
     //返回Json数据的companyID值

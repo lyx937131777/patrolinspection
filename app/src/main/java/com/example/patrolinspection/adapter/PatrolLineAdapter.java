@@ -21,6 +21,7 @@ import org.litepal.LitePal;
 
 import java.util.List;
 
+//显示巡检线路（巡检界面）的适配器
 public class PatrolLineAdapter extends RecyclerView.Adapter<PatrolLineAdapter.ViewHolder>
 {
     private Context mContext;

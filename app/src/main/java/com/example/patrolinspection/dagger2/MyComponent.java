@@ -20,6 +20,7 @@ import com.example.patrolinspection.presenter.SignInOutPresenter;
 
 import dagger.Component;
 
+//dagger2框架 用于自动生成presenter
 @Component(modules = {MyModule.class})
 public interface MyComponent
 {

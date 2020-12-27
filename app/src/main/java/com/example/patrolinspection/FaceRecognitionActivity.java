@@ -39,6 +39,7 @@ import org.litepal.LitePal;
 import java.io.File;
 import java.io.IOException;
 
+//人脸识别界面
 public class FaceRecognitionActivity extends AppCompatActivity
 {
     //photo

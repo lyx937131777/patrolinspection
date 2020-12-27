@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.patrolinspection.util.LogUtil;
 import com.example.patrolinspection.util.NfcUtil;
 
+//只刷NFC的界面
 public class NfcActivity extends AppCompatActivity
 {
     private static final String TAG = "NfcActivity";

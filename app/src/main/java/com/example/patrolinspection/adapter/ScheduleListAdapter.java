@@ -19,6 +19,7 @@ import org.litepal.LitePal;
 
 import java.util.List;
 
+//显示巡检计划（数据更新界面）的适配器
 public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder>
 {
     private Context mContext;

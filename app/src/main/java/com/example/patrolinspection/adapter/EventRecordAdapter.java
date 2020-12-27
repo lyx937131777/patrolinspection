@@ -17,6 +17,7 @@ import com.example.patrolinspection.util.Utility;
 
 import java.util.List;
 
+//显示事件记录（可处理）的适配器
 public class EventRecordAdapter extends RecyclerView.Adapter<EventRecordAdapter.ViewHolder>
 {
     private Context mContext;

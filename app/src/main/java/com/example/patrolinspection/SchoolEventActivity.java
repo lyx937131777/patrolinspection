@@ -16,7 +16,7 @@ import com.example.patrolinspection.dagger2.MyComponent;
 import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.db.Police;
 import com.example.patrolinspection.presenter.SchoolEventPresenter;
-import com.example.patrolinspection.ui.main.SchoolPagerAdapter;
+import com.example.patrolinspection.fragment.adapter.SchoolPagerAdapter;
 
 import org.litepal.LitePal;
 

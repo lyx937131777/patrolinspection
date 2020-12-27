@@ -19,6 +19,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//护校事件
 public class SchoolEventPresenter
 {
     private Context context;
@@ -30,6 +31,7 @@ public class SchoolEventPresenter
         this.pref = pref;
     }
 
+    //登出
     public void logout(){
         progressDialog = ProgressDialog.show(context,"","登出中...");
 
@@ -75,6 +77,7 @@ public class SchoolEventPresenter
         });
     }
 
+    //获取护校事件记录的列表
     public void updateRecord(final List<SchoolEventRecord> schoolEventRecordList, final SchoolEventRecordAdapter adapter, final String type){
         String address = HttpUtil.LocalAddress + "/api/schoolRecord/app_list";
         String userID = pref.getString("userID",null);

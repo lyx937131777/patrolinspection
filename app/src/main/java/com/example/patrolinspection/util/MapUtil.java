@@ -5,6 +5,7 @@ import com.example.patrolinspection.R;
 import java.util.HashMap;
 import java.util.Map;
 
+//映射工具 将中文、单词、图标对应
 public class MapUtil
 {
     private static Map<String, Integer> stateMap = new HashMap<String, Integer>();

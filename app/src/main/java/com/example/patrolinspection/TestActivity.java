@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import java.io.InputStream;
 
+//显示大图片界面
 public class TestActivity extends AppCompatActivity {
     private ImageView imageView;
     private Dialog dialog;

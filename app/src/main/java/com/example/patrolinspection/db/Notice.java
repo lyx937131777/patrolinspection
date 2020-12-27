@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.litepal.crud.LitePalSupport;
 
+//公告
 public class Notice extends LitePalSupport
 {
     @SerializedName("id")

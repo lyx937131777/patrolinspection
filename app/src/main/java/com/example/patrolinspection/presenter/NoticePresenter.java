@@ -21,6 +21,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//公告
 public class NoticePresenter
 {
     private Context context;
@@ -31,6 +32,7 @@ public class NoticePresenter
         this.pref = pref;
     }
 
+    //获取公告列表
     public void updateNotice(final List<Notice> noticeList, final NoticeAdapter noticeAdapter){
         String userID = pref.getString("userID",null);
         String address = HttpUtil.LocalAddress + "/api/announce/list";

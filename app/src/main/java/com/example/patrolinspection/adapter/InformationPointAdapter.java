@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+//显示信息点的适配器
 public class InformationPointAdapter extends RecyclerView.Adapter<InformationPointAdapter.ViewHolder>
 {
     private Context mContext;

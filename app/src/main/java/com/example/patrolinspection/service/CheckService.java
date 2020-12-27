@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+//10秒检查一次数据合理性的服务 保障本地数据稳定
 public class CheckService extends Service
 {
     public static final int SLEEP_TIME = 10;

@@ -1,8 +1,8 @@
 package com.example.patrolinspection.db;
 
-import org.litepal.LitePal;
 import org.litepal.crud.LitePalSupport;
 
+//信息点拍照记录
 public class PointPhotoRecord extends LitePalSupport
 {
     private String patrolRecordId;

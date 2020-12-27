@@ -1,5 +1,6 @@
 package com.example.patrolinspection.db;
 
+//公司
 public class Company
 {
     private boolean isschool;

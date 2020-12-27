@@ -19,6 +19,7 @@ import com.example.patrolinspection.util.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+//签到or签退界面（四or两个菜单供选择
 public class SignActivity extends AppCompatActivity
 {
 

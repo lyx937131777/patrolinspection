@@ -6,8 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.example.patrolinspection.ui.main.SectionsPagerAdapter;
+import com.example.patrolinspection.fragment.adapter.SectionsPagerAdapter;
 
+//一场列表界面（其下有两个同结构的子页面）
 public class EventRecordActivity extends AppCompatActivity
 {
 

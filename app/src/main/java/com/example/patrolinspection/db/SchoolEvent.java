@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+//护校事件
 public class SchoolEvent implements Serializable
 {
     @SerializedName("id")

@@ -44,6 +44,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+//更新数据
 public class DataUpdatingPresenter
 {
     private Context context;
@@ -59,6 +60,7 @@ public class DataUpdatingPresenter
         photoCount = 0;
     }
 
+    //更新所有信息
     public void updateAll(){
         updatePatrolPlan();
         updatePatrolLine();

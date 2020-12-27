@@ -17,6 +17,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
+//巡检界面
 public class PatrolInspectionActivity extends AppCompatActivity
 {
     private List<PatrolSchedule> patrolScheduleList = new ArrayList<>();

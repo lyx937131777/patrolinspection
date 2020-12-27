@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.litepal.crud.LitePalSupport;
 
+//保安
 public class Police extends LitePalSupport
 {
     @SerializedName("id")
