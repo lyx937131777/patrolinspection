@@ -31,6 +31,7 @@ import com.example.patrolinspection.dagger2.MyModule;
 import com.example.patrolinspection.presenter.LoginPresenter;
 import com.example.patrolinspection.util.LogUtil;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,18 +119,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void readSerial()
     {
         phoneID = Build.SERIAL.toUpperCase();
-        if (phoneID.equals("UNKNOWN") && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q )
+        LogUtil.e("LoginActivity","phoneID 1 : "+phoneID);
+        if (isDefault(phoneID) && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q )
         {
             phoneID = Build.getSerial().toUpperCase();
+            LogUtil.e("LoginActivity","phoneID 2 : "+phoneID);
         }
-        if(phoneID.equals("UNKNOWN")){
+        if(isDefault(phoneID)){
             phoneID = Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase();
+            LogUtil.e("LoginActivity","phoneID 3 : "+phoneID);
         }
 
 //        phoneID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         loginPresenter.login(phoneID);
         textView.setText("当前设备机号为：" + phoneID + "\n未在系统中注册，请注册后重新登录");
     }
+
+    private boolean isDefault(String s){
+        return s.equals("UNKNOWN") || s.equals("0123456789ABCDEF");
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)

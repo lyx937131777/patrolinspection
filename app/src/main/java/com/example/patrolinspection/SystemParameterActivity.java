@@ -121,8 +121,8 @@ public class SystemParameterActivity extends AppCompatActivity
 
         nameText.setText(Build.BRAND);
         modelText.setText(Build.MODEL);
-        if(Build.SERIAL.equals("unknown")){
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || Build.getSerial().toUpperCase().equals("UNKNOWN")){
+        if(isDefault(Build.SERIAL.toUpperCase())){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || isDefault(Build.getSerial().toUpperCase())){
                 idText.setText(Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase());
             }else{
                 idText.setText(Build.getSerial().toUpperCase());
@@ -174,6 +174,11 @@ public class SystemParameterActivity extends AppCompatActivity
         }
         heartBeat();
     }
+
+    private boolean isDefault(String s){
+        return s.equals("UNKNOWN") || s.equals("0123456789ABCDEF");
+    }
+
 
     private void initReadBak(){
         //NFC适配器，所有的关于NFC的操作从该适配器进行

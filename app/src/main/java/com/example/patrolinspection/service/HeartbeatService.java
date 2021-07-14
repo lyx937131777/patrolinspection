@@ -78,7 +78,7 @@ import okhttp3.Response;
 public class HeartbeatService extends Service
 {
     //TODO 上一个发布的版本号 若服务器上还是此版本则不更新
-    public static final String LAST_VERSION = "1.11.3";
+    public static final String LAST_VERSION = "1.12.2";
 
     private static final String TAG = "HeartbeatService";
     public static boolean isRun = false;
